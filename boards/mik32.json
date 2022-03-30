@@ -1,0 +1,40 @@
+{
+  "build": {
+    "f_cpu": "32000000L",
+    "toolchain-mik32":{
+      "ldscript": "mik32.ld"
+    },
+    "hwids": [
+      [
+        "0x0403",
+        "0x6010"
+      ]
+    ],
+    "mabi": "ilp32",
+    "march": "rv32imc",
+    "mcmodel": "medlow",
+    "extra_flags": "-DARDUINO_ESP32_PRO",
+    "mcu": "mik32",
+    "variant": "mik32"
+  },
+  "debug": {
+    "onboard_tools": [
+      "ftdi"
+    ],
+    "speed": "500"
+  },
+  "frameworks": [
+    "toolchain-mik32"
+  ],
+  "name": "MIK32",
+  "upload": {
+    "maximum_ram_size": 16384,
+    "maximum_size": 8192,
+    "protocol": "ftdi",
+    "protocols": [
+      "ftdi"
+    ]
+  },
+  "url": "http://mik32.ru",
+  "vendor": "MIKRON"
+}

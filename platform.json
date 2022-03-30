@@ -1,0 +1,51 @@
+{
+    "name": "MIK32",
+    "title": "MIK32 toolchain",
+    "description": "My custom development platform",
+    "homepage": "http://mik32.ru",
+    "license": "Apache-2.0",
+    "keywords": ["keyword_1", "keyword_N"],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/platformio/platform-myplatform.git"
+    },
+    "engines": {
+      "platformio": "^5"
+    },
+    "version": "0.0.1",
+    "frameworks": {
+      "toolchain-mik32": {
+        "package": "toolchain-mik32",
+        "script": "builder/frameworks/custom.py",
+        "title": "Custom SDK"
+      }
+    },
+    "packages": {
+      "toolchain-mik32": {
+        "type": "toolchain",
+        "owner": "platformio",
+        "version": "1.0"
+      },
+      "toolchain-riscv": {
+        "type": "toolchain",
+        "owner": "platformio",
+        "version": "~1.80300.0"
+      },
+      "framework-zephyr": {
+        "type": "framework",
+        "optional": true,
+        "owner": "platformio",
+        "version": "~2.20700.0"
+      },
+      "tool-openocd-riscv": {
+        "optional": true,
+        "type": "uploader",
+        "owner": "platformio",
+        "version": "~2.1000.0"
+      }
+    },
+    "pythonPackages": {
+      "pypi-pkg-1": "1.2.3",
+      "pypi-pkg-2": ">=2.3, <3"
+    }
+  }
