@@ -44,6 +44,9 @@ env.Replace(
 if env.get("PROGNAME", "program") == "program":
     env.Replace(PROGNAME="firmware")
 
+TOOLCHAIN_DIR = platform.get_package_dir("toolchain-mik32")
+SHARED_DIR = join(TOOLCHAIN_DIR, "shared")
+
 env.Append(
     BUILDERS=dict(
         ElfToHex=Builder(
@@ -56,8 +59,10 @@ env.Append(
             ]), "Building $TARGET"),
             suffix=".hex"
         )
-    )
+    ),
+    LIBPATH = [join(SHARED_DIR, "libs")]
 )
+
 
 pioframework = env.get("PIOFRAMEWORK", [])
 

@@ -57,7 +57,7 @@ class Mik32Platform(PlatformBase):
         tool = "ftdi"
             
         if (tool not in upload_protocols or tool in debug["tools"]):
-            assert "TOol not in upload protocols"
+            assert "Tool not in upload protocols"
         
         server_args = [
             # "-s", "$PACKAGE_DIR/share/openocd/scripts"

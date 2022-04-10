@@ -13,7 +13,6 @@
     "mabi": "ilp32",
     "march": "rv32imc",
     "mcmodel": "medlow",
-    "extra_flags": "-DARDUINO_ESP32_PRO",
     "mcu": "mik32",
     "variant": "mik32"
   },
