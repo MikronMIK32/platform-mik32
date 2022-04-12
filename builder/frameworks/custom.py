@@ -79,11 +79,11 @@ if not os.path.isfile(os.path.join(BUILD_DIR, 'crt0', 'crt0.o')):
         src_dir=RUNTIME_DIR,
     )
 
-if not os.path.isdir(os.path.join(BUILD_DIR, 'libs')):
-    env.BuildSources(
-        os.path.join(BUILD_DIR, 'libs'),
-        src_dir=os.path.join(SHARED_DIR, "libs"),
-    )
+# if not os.path.isdir(os.path.join(BUILD_DIR, 'libs')):
+# env.BuildSources(
+#     os.path.join(BUILD_DIR, 'libs'),
+#     src_dir=os.path.join(SHARED_DIR, "libs"),
+# )
 
 # env.Replace(PLATFORMIO_LIB_EXTRA_DIRS=[os.path.join(SHARED_DIR, "libs")])
 
@@ -102,11 +102,10 @@ linkflags = [
     os.path.join(BUILD_DIR, 'crt0', 'crt0.o'),
 ]
 
-linkflags.extend(map(
-    lambda item: os.path.join(BUILD_DIR, 'libs', item),
-    os.listdir(path=os.path.join(BUILD_DIR, "libs"))
-))
-
+# linkflags.extend(map(
+#     lambda item: os.path.join(BUILD_DIR, 'libs', "".join(item.split('.')[:-1])+".o"),
+#     filter(lambda item: item.split('.')[-1] == 'c', os.listdir(path=os.path.join(SHARED_DIR, "libs")))
+# ))
 env.AppendUnique(
     CPPPATH=[
         "$PROJECT_SRC_DIR",

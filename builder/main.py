@@ -60,7 +60,7 @@ env.Append(
             suffix=".hex"
         )
     ),
-    LIBPATH = [join(SHARED_DIR, "libs")]
+    # LIBPATH = [join(SHARED_DIR, "libs")]
 )
 
 
