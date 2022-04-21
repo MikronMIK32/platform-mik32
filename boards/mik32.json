@@ -20,7 +20,8 @@
     "onboard_tools": [
       "ftdi"
     ],
-    "speed": "500"
+    "speed": "500",
+    "svd_path": "mcu32.svd"
   },
   "frameworks": [
     "toolchain-mik32"

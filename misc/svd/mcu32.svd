@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- File naming: <vendor>_<part/series name>.svd -->
+
+<device schemaVersion="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">
+  <name>MCU32</name> <!-- name of part or part series -->
+  <version>1.0</version> <!-- version of this description -->
+  <description>RISC-V 32-bit Microcontroller based device </description>
+  <addressUnitBits>8</addressUnitBits> <!-- byte addressable memory -->
+  <width>32</width> <!-- bus width is 32 bits -->
+  <!-- default settings implicitly inherited by subsequent sections -->
+  <size>32</size> <!-- this is the default size (number of bits) of all peripherals
+                                                                       and register that do not define "size" themselves -->
+  <access>read-write</access> <!-- default access permission for all subsequent registers -->
+  <resetValue>0x00000000</resetValue> <!-- by default all bits of the registers are initialized to 0 on reset -->
+  <resetMask>0xFFFFFFFF</resetMask> <!-- by default all 32Bits of the registers are used -->
+
+  <peripherals>
+    <!-- GPIO -->
+    <peripheral>
+      <name>GPIO1</name>
+      <description>GPIO1 порт ввода-вывода</description>
+      <groupName>GPIO</groupName>
+      <baseAddress>0x00003000</baseAddress>
+
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x400</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <!-- STATE -->
+        <register>
+          <name>STATE</name>
+          <description>SET/STATE Register</description>
+          <addressOffset>0x00</addressOffset>
+          <resetValue>0x0000</resetValue>
+          <resetMask>0xFFFF</resetMask>
+
+          <fields>
+            <field>
+              <name>STATE_[%s]</name>
+              <description>Port [%s] set/state register
+Reading output current pins state.
+Writing set 1 to corresponding pins.
+1: set 1 to corresponding pin</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>GPIO Logic Low Level</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Enable</name>
+                  <description>GPIO Logic High Level</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+      </registers>
+    </peripheral>
+  </peripherals>
+</device>
