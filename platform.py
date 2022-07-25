@@ -23,6 +23,23 @@ from platformio.util import get_systype
 
 # env = DefaultEnvironment()
 
+
+NOT_SUPPORTED_INTERFACES = [
+    "stlink",
+    "stlink-v1",
+    "stlink-v2",
+    "stlink-v2-1"
+]
+
+
+"""
+Verified flashers:
+    - mlink(FT2232H)
+    - jlink (Not J-Link ARM)
+    - xds100v2
+"""
+
+
 class Mik32Platform(PlatformBase):
 
     def configure_default_packages(self, variables, targets):
@@ -62,25 +79,63 @@ class Mik32Platform(PlatformBase):
         server_args = [
             # "-s", "$PACKAGE_DIR/share/openocd/scripts"
         ]
+        
         sdk_dir = self.get_package_dir('toolchain-mik32')
-        openocd_scripts = os.path.join(sdk_dir, 'openocd/share/openocd/scripts/')
+        openocd_scripts = os.path.abspath(os.path.join(sdk_dir, 'openocd/share/openocd/scripts/'))
+
+        # Interface
         interface = debug.get("interface", "m-link")
-        interface_cfg = os.path.join(openocd_scripts, 'interface', 'ftdi', interface + '.cfg')
 
-        if os.path.isfile(interface_cfg):
-            server_args.extend(['-f', interface_cfg])
+        ## Not supported interfaces
+        if interface in NOT_SUPPORTED_INTERFACES:
+            print(f"Error: Interface '{interface}' not supported")
+            raise Exception(f"Interface '{interface}' not supported")
+        
+        openocd_interfaces = os.path.join(openocd_scripts, "interface")
+
+        ## If not FTDI interface (jlink, ...)
+        if f"{interface}.cfg" in os.listdir(openocd_interfaces):
+            interface_cfg = os.path.join(openocd_scripts, 'interface', f"{interface}.cfg")
+
+        ## If FTDI interface (m-link, xds100v2, ...)
+        elif f"{interface}.cfg" in os.listdir(os.path.join(openocd_interfaces, "ftdi")):
+            interface_cfg = os.path.join(openocd_scripts, 'interface', 'ftdi', f"{interface}.cfg")
+
+        ## Interface not found
         else:
-            print('ERROR! No interface cfg file found for interface', debug.get("interface"), interface_cfg)
+            print(f"Error: Interface '{interface}' not found.",
+                  f"  Fix:",
+                  f"    Edit field 'board_debug.interface = {interface}' in 'platformio.ini'",
+                  f"    OR",
+                  f"    add your interface to '{openocd_interfaces}'",
+                  sep="\n")
 
+            raise Exception(f"Interface '{interface}' not found")
+
+        server_args.extend(['-f', interface_cfg])
+
+        # Flash speed
         adapter_khz = debug.get("adapter_speed", "500")
-        server_args.extend(["-c", "adapter_khz %s" % adapter_khz])
+        server_args.extend(["-c", f"adapter_khz {adapter_khz}"])
 
-        board_cfg = os.path.join(openocd_scripts, 'target', board.id + '.cfg')
+        # Board cfg file
+        board_cfg = os.path.join(openocd_scripts, 'target', f"{board.id}.cfg")
 
-        if os.path.isfile(board_cfg):
-            server_args.extend(["-f", board_cfg])
-        else:
-            print('ERROR! No board cfg file found for', board.id, 'at path', board_cfg)
+        if not os.path.isfile(board_cfg):
+            print(f"Error: No board cfg file found for {board.id}.",
+                  f"  Fix:"
+                  f"    Edit field 'board = {board.id}' in 'platformio.ini'",
+                  f"    OR",
+                  f"    add cfg file to '{openocd_interfaces}'",
+                  sep="\n")
+
+            raise Exception(f"Interface '{interface}' not found")
+
+        server_args.extend(["-f", board_cfg])
+
+        ## Special behavior for xds100v2
+        if interface == "xds100v2":
+            server_args.extend(["-c", "ftdi_set_signal PWR_RST 1", "-c", "jtag arp_init"])
 
         server_args.extend(["-f", os.path.join(openocd_scripts, "include_eeprom.tcl")])
 
