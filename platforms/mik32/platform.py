@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import traceback
 
 #from platformio.managers.platform import PlatformBase
 from platformio import app, exception, fs, util
@@ -37,6 +38,7 @@ NOT_SUPPORTED_INTERFACES = [
     - jlink (Not J-Link ARM)
     - xds100v2
 """
+
 
 
 class Mik32Platform(PlatformBase):
@@ -65,7 +67,6 @@ class Mik32Platform(PlatformBase):
 
         debug_config.server = debug_config._configure_server()
 
-
     # Установка параметров указанной конфигурации
     def configure_board(self, board, env):
         config = self.config.items(env=env, as_dict=True)
@@ -77,7 +78,6 @@ class Mik32Platform(PlatformBase):
             board.update(key, value)
 
         return board
-
 
     def configure_default_packages(self, selected_config, targets):
         self.__class__.__selected_config = selected_config
@@ -101,7 +101,11 @@ class Mik32Platform(PlatformBase):
         if not board:
             return board
             
-        board = self.configure_board_tools(board)
+        if isinstance(board, dict):
+            for board_id, _ in board.items():
+                board[board_id] = self.configure_board_tools(board[board_id])
+        else:
+            board = self.configure_board_tools(board)
 
         return board
 
