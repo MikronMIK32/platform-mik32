@@ -1,0 +1,14 @@
+{
+    "name": "toolchain-mik32",
+    "version": "1.0",
+    "description": "GNU toolchain for mik32",
+    "keywords": [
+      "build tools",
+      "risc-v"
+    ],
+    "license": "GPL-2.0-or-later",
+    "system": [
+      "windows_x86",
+      "windows_amd64"
+    ]
+  }
