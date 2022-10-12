@@ -1,0 +1,11 @@
+prefix=/home/build/mingw/openocd-mingw-w64-build-scripts/objdir
+exec_prefix=/home/build/mingw/openocd-mingw-w64-build-scripts/objdir/bin
+libdir=/home/build/mingw/openocd-mingw-w64-build-scripts/objdir/bin
+includedir=/home/build/mingw/openocd-mingw-w64-build-scripts/objdir/include/libftdi1
+
+Name: libftdi1
+Description: Library to program and control the FTDI USB controller
+Requires: libusb-1.0
+Version: 1.2
+Libs: -L${libdir} -lftdi1
+Cflags: -I${includedir}

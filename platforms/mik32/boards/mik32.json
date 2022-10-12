@@ -1,0 +1,58 @@
+{
+  "build": {
+    "f_cpu": "32000000L",
+    "toolchain-mik32":{
+      "ldscript": "mik32.ld"
+    },
+    "hwids": [
+      [
+        "0x0403",
+        "0x6010"
+      ]
+    ],
+    "mabi": "ilp32",
+    "march": "rv32imc",
+    "mcmodel": "medlow",
+    "extra_flags": "-DARDUINO_ESP32_PRO",
+    "mcu": "mik32",
+    "variant": "mik32"
+  },
+  "memory_usage": {
+    "default": {
+      "rom": 8192,
+      "ram": 16384
+    },
+    "eeprom": {
+      "rom": 8192,
+      "ram": 16384
+    },
+    "ram": {
+      "rom": 8192,
+      "ram": 8192
+    }
+  },
+  "debug": {
+    "maximum_ram_size": 8192,
+    "maximum_size": 8192,
+    "protocols": ["ftdi", "jlink"],
+    "protocol": "ftdi",
+    "interface": "m-link",
+    "adapter_speed": "500",
+    "ldscript": "ram"
+  },
+  "frameworks": [
+    "toolchain-mik32"
+  ],
+  "name": "MIK32",
+  "upload": {
+    "maximum_ram_size": 16384,
+    "maximum_size": 8192,
+    "protocols": ["ftdi", "jlink"],
+    "protocol": "ftdi",
+    "interface": "m-link",
+    "adapter_speed": "500",
+    "ldscript": "eeprom"
+  },
+  "url": "http://mik32.ru",
+  "vendor": "MIKRON"
+}
