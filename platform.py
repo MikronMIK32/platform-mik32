@@ -62,7 +62,7 @@ class Mik32Platform(PlatformBase):
         server_args = [
             # "-s", "$PACKAGE_DIR/share/openocd/scripts"
         ]
-        sdk_dir = self.get_package_dir('toolchain-mik32')
+        sdk_dir = self.get_package_dir('framework-mik32v0-sdk')
         openocd_scripts = os.path.join(sdk_dir, 'openocd/share/openocd/scripts/')
         interface = debug.get("interface", "m-link")
         interface_cfg = os.path.join(openocd_scripts, 'interface', 'ftdi', interface + '.cfg')

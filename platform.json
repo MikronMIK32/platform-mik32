@@ -1,29 +1,33 @@
 {
     "name": "MIK32",
-    "title": "MIK32 toolchain",
-    "description": "My custom development platform",
+    "title": "Mikron MIK32 Platform",
+    "description": "Mikron MIK32 Platform",
     "homepage": "http://mik32.ru",
-    "license": "Apache-2.0",
-    "keywords": ["keyword_1", "keyword_N"],
+    "keywords": [
+      "dev-platform",
+      "Mikron",
+      "MIK32",
+      "RISC-V",
+      "32bit"
+    ],
     "repository": {
       "type": "git",
-      "url": "https://github.com/platformio/platform-myplatform.git"
+      "url": "https://github.com/sh-sergey/mik32-platformio.git"
     },
     "engines": {
       "platformio": "^5"
     },
     "version": "0.0.1",
     "frameworks": {
-      "toolchain-mik32": {
-        "package": "toolchain-mik32",
+      "framework-mik32v0-sdk": {
+        "package": "framework-mik32v0-sdk",
         "script": "builder/frameworks/custom.py",
-        "title": "Custom SDK"
+        "title": "Mikron MIK32V0 Firmware Library"
       }
     },
     "packages": {
-      "toolchain-mik32": {
-        "type": "toolchain",
-        "owner": "platformio",
+      "framework-mik32v0-sdk": {
+        "type": "framework",
         "version": "1.0"
       },
       "toolchain-riscv": {
@@ -31,21 +35,11 @@
         "owner": "platformio",
         "version": "~1.80300.0"
       },
-      "framework-zephyr": {
-        "type": "framework",
-        "optional": true,
-        "owner": "platformio",
-        "version": "~2.20700.0"
-      },
       "tool-openocd-riscv": {
         "optional": true,
         "type": "uploader",
         "owner": "platformio",
         "version": "~2.1000.0"
       }
-    },
-    "pythonPackages": {
-      "pypi-pkg-1": "1.2.3",
-      "pypi-pkg-2": ">=2.3, <3"
     }
   }
