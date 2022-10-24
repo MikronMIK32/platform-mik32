@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """
-Custom
+Custom 
 
 get from
 
@@ -26,6 +26,8 @@ import subprocess
 import sys
 import os
 import ctypes
+
+from os.path import join, isdir
 
 import click
 import semantic_version
@@ -51,82 +53,65 @@ platform = env.PioPlatform()
 board = env.BoardConfig()
 
 TOOLCHAIN_DIR = platform.get_package_dir(
-    "toolchain-mik32"
+    "framework-mik32v0-sdk"
 )
 
-assert os.path.isdir(TOOLCHAIN_DIR)
+assert isdir(TOOLCHAIN_DIR)
 
 BUILD_DIR = env.subst("$BUILD_DIR")
 PROJECT_DIR = env.subst("$PROJECT_DIR")
 PROJECT_SRC_DIR = env.subst("$PROJECT_SRC_DIR")
-CMAKE_API_REPLY_PATH = os.path.join(".cmake", "api", "v1", "reply")
+CMAKE_API_REPLY_PATH = join(".cmake", "api", "v1", "reply")
 
-SHARED_DIR = os.path.join(TOOLCHAIN_DIR, "shared")
-LDSCRIPTS_DIR = os.path.join(SHARED_DIR, "ldscripts")
-RUNTIME_DIR = os.path.join(SHARED_DIR, "runtime")
+SHARED_DIR = join(TOOLCHAIN_DIR, "shared")
+LDSCRIPTS_DIR = join(SHARED_DIR, "ldscripts")
+RUNTIME_DIR = join(SHARED_DIR, "runtime")
 
 
 def log(msg, should_append=False):
-    LOG_FILE = os.path.join(PROJECT_DIR, "log.log")
+    LOG_FILE = join(PROJECT_DIR, "log.log")
 
     with open(LOG_FILE, 'a' if should_append else 'w') as f:
         f.write(msg + '\n')
 
 
-if not os.path.isfile(os.path.join(BUILD_DIR, 'crt0', 'crt0.o')):
-    env.BuildSources(
-        os.path.join(BUILD_DIR, 'crt0'),
-        src_dir=RUNTIME_DIR,
-    )
+# debug = board.manifest.get("debug", {})
+# if "tools" not in debug:
+#     debug["tools"] = {}
 
-# if not os.path.isdir(os.path.join(BUILD_DIR, 'libs')):
-# env.BuildSources(
-#     os.path.join(BUILD_DIR, 'libs'),
-#     src_dir=os.path.join(SHARED_DIR, "libs"),
-# )
+# ldscript = debug.get("ldscript", "eeprom")
+# ldscript_ld = os.path.join(LDSCRIPTS_DIR, ldscript + '.ld')
+# if not os.path.isfile(ldscript_ld):
+#     print('ERROR! No ld script file found for name', ldscript)
 
-# env.Replace(PLATFORMIO_LIB_EXTRA_DIRS=[os.path.join(SHARED_DIR, "libs")])
 
-debug = board.manifest.get("debug", {})
-if "tools" not in debug:
-    debug["tools"] = {}
-
-ldscript = debug.get("ldscript", "eeprom")
-ldscript_ld = os.path.join(LDSCRIPTS_DIR, ldscript + '.ld')
-if not os.path.isfile(ldscript_ld):
-    print('ERROR! No ld script file found for name', ldscript)
-
-linkflags = [
-    "-nostartfiles",
-    "-T", ldscript_ld,
-    os.path.join(BUILD_DIR, 'crt0', 'crt0.o'),
-]
-
-# linkflags.extend(map(
-#     lambda item: os.path.join(BUILD_DIR, 'libs', "".join(item.split('.')[:-1])+".o"),
-#     filter(lambda item: item.split('.')[-1] == 'c', os.listdir(path=os.path.join(SHARED_DIR, "libs")))
-# ))
 env.AppendUnique(
     CPPPATH=[
+        '-v',
         "$PROJECT_SRC_DIR",
-        os.path.join(SHARED_DIR, "include"),
-        os.path.join(SHARED_DIR, "periphery"),
-        os.path.join(SHARED_DIR, "libs"),
+        join(SHARED_DIR, "include"),
+        join(SHARED_DIR, "periphery"),
+        join(SHARED_DIR, "runtime"),
     ],
-    # LINKFLAGS=[
-    #     "-nostartfiles",
-    #     "-T", ldscript_ld,
-    #     os.path.join(BUILD_DIR, 'crt0', 'crt0.o'),
-    #     os.path.join(BUILD_DIR, 'libs', 'common.o'),
-    #     os.path.join(BUILD_DIR, 'libs', 'dma_lib.o'),
-    #     os.path.join(BUILD_DIR, 'libs', 'memcpy.o'),
-    #     os.path.join(BUILD_DIR, 'libs', 'rtc_lib.o'),
-    #     os.path.join(BUILD_DIR, 'libs', 'uart_lib.o'),
-    #     os.path.join(BUILD_DIR, 'libs', 'xprintf.o'),
-    #     '-v'
-    # ],
-    LINKFLAGS=linkflags,
+    LINKFLAGS=[
+        "-nostartfiles",
+    ],
     LIBS=[
-
+        "c"
     ]
 )
+
+if not env.BoardConfig().get("build.ldscript", ""):
+    env.Replace(
+        LDSCRIPT_PATH=join(SHARED_DIR, "ldscripts", board.get(
+            "build.mik32v0-sdk.ldscript"))
+    )
+
+libs = [
+    env.BuildLibrary(
+        join("$BUILD_DIR", "runtime"),
+        join(SHARED_DIR, "runtime"),
+    )
+]
+
+env.Prepend(LIBS=libs)

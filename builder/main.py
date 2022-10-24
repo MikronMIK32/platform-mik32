@@ -44,9 +44,6 @@ env.Replace(
 if env.get("PROGNAME", "program") == "program":
     env.Replace(PROGNAME="firmware")
 
-TOOLCHAIN_DIR = platform.get_package_dir("toolchain-mik32")
-SHARED_DIR = join(TOOLCHAIN_DIR, "shared")
-
 env.Append(
     BUILDERS=dict(
         ElfToHex=Builder(
@@ -59,10 +56,8 @@ env.Append(
             ]), "Building $TARGET"),
             suffix=".hex"
         )
-    ),
-    # LIBPATH = [join(SHARED_DIR, "libs")]
+    )
 )
-
 
 pioframework = env.get("PIOFRAMEWORK", [])
 
@@ -109,7 +104,7 @@ uploader = "openocd"
 tool_args = [
     "-c",
     "debug_level %d" % (2 if int(ARGUMENTS.get("PIOVERBOSE", 2)) else 1),
-    "-s", platform.get_package_dir("tool-openocd-riscv") or ""
+    # "-s", platform.get_package_dir("tool-openocd-riscv") or ""
 ]
 
 tool_args.extend(
@@ -140,6 +135,7 @@ env.Replace(
     UPLOADERFLAGS=tool_args,
     UPLOADCMD="$UPLOADER $UPLOADERFLAGS"
 )
+
 upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
 
 AlwaysBuild(env.Alias("upload", upload_target, upload_actions))

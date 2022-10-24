@@ -75,7 +75,7 @@ class Mik32Platform(PlatformBase):
         adapter_khz = debug.get("adapter_speed", "500")
         server_args.extend(["-c", "adapter_khz %s" % adapter_khz])
 
-        board_cfg = os.path.join(openocd_scripts, 'target', board.id + '.cfg')
+        board_cfg = os.path.join(openocd_scripts, 'target', 'mik32.cfg')
 
         if os.path.isfile(board_cfg):
             server_args.extend(["-f", board_cfg])
