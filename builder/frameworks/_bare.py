@@ -14,20 +14,22 @@ env.Append(
     ],
 
     ASPPFLAGS=[
-        "-x", "assembler-with-cpp",
+        # "-x", "assembler-with-cpp",
     ],
 
     CCFLAGS=[
-        "-Os",
+        # "-Os",
+        "-Og",
+        "-g",
         "-Wall",
         "-march=%s" % board_config.get("build.march"),
         "-mabi=%s" % board_config.get("build.mabi"),
         "-mcmodel=%s" % board_config.get("build.mcmodel"),
-        "-fmessage-length=0",
-        "-fsigned-char",
-        "-ffunction-sections",
-        "-fdata-sections",
-        "-fno-common"
+        # "-fmessage-length=0",
+        # "-fsigned-char",
+        # "-ffunction-sections",
+        # "-fdata-sections",
+        # "-fno-common"
     ],
 
     # CFLAGS = [
@@ -42,14 +44,14 @@ env.Append(
         # "-Os",
         # "-ffunction-sections",
         # "-fdata-sections",
-        "-nostartfiles",
+        # "-nostartfiles",
         # "-Xlinker",
-        "-march=%s" % board_config.get("build.march"),
-        "-mabi=%s" % board_config.get("build.mabi"),
-        "-mcmodel=%s" % board_config.get("build.mcmodel"),
+        # "-march=%s" % board_config.get("build.march"),
+        # "-mabi=%s" % board_config.get("build.mabi"),
+        # "-mcmodel=%s" % board_config.get("build.mcmodel"),
         # "-nostdlib",
         # "--specs=nano.specs",
-        "-Wl,--gc-sections"
+        # "-Wl,--gc-sections"
     ],
 
     LIBS=["c"],
