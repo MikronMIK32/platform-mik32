@@ -66,6 +66,7 @@ CMAKE_API_REPLY_PATH = join(".cmake", "api", "v1", "reply")
 SHARED_DIR = join(TOOLCHAIN_DIR, "shared")
 LDSCRIPTS_DIR = join(SHARED_DIR, "ldscripts")
 RUNTIME_DIR = join(SHARED_DIR, "runtime")
+HAL_DIR = join(TOOLCHAIN_DIR, "hal")
 
 
 def log(msg, should_append=False):
@@ -75,16 +76,6 @@ def log(msg, should_append=False):
         f.write(msg + '\n')
 
 
-# debug = board.manifest.get("debug", {})
-# if "tools" not in debug:
-#     debug["tools"] = {}
-
-# ldscript = debug.get("ldscript", "eeprom")
-# ldscript_ld = os.path.join(LDSCRIPTS_DIR, ldscript + '.ld')
-# if not os.path.isfile(ldscript_ld):
-#     print('ERROR! No ld script file found for name', ldscript)
-
-
 env.AppendUnique(
     CPPPATH=[
         '-v',
@@ -92,6 +83,8 @@ env.AppendUnique(
         join(SHARED_DIR, "include"),
         join(SHARED_DIR, "periphery"),
         join(SHARED_DIR, "runtime"),
+        join(HAL_DIR, "core", "Include"),
+        join(HAL_DIR, "peripherals", "Include"),
     ],
     LINKFLAGS=[
         "-nostartfiles",
@@ -111,7 +104,19 @@ libs = [
     env.BuildLibrary(
         join("$BUILD_DIR", "runtime"),
         join(SHARED_DIR, "runtime"),
-    )
+    ),
+    env.BuildLibrary(
+        join("$BUILD_DIR", "libs"),
+        join(SHARED_DIR, "libs"),
+    ),
+    env.BuildLibrary(
+        join("$BUILD_DIR", "hal_core"),
+        join(HAL_DIR, "core", "Source"),
+    ),
+    env.BuildLibrary(
+        join("$BUILD_DIR", "hal_peripherals"),
+        join(HAL_DIR, "peripherals", "Source"),
+    ),
 ]
 
 env.Prepend(LIBS=libs)

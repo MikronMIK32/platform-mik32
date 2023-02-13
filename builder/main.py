@@ -27,6 +27,7 @@ env.Replace(
     AR="riscv64-unknown-elf-gcc-ar",
     AS="riscv64-unknown-elf-as",
     CC="riscv64-unknown-elf-gcc",
+    LD="riscv64-unknown-elf-ld",
     GDB="riscv64-unknown-elf-gdb",
     CXX="riscv64-unknown-elf-g++",
     OBJCOPY="riscv64-unknown-elf-objcopy",
@@ -120,7 +121,7 @@ hex_path = target_hex[0].rstr().replace('\\', '/')
 command = ("eeprom_write_file %s" % hex_path) \
     if ldscript == "eeprom" \
     else "load_image %s %s ihex" % (hex_path, board_config.get(
-    "upload").get("image_offset", "0x0"))
+        "upload").get("image_offset", "0x0"))
 tool_args.extend(
     [
         "-c", "reset halt",

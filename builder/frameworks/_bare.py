@@ -1,10 +1,11 @@
-import os
+from os.path import join
 
 from SCons.Script import DefaultEnvironment
 
 env = DefaultEnvironment()
 platform = env.PioPlatform()
 board_config = env.BoardConfig()
+
 
 env.Append(
     ASFLAGS=[
@@ -41,6 +42,9 @@ env.Append(
     # ],
 
     LINKFLAGS=[
+        "-Xlinker",
+        "-Map=%s.map" % join("$BUILD_DIR", "${PROGNAME}"),
+        # "--oformat elf32-littleriscv",
         # "-Os",
         # "-ffunction-sections",
         # "-fdata-sections",
