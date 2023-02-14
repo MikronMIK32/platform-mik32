@@ -94,10 +94,23 @@ env.AppendUnique(
     ]
 )
 
-if not env.BoardConfig().get("build.ldscript", ""):
-    env.Replace(
-        LDSCRIPT_PATH=join(SHARED_DIR, "ldscripts", board.get(
-            "build.mik32v0-sdk.ldscript"))
+debug = board.manifest.get("debug", {})
+ldscript = debug.get("ldscript", "")
+
+# if not env.BoardConfig().get("build.ldscript", ""):
+#     env.Replace(
+#         LDSCRIPT_PATH=join(SHARED_DIR, "ldscripts", board.get(
+#             "build.mik32v0-sdk.ldscript"))
+#     )
+#     print("ldscript: %s" % board.get("build.mik32v0-sdk.ldscript"))
+# else:
+#     print("ldscript: %s" % env.BoardConfig().get("build.ldscript", ""))
+
+from utils import get_ldscript_path
+
+print("ldscript: %s" % get_ldscript_path())
+env.Replace(
+        LDSCRIPT_PATH=get_ldscript_path()
     )
 
 libs = [

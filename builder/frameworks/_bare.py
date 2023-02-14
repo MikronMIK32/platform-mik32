@@ -7,7 +7,7 @@ platform = env.PioPlatform()
 board_config = env.BoardConfig()
 
 
-env.Append(
+env.AppendUnique(
     ASFLAGS=[
         "-march=%s" % board_config.get("build.march"),
         "-mabi=%s" % board_config.get("build.mabi"),
@@ -62,4 +62,4 @@ env.Append(
 )
 
 # copy CCFLAGS to ASFLAGS (-x assembler-with-cpp mode)
-env.Append(ASFLAGS=env.get("CCFLAGS", [])[:])
+env.AppendUnique(ASFLAGS=env.get("CCFLAGS", [])[:])

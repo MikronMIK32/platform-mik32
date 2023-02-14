@@ -21,7 +21,7 @@ from SCons.Script import (ARGUMENTS, COMMAND_LINE_TARGETS, AlwaysBuild,
 env = DefaultEnvironment()
 env.SConscript("compat.py", exports="env")
 platform = env.PioPlatform()
-board_config = env.BoardConfig()
+board = env.BoardConfig()
 
 env.Replace(
     AR="riscv64-unknown-elf-gcc-ar",
@@ -34,7 +34,7 @@ env.Replace(
     RANLIB="riscv64-unknown-elf-gcc-ranlib",
     SIZETOOL="riscv64-unknown-elf-size",
 
-    ARFLAGS=["rc"],
+    # ARFLAGS=["rc"],
 
     SIZEPRINTCMD='$SIZETOOL -d $SOURCES',
 
@@ -97,7 +97,7 @@ AlwaysBuild(target_size)
 #
 
 upload_protocol = env.subst("$UPLOAD_PROTOCOL")
-debug_tools = board_config.get("debug.tools", {})
+debug_tools = board.get("debug.tools", {})
 upload_actions = []
 upload_target = target_hex
 
@@ -115,18 +115,19 @@ tool_args.extend(
 #     tool_args.extend(
 #         ["-c", "adapter_khz %s" % env.GetProjectOption("debug_speed")]
 #     )
-debug = board_config.manifest.get("debug", {})
-ldscript = debug.get("ldscript", "eeprom")
+
+from utils import get_memory_type, MemoryType
+
 hex_path = target_hex[0].rstr().replace('\\', '/')
 command = ("eeprom_write_file %s" % hex_path) \
-    if ldscript == "eeprom" \
-    else "load_image %s %s ihex" % (hex_path, board_config.get(
-        "upload").get("image_offset", "0x0"))
+    if get_memory_type() == MemoryType.EEPROM \
+    else "load_image %s %s ihex" % (hex_path, board.get(
+        "upload.image_offset", "0x0"))
 tool_args.extend(
     [
         "-c", "reset halt",
         "-c", command,
-        "-c", "resume %s" % board_config.get(
+        "-c", "resume %s" % board.get(
             "upload").get("image_offset", "0x0"),
         "-c", "shutdown"
     ]
