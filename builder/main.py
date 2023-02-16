@@ -1,17 +1,4 @@
-# Copyright 2014-present PlatformIO <contact@platformio.org>
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#    http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
+from utils import get_memory_type, MemoryType
 from os.path import join
 
 from SCons.Script import (ARGUMENTS, COMMAND_LINE_TARGETS, AlwaysBuild,
@@ -33,8 +20,6 @@ env.Replace(
     OBJCOPY="riscv64-unknown-elf-objcopy",
     RANLIB="riscv64-unknown-elf-gcc-ranlib",
     SIZETOOL="riscv64-unknown-elf-size",
-
-    # ARFLAGS=["rc"],
 
     SIZEPRINTCMD='$SIZETOOL -d $SOURCES',
 
@@ -93,7 +78,7 @@ target_size = env.Alias(
 AlwaysBuild(target_size)
 
 #
-# Target: Upload by default .bin file
+# Target: Upload
 #
 
 upload_protocol = env.subst("$UPLOAD_PROTOCOL")
@@ -111,18 +96,16 @@ tool_args = [
 tool_args.extend(
     debug_tools.get(upload_protocol).get("server").get("arguments", []))
 
-# if env.GetProjectOption("debug_speed"):
-#     tool_args.extend(
-#         ["-c", "adapter_khz %s" % env.GetProjectOption("debug_speed")]
-#     )
-
-from utils import get_memory_type, MemoryType
-
 hex_path = target_hex[0].rstr().replace('\\', '/')
-command = ("eeprom_write_file %s" % hex_path) \
-    if get_memory_type() == MemoryType.EEPROM \
-    else "load_image %s %s ihex" % (hex_path, board.get(
+command = None
+match get_memory_type():
+    case MemoryType.RAM:
+        command = "load_image %s %s ihex" % (hex_path, board.get(
         "upload.image_offset", "0x0"))
+    case MemoryType.EEPROM:
+        command =("eeprom_write_file %s" % hex_path)
+    case _:
+        print("ERROR: unknown memory type")
 tool_args.extend(
     [
         "-c", "reset halt",
