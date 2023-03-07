@@ -40,8 +40,9 @@ env.AppendUnique(
         join(SHARED_DIR, "include"),
         join(SHARED_DIR, "periphery"),
         join(SHARED_DIR, "runtime"),
-        # join(HAL_DIR, "core", "Include"),
-        # join(HAL_DIR, "peripherals", "Include"),
+        join(HAL_DIR, "core", "Include"),
+        join(HAL_DIR, "peripherals", "Include"),
+        join(SHARED_DIR, "libs"),
     ],
     LIBS=[
         "c"
@@ -53,18 +54,18 @@ libs = [
         join("$BUILD_DIR", "runtime"),
         join(SHARED_DIR, "runtime"),
     ),
-    # env.BuildLibrary(
-    #     join("$BUILD_DIR", "libs"),
-    #     join(SHARED_DIR, "libs"),
-    # ),
-    # env.BuildLibrary(
-    #     join("$BUILD_DIR", "hal_core"),
-    #     join(HAL_DIR, "core", "Source"),
-    # ),
-    # env.BuildLibrary(
-    #     join("$BUILD_DIR", "hal_peripherals"),
-    #     join(HAL_DIR, "peripherals", "Source"),
-    # ),
+    env.BuildLibrary(
+        join("$BUILD_DIR", "libs"),
+        join(SHARED_DIR, "libs"),
+    ),
+    env.BuildLibrary(
+        join("$BUILD_DIR", "hal_core"),
+        join(HAL_DIR, "core", "Source"),
+    ),
+    env.BuildLibrary(
+        join("$BUILD_DIR", "hal_peripherals"),
+        join(HAL_DIR, "peripherals", "Source"),
+    ),
 ]
 
 env.Prepend(LIBS=libs)

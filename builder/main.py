@@ -100,10 +100,15 @@ hex_path = target_hex[0].rstr().replace('\\', '/')
 command = None
 match get_memory_type():
     case MemoryType.RAM:
+        print("Memory type is RAM")
         command = "load_image %s %s ihex" % (hex_path, board.get(
-        "upload.image_offset", "0x0"))
+            "upload.image_offset", "0x0"))
     case MemoryType.EEPROM:
-        command =("eeprom_write_file %s" % hex_path)
+        print("Memory type is EEPROM")
+        command = "eeprom_write_file %s" % hex_path
+    case MemoryType.SPIFI:
+        print("Memory type is SPI")
+        command = ""
     case _:
         print("ERROR: unknown memory type")
 tool_args.extend(
@@ -115,6 +120,7 @@ tool_args.extend(
         "-c", "shutdown"
     ]
 )
+
 env.Replace(
     UPLOADER=uploader,
     UPLOADERFLAGS=tool_args,
