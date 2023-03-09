@@ -98,19 +98,18 @@ tool_args.extend(
 
 hex_path = target_hex[0].rstr().replace('\\', '/')
 command = None
-match get_memory_type():
-    case MemoryType.RAM:
-        print("Memory type is RAM")
-        command = "load_image %s %s ihex" % (hex_path, board.get(
-            "upload.image_offset", "0x0"))
-    case MemoryType.EEPROM:
-        print("Memory type is EEPROM")
-        command = "eeprom_write_file %s" % hex_path
-    case MemoryType.SPIFI:
-        print("Memory type is SPI")
-        command = ""
-    case _:
-        print("ERROR: unknown memory type")
+memory_type = get_memory_type()
+if memory_type == MemoryType.RAM:
+    print("Memory type is RAM")
+    command = "load_image %s %s ihex" % (hex_path, board.get("upload.image_offset", "0x0"))
+elif memory_type == MemoryType.EEPROM:
+    print("Memory type is EEPROM")
+    command = "eeprom_write_file %s" % hex_path
+elif memory_type == MemoryType.SPIFI:
+    print("Memory type is SPI")
+    command = ""
+else:
+    print("ERROR: unknown memory type")
 tool_args.extend(
     [
         "-c", "reset halt",
