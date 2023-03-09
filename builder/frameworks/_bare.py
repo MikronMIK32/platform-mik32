@@ -14,18 +14,52 @@ env.AppendUnique(
         "-mcmodel=%s" % board_config.get("build.mcmodel"),
     ],
 
-    CCFLAGS=[
-        "-march=%s" % board_config.get("build.march"),
-        "-mabi=%s" % board_config.get("build.mabi"),
-        "-mcmodel=%s" % board_config.get("build.mcmodel"),
+    ASPPFLAGS=[
+        # "-x", "assembler-with-cpp",
     ],
 
-    LINKFLAGS=[
+    CCFLAGS=[
+        # "-Os",
+        "-Og",
+        "-g",
+        "-Wall",
         "-march=%s" % board_config.get("build.march"),
         "-mabi=%s" % board_config.get("build.mabi"),
         "-mcmodel=%s" % board_config.get("build.mcmodel"),
+        # "-fmessage-length=0",
+        # "-fsigned-char",
+        # "-ffunction-sections",
+        # "-fdata-sections",
+        # "-fno-common"
+    ],
+
+    # CFLAGS = [
+    #     "-std=gnu11"
+    # ],
+
+    # CXXFLAGS = [
+    #     "-std=gnu++17"
+    # ],
+
+    LINKFLAGS=[
         "-Xlinker",
         "-Map=%s.map" % join("$BUILD_DIR", "${PROGNAME}"),
-        "-nostartfiles",
+        # "--oformat elf32-littleriscv",
+        # "-Os",
+        # "-ffunction-sections",
+        # "-fdata-sections",
+        # "-nostartfiles",
+        # "-Xlinker",
+        # "-march=%s" % board_config.get("build.march"),
+        # "-mabi=%s" % board_config.get("build.mabi"),
+        # "-mcmodel=%s" % board_config.get("build.mcmodel"),
+        # "-nostdlib",
+        # "--specs=nano.specs",
+        # "-Wl,--gc-sections"
     ],
+
+    LIBS=["c"],
 )
+
+# copy CCFLAGS to ASFLAGS (-x assembler-with-cpp mode)
+env.AppendUnique(ASFLAGS=env.get("CCFLAGS", [])[:])
