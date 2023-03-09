@@ -6,7 +6,7 @@ from os.path import join, exists, basename
 from enum import Enum
 
 env = DefaultEnvironment()
-env.SConscript("_bare.py")
+env.SConscript("compat.py", exports="env")
 
 platform = env.PioPlatform()
 board = env.BoardConfig()
