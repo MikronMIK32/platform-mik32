@@ -83,11 +83,10 @@ env.AppendUnique(
         join(SHARED_DIR, "include"),
         join(SHARED_DIR, "periphery"),
         join(SHARED_DIR, "runtime"),
+        join(SHARED_DIR, "libs"),
         join(HAL_DIR, "core", "Include"),
         join(HAL_DIR, "peripherals", "Include"),
-    ],
-    LINKFLAGS=[
-        "-nostartfiles",
+        join(HAL_DIR, "utilities", "Include"),
     ],
     LIBS=[
         "c"
@@ -129,6 +128,10 @@ libs = [
     env.BuildLibrary(
         join("$BUILD_DIR", "hal_peripherals"),
         join(HAL_DIR, "peripherals", "Source"),
+    ),
+    env.BuildLibrary(
+        join("$BUILD_DIR", "hal_utilities"),
+        join(HAL_DIR, "utilities", "Source"),
     ),
 ]
 
