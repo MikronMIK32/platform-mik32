@@ -28,7 +28,7 @@
     "packages": {
       "framework-mik32v0-sdk": {
         "type": "framework",
-        "version": "1.0"
+        "version": "^0.2.0"
       },
       "toolchain-riscv": {
         "type": "toolchain",
