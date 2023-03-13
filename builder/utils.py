@@ -17,7 +17,6 @@ TOOLCHAIN_DIR = platform.get_package_dir(
 SHARED_DIR = join(TOOLCHAIN_DIR, "shared")
 LDSCRIPTS_DIR = join(SHARED_DIR, "ldscripts")
 
-
 def get_ldscript_path() -> str:
     if board.get("build.ldscript", ""):
         ld = board.get("build.ldscript", "")
@@ -35,9 +34,10 @@ def get_ldscript_path() -> str:
         if exists(join(LDSCRIPTS_DIR, ld + ".ld")):
             return join(LDSCRIPTS_DIR, ld + ".ld")
 
-    print("No ld script defined, using default")
-    if exists(join(SHARED_DIR, "ldscripts", board.get(
-            "build.mik32v0-sdk.ldscript"))):
+    default_ld_path = join(SHARED_DIR, "ldscripts", board.get(
+            "build.mik32v0-sdk.ldscript"))
+    if exists(default_ld_path):
+        print("No ld script defined, using default %s" % basename(default_ld_path))
         return join(SHARED_DIR, "ldscripts", board.get(
             "build.mik32v0-sdk.ldscript"))
 
@@ -50,17 +50,16 @@ class MemoryType(Enum):
     EEPROM = "eeprom"
     SPIFI = "spifi"
 
+import re
 
 def get_memory_type() -> MemoryType:
     path = get_ldscript_path()
     filename = basename(path)
 
-    type_str = filename.split(".")[0]
-    if (type_str in MemoryType._value2member_map_):
-        return MemoryType._value2member_map_[type_str]
-    type_str = filename.split("_")[0]
-    if (type_str in MemoryType):
-        return MemoryType._value2member_map_[type_str]
+    pattern = re.compile(r"ram|eeprom|spifi[\d_\-\.]*")
+    result = pattern.match(filename).group(0)
+    if (result in MemoryType._value2member_map_):
+        return MemoryType._value2member_map_[result]
 
     print("ERROR: Unable to determine memory type")
     return None

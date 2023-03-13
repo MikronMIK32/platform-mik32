@@ -14,7 +14,6 @@
 
 import copy
 import os
-import platform
 import ctypes
 
 from platformio.managers.platform import PlatformBase

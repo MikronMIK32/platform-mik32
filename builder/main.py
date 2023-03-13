@@ -21,6 +21,8 @@ env.Replace(
     RANLIB="riscv64-unknown-elf-gcc-ranlib",
     SIZETOOL="riscv64-unknown-elf-size",
 
+    ARFLAGS=["rc"],
+
     SIZEPRINTCMD='$SIZETOOL -d $SOURCES',
 
     PROGSUFFIX=".elf"
@@ -41,13 +43,21 @@ env.Append(
                 "$TARGET"
             ]), "Building $TARGET"),
             suffix=".hex"
-        )
+        ),
+        ElfToBin=Builder(
+            action=env.VerboseAction(" ".join([
+                "$OBJCOPY",
+                "-O",
+                "binary",
+                "$SOURCES",
+                "$TARGET"
+            ]), "Building $TARGET"),
+            suffix=".bin"
+        ),
     )
 )
 
-pioframework = env.get("PIOFRAMEWORK", [])
-
-if not pioframework:
+if not env.get("PIOFRAMEWORK"):
     env.SConscript("frameworks/_bare.py", exports="env")
 
 env.SConscript("frameworks/custom.py", exports={"env": env})
@@ -60,13 +70,16 @@ target_elf = None
 if "nobuild" in COMMAND_LINE_TARGETS:
     target_elf = join("$BUILD_DIR", "${PROGNAME}.elf")
     target_hex = join("$BUILD_DIR", "${PROGNAME}.hex")
+    target_bin = join("$BUILD_DIR", "${PROGNAME}.bin")
 else:
     target_elf = env.BuildProgram()
     target_hex = env.ElfToHex(join("$BUILD_DIR", "${PROGNAME}"), target_elf)
+    target_bin = env.ElfToBin(join("$BUILD_DIR", "${PROGNAME}"), target_elf)
     env.Depends(target_hex, "checkprogsize")
 
 AlwaysBuild(env.Alias("nobuild", target_hex))
 target_buildprog = env.Alias("buildprog", target_hex, target_hex)
+target_buildbin = env.Alias("buildbin", target_bin, target_bin)
 
 #
 # Target: Print binary size
