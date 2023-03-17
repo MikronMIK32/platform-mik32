@@ -11,6 +11,7 @@ env.AppendUnique(
         "-march=%s" % board_config.get("build.march"),
         "-mabi=%s" % board_config.get("build.mabi"),
         "-mcmodel=%s" % board_config.get("build.mcmodel"),
+        "-g",
     ],
 
     ASPPFLAGS=[
@@ -22,6 +23,7 @@ env.AppendUnique(
         "-mabi=%s" % board_config.get("build.mabi"),
         "-mcmodel=%s" % board_config.get("build.mcmodel"),
         "-Os",
+        "-g",
         "-Wall",
         "-fsigned-char",
         "-ffunction-sections",
