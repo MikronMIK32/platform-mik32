@@ -143,7 +143,7 @@ tool_args.extend(
         "-c", "shutdown"
     ]
 )
-print(" ".join(tool_args))
+
 env.Replace(
     UPLOADER=uploader,
     UPLOADERFLAGS=tool_args,

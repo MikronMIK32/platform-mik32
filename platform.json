@@ -17,7 +17,7 @@
     "engines": {
       "platformio": "^5"
     },
-    "version": "0.2.0",
+    "version": "0.2.1",
     "frameworks": {
       "framework-mik32v0-sdk": {
         "package": "framework-mik32v0-sdk",
