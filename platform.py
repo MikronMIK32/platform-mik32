@@ -58,15 +58,15 @@ class Mik32Platform(PlatformBase):
         if (tool not in upload_protocols or tool in debug["tools"]):
             assert "Tool not in upload protocols"
         
-        server_args = [
-            # "-s", "$PACKAGE_DIR/share/openocd/scripts"
-        ]
         sdk_dir = self.get_package_dir('framework-mik32v0-sdk')
         openocd_scripts = os.path.join(sdk_dir, 'openocd/share/openocd/scripts/')
+        server_args = [
+            "-s", "%s" % openocd_scripts
+        ]
         interface = debug.get("interface", "m-link")
-        interface_cfg = os.path.join(openocd_scripts, 'interface', 'ftdi', interface + '.cfg')
+        interface_cfg = os.path.join('interface', 'ftdi', interface + '.cfg')
 
-        if os.path.isfile(interface_cfg):
+        if os.path.isfile(os.path.join(openocd_scripts, interface_cfg)):
             server_args.extend(['-f', interface_cfg])
         else:
             print('ERROR! No interface cfg file found for interface', debug.get("interface"), interface_cfg)
@@ -74,14 +74,14 @@ class Mik32Platform(PlatformBase):
         adapter_khz = debug.get("adapter_speed", "500")
         server_args.extend(["-c", "adapter_khz %s" % adapter_khz])
 
-        board_cfg = os.path.join(openocd_scripts, 'target', 'mik32.cfg')
+        board_cfg = os.path.join('target', 'mik32.cfg')
 
-        if os.path.isfile(board_cfg):
+        if os.path.isfile(os.path.join(openocd_scripts, board_cfg)):
             server_args.extend(["-f", board_cfg])
         else:
             print('ERROR! No board cfg file found for', board.id, 'at path', board_cfg)
 
-        server_args.extend(["-f", os.path.join(openocd_scripts, "include_eeprom.tcl")])
+        server_args.extend(["-f", "include_eeprom.tcl"])
 
         
 

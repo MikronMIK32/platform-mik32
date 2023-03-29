@@ -130,9 +130,9 @@ tool_args.extend(
 from utils import get_memory_type, MemoryType
 
 hex_path = target_hex[0].rstr().replace('\\', '/')
-command = ("eeprom_write_file %s" % hex_path) \
+command = ("eeprom_write_file \\\"%s\\\"" % hex_path) \
     if get_memory_type() == MemoryType.EEPROM \
-    else "load_image %s %s ihex" % (hex_path, board.get(
+    else "load_image \\\"%s\\\" %s ihex" % (hex_path, board.get(
         "upload.image_offset", "0x0"))
 tool_args.extend(
     [
@@ -143,6 +143,7 @@ tool_args.extend(
         "-c", "shutdown"
     ]
 )
+print(" ".join(tool_args))
 env.Replace(
     UPLOADER=uploader,
     UPLOADERFLAGS=tool_args,

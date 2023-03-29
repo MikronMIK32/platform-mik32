@@ -43,7 +43,7 @@ env.AppendUnique(
         "-mcmodel=%s" % board_config.get("build.mcmodel"),
         "-nostartfiles",
         "-Xlinker",
-        "-Map=%s.map" % join("$BUILD_DIR", "${PROGNAME}"),
+        "-Map=\"%s.map\"" % join("$BUILD_DIR", "${PROGNAME}"),
         "-Wl,--gc-sections",
     ],
 
