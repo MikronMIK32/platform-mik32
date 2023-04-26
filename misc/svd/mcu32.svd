@@ -11,50 +11,1896 @@
   <size>32</size> <!-- this is the default size (number of bits) of all peripherals
                                                                        and register that do not define "size" themselves -->
   <access>read-write</access> <!-- default access permission for all subsequent registers -->
-  <resetValue>0x00000000</resetValue> <!-- by default all bits of the registers are initialized to 0 on reset -->
+  <resetValue>0x00000000</resetValue> <!-- by default all bits of the registers are initialized to 0
+  on reset -->
   <resetMask>0xFFFFFFFF</resetMask> <!-- by default all 32Bits of the registers are used -->
 
   <peripherals>
-    <!-- GPIO -->
+    <!-- DMA -->
     <peripheral>
-      <name>GPIO1</name>
-      <description>GPIO1 порт ввода-вывода</description>
-      <groupName>GPIO</groupName>
-      <baseAddress>0x00003000</baseAddress>
-
+      <name>DMA</name>
+      <description>Прямой доступ к памяти</description>
+      <baseAddress>0x000040000</baseAddress>
       <addressBlock>
         <offset>0</offset>
-        <size>0x400</size>
+        <size>0x44</size>
         <usage>registers</usage>
       </addressBlock>
 
       <registers>
-        <!-- STATE -->
         <register>
-          <name>STATE</name>
-          <description>SET/STATE Register</description>
+          <name>CH1_DST</name>
+          <description>Регистр адреса назначения канала 1</description>
           <addressOffset>0x00</addressOffset>
-          <resetValue>0x0000</resetValue>
-          <resetMask>0xFFFF</resetMask>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Dst</name>
+              <description>Адрес назначения</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH1_SRC</name>
+          <description>Регистр адреса источника канала 1</description>
+          <addressOffset>0x04</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Src</name>
+              <description>Адрес источника</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH1_LEN</name>
+          <description>Регистр размера передаваемых данных канала 1</description>
+          <addressOffset>0x08</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Data_Len</name>
+              <description>Количество байт пересылки. Расчитывается как Data_Len + 1</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH1_CFG</name>
+          <description>Регистр управления и конфигурации канала 1</description>
+          <addressOffset>0x0C</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Enable</name>
+              <description>Разрешение работы канала:
+              0b1 – инициализация работы канала;
+              0b0 – принудительная остановка</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Prior</name>
+              <description>Приоритет канала:
+              0b00 – низкий;
+              0b01 – средний;
+              0b10 – высокий;
+              0b11 – приоритетный (очень высокий)</description>
+              <bitRange>[2:1]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b11</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_mode</name>
+              <description>Режим адреса источника:
+              0b0 – периферия;
+              0b1 – память</description>
+              <bitRange>[3:3]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_mode</name>
+              <description>Режим адреса назначения:
+              0b0 – периферия;
+              0b1 – память</description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_incr</name>
+              <description>Инкремент адреса источника:
+              0b0 – нет инкремента;
+              0b1 – есть инкремент</description>
+              <bitRange>[5:5]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_incr</name>
+              <description>Инкремент адреса назначения:
+              0b0 – нет инкремента;
+              0b1 – есть инкремент</description>
+              <bitRange>[5:5]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_size</name>
+              <description>Разрядность адреса источника:
+              0b00 – байт;
+              0b01 – полуслово;
+              0b10 – слово;
+              0b11 - резерв
+              * должно быть кратно data_len</description>
+              <bitRange>[8:7]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b10</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_size</name>
+              <description>Разрядность адреса источника:
+              0b00 – байт;
+              0b01 – полуслово;
+              0b10 – слово;
+              0b11 - резерв
+              * должно быть кратно data_len</description>
+              <bitRange>[10:9]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b10</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_block_size</name>
+              <description>Количество байт в пакете
+              Определяется как 2^read_block_size
+              * должно быть кратно read_size</description>
+              <bitRange>[13:11]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b000</minimum>
+                  <maximum>0b111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_block_size</name>
+              <description>Количество байт в пакете
+              Определяется как 2^write_block_size
+              * должно быть кратно write_size</description>
+              <bitRange>[16:14]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b000</minimum>
+                  <maximum>0b111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_requets</name>
+              <description>Выбор периферийной линии источника</description>
+              <bitRange>[20:17]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0000</minimum>
+                  <maximum>0b1111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_requets</name>
+              <description>Выбор периферийной линии назначения</description>
+              <bitRange>[24:21]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0000</minimum>
+                  <maximum>0b1111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_ack_ena</name>
+              <description>Разрешение работы логики с откликом для адресата источника:
+              0 – запрещено;
+              1 – разрешено</description>
+              <bitRange>[25:25]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b01</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_ack_ena</name>
+              <description>Разрешение работы логики с откликом для адресата назначения:
+              0 – запрещено;
+              1 – разрешено</description>
+              <bitRange>[26:26]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b01</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Irq_ena</name>
+              <description>Разрешение формирования пре-рывания по завершении работы канала:
+              0 – прерывание не формируется;
+              1 – прерывание формируется</description>
+              <bitRange>[27:27]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH2_DST</name>
+          <description>Регистр адреса назначения канала 2</description>
+          <addressOffset>0x10</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Dst</name>
+              <description>Адрес назначения</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH2_SRC</name>
+          <description>Регистр адреса источника канала 2</description>
+          <addressOffset>0x14</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Src</name>
+              <description>Адрес источника</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH2_LEN</name>
+          <description>Регистр размера передаваемых данных канала 2</description>
+          <addressOffset>0x18</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Data_Len</name>
+              <description>Количество байт пересылки. Расчитывается как Data_Len + 1</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH2_CFG</name>
+          <description>Регистр управления и конфигурации канала 2</description>
+          <addressOffset>0x1C</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Enable</name>
+              <description>Разрешение работы канала:
+              0b1 – инициализация работы канала;
+              0b0 – принудительная остановка</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Prior</name>
+              <description>Приоритет канала:
+              0b00 – низкий;
+              0b01 – средний;
+              0b10 – высокий;
+              0b11 – приоритетный (очень высокий)</description>
+              <bitRange>[2:1]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b11</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_mode</name>
+              <description>Режим адреса источника:
+              0b0 – периферия;
+              0b1 – память</description>
+              <bitRange>[3:3]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_mode</name>
+              <description>Режим адреса назначения:
+              0b0 – периферия;
+              0b1 – память</description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_incr</name>
+              <description>Инкремент адреса источника:
+              0b0 – нет инкремента;
+              0b1 – есть инкремент</description>
+              <bitRange>[5:5]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_incr</name>
+              <description>Инкремент адреса назначения:
+              0b0 – нет инкремента;
+              0b1 – есть инкремент</description>
+              <bitRange>[5:5]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_size</name>
+              <description>Разрядность адреса источника:
+              0b00 – байт;
+              0b01 – полуслово;
+              0b10 – слово;
+              0b11 - резерв
+              * должно быть кратно data_len</description>
+              <bitRange>[8:7]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b10</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_size</name>
+              <description>Разрядность адреса источника:
+              0b00 – байт;
+              0b01 – полуслово;
+              0b10 – слово;
+              0b11 - резерв
+              * должно быть кратно data_len</description>
+              <bitRange>[10:9]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b10</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_block_size</name>
+              <description>Количество байт в пакете
+              Определяется как 2^read_block_size
+              * должно быть кратно read_size</description>
+              <bitRange>[13:11]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b000</minimum>
+                  <maximum>0b111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_block_size</name>
+              <description>Количество байт в пакете
+              Определяется как 2^write_block_size
+              * должно быть кратно write_size</description>
+              <bitRange>[16:14]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b000</minimum>
+                  <maximum>0b111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_requets</name>
+              <description>Выбор периферийной линии источника</description>
+              <bitRange>[20:17]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0000</minimum>
+                  <maximum>0b1111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_requets</name>
+              <description>Выбор периферийной линии назначения</description>
+              <bitRange>[24:21]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0000</minimum>
+                  <maximum>0b1111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_ack_ena</name>
+              <description>Разрешение работы логики с откликом для адресата источника:
+              0 – запрещено;
+              1 – разрешено</description>
+              <bitRange>[25:25]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b01</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_ack_ena</name>
+              <description>Разрешение работы логики с откликом для адресата назначения:
+              0 – запрещено;
+              1 – разрешено</description>
+              <bitRange>[26:26]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b01</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Irq_ena</name>
+              <description>Разрешение формирования пре-рывания по завершении работы канала:
+              0 – прерывание не формируется;
+              1 – прерывание формируется</description>
+              <bitRange>[27:27]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH3_DST</name>
+          <description>Регистр адреса назначения канала 3</description>
+          <addressOffset>0x20</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Dst</name>
+              <description>Адрес назначения</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH3_SRC</name>
+          <description>Регистр адреса источника канала 3</description>
+          <addressOffset>0x24</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Src</name>
+              <description>Адрес источника</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH3_LEN</name>
+          <description>Регистр размера передаваемых данных канала 3</description>
+          <addressOffset>0x28</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Data_Len</name>
+              <description>Количество байт пересылки. Расчитывается как Data_Len + 1</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH3_CFG</name>
+          <description>Регистр управления и конфигурации канала 3</description>
+          <addressOffset>0x2C</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Enable</name>
+              <description>Разрешение работы канала:
+              0b1 – инициализация работы канала;
+              0b0 – принудительная остановка</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Prior</name>
+              <description>Приоритет канала:
+              0b00 – низкий;
+              0b01 – средний;
+              0b10 – высокий;
+              0b11 – приоритетный (очень высокий)</description>
+              <bitRange>[2:1]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b11</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_mode</name>
+              <description>Режим адреса источника:
+              0b0 – периферия;
+              0b1 – память</description>
+              <bitRange>[3:3]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_mode</name>
+              <description>Режим адреса назначения:
+              0b0 – периферия;
+              0b1 – память</description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_incr</name>
+              <description>Инкремент адреса источника:
+              0b0 – нет инкремента;
+              0b1 – есть инкремент</description>
+              <bitRange>[5:5]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_incr</name>
+              <description>Инкремент адреса назначения:
+              0b0 – нет инкремента;
+              0b1 – есть инкремент</description>
+              <bitRange>[5:5]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_size</name>
+              <description>Разрядность адреса источника:
+              0b00 – байт;
+              0b01 – полуслово;
+              0b10 – слово;
+              0b11 - резерв
+              * должно быть кратно data_len</description>
+              <bitRange>[8:7]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b10</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_size</name>
+              <description>Разрядность адреса источника:
+              0b00 – байт;
+              0b01 – полуслово;
+              0b10 – слово;
+              0b11 - резерв
+              * должно быть кратно data_len</description>
+              <bitRange>[10:9]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b10</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_block_size</name>
+              <description>Количество байт в пакете
+              Определяется как 2^read_block_size
+              * должно быть кратно read_size</description>
+              <bitRange>[13:11]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b000</minimum>
+                  <maximum>0b111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_block_size</name>
+              <description>Количество байт в пакете
+              Определяется как 2^write_block_size
+              * должно быть кратно write_size</description>
+              <bitRange>[16:14]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b000</minimum>
+                  <maximum>0b111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_requets</name>
+              <description>Выбор периферийной линии источника</description>
+              <bitRange>[20:17]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0000</minimum>
+                  <maximum>0b1111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_requets</name>
+              <description>Выбор периферийной линии назначения</description>
+              <bitRange>[24:21]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0000</minimum>
+                  <maximum>0b1111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_ack_ena</name>
+              <description>Разрешение работы логики с откликом для адресата источника:
+              0 – запрещено;
+              1 – разрешено</description>
+              <bitRange>[25:25]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b01</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_ack_ena</name>
+              <description>Разрешение работы логики с откликом для адресата назначения:
+              0 – запрещено;
+              1 – разрешено</description>
+              <bitRange>[26:26]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b01</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Irq_ena</name>
+              <description>Разрешение формирования пре-рывания по завершении работы канала:
+              0 – прерывание не формируется;
+              1 – прерывание формируется</description>
+              <bitRange>[27:27]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH4_DST</name>
+          <description>Регистр адреса назначения канала 4</description>
+          <addressOffset>0x30</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Dst</name>
+              <description>Адрес назначения</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH4_SRC</name>
+          <description>Регистр адреса источника канала 4</description>
+          <addressOffset>0x34</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Src</name>
+              <description>Адрес источника</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH4_LEN</name>
+          <description>Регистр размера передаваемых данных канала 4</description>
+          <addressOffset>0x38</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Data_Len</name>
+              <description>Количество байт пересылки. Расчитывается как Data_Len + 1</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>4294967295</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>CH4_CFG</name>
+          <description>Регистр управления и конфигурации канала 4</description>
+          <addressOffset>0x3C</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Enable</name>
+              <description>Разрешение работы канала:
+              0b1 – инициализация работы канала;
+              0b0 – принудительная остановка</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Prior</name>
+              <description>Приоритет канала:
+              0b00 – низкий;
+              0b01 – средний;
+              0b10 – высокий;
+              0b11 – приоритетный (очень высокий)</description>
+              <bitRange>[2:1]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b11</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_mode</name>
+              <description>Режим адреса источника:
+              0b0 – периферия;
+              0b1 – память</description>
+              <bitRange>[3:3]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_mode</name>
+              <description>Режим адреса назначения:
+              0b0 – периферия;
+              0b1 – память</description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_incr</name>
+              <description>Инкремент адреса источника:
+              0b0 – нет инкремента;
+              0b1 – есть инкремент</description>
+              <bitRange>[5:5]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_incr</name>
+              <description>Инкремент адреса назначения:
+              0b0 – нет инкремента;
+              0b1 – есть инкремент</description>
+              <bitRange>[5:5]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_size</name>
+              <description>Разрядность адреса источника:
+              0b00 – байт;
+              0b01 – полуслово;
+              0b10 – слово;
+              0b11 - резерв
+              * должно быть кратно data_len</description>
+              <bitRange>[8:7]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b10</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_size</name>
+              <description>Разрядность адреса источника:
+              0b00 – байт;
+              0b01 – полуслово;
+              0b10 – слово;
+              0b11 - резерв
+              * должно быть кратно data_len</description>
+              <bitRange>[10:9]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b10</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_block_size</name>
+              <description>Количество байт в пакете
+              Определяется как 2^read_block_size
+              * должно быть кратно read_size</description>
+              <bitRange>[13:11]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b000</minimum>
+                  <maximum>0b111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_block_size</name>
+              <description>Количество байт в пакете
+              Определяется как 2^write_block_size
+              * должно быть кратно write_size</description>
+              <bitRange>[16:14]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b000</minimum>
+                  <maximum>0b111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_requets</name>
+              <description>Выбор периферийной линии источника</description>
+              <bitRange>[20:17]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0000</minimum>
+                  <maximum>0b1111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_requets</name>
+              <description>Выбор периферийной линии назначения</description>
+              <bitRange>[24:21]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0000</minimum>
+                  <maximum>0b1111</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Read_ack_ena</name>
+              <description>Разрешение работы логики с откликом для адресата источника:
+              0 – запрещено;
+              1 – разрешено</description>
+              <bitRange>[25:25]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b01</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Write_ack_ena</name>
+              <description>Разрешение работы логики с откликом для адресата назначения:
+              0 – запрещено;
+              1 – разрешено</description>
+              <bitRange>[26:26]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b00</minimum>
+                  <maximum>0b01</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Irq_ena</name>
+              <description>Разрешение формирования пре-рывания по завершении работы канала:
+              0 – прерывание не формируется;
+              1 – прерывание формируется</description>
+              <bitRange>[27:27]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+
+        <register>
+          <name>DMA_CNTR</name>
+          <description>Регистр прерываний и настройки контроллера</description>
+          <addressOffset>0x40</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Clear_Local_Irq</name>
+              <description>Очистка локального прерывания:
+              0b1 – снятие запроса на прерывание</description>
+              <bitRange>[3:0]</bitRange>
+              <access>write-only</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Clear_Global_Irq</name>
+              <description>Очистка глобального прерывания:
+              0b1 – снятие запроса на прерывание</description>
+              <bitRange>[4:4]</bitRange>
+              <access>write-only</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Clear_Error_Irq</name>
+              <description>Очистка прерывания ошибки:
+              0b1 – снятие запроса на прерывание</description>
+              <bitRange>[5:5]</bitRange>
+              <access>write-only</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Global_Irq_Ena</name>
+              <description>Разрешение формирования глобального прерывания:
+              0b1 – разрешено;
+              0b0 – запрещено</description>
+              <bitRange>[6:6]</bitRange>
+              <access>write-only</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Error_Irq_Ena</name>
+              <description>Разрешение формирования прерывания при ошибке:
+              0b1 - разрешено;
+              0b0 - запрещено</description>
+              <bitRange>[7:7]</bitRange>
+              <access>write-only</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Current_Value</name>
+              <description>Разрешение чтения текущего статуса канала:
+              0b0 – разрешено (значения при настройке);
+              0b1 – запрещено (текущие значения)</description>
+              <bitRange>[8:8]</bitRange>
+              <access>write-only</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0b0</minimum>
+                  <maximum>0b1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+
+            <field>
+              <name>Channel_Ready</name>
+              <description>Статус состояния каналов:
+              0b1 - готов к работе;
+              0b0 - занят</description>
+              <bitRange>[3:0]</bitRange>
+              <access>read-only</access>
+            </field>
+
+            <field>
+              <name>Channel_Irq</name>
+              <description>Статус прерываний:
+              0b1 - есть прерывания;
+              0b0 - нет прерываний</description>
+              <bitRange>[7:4]</bitRange>
+              <access>read-only</access>
+            </field>
+
+            <field>
+              <name>Channel_Bus_Error</name>
+              <description>Статус состояния каналов при ошибках на шине:
+              0b1 - есть ошибка;
+              0b0 - нет ошибки</description>
+              <bitRange>[11:8]</bitRange>
+              <access>read-only</access>
+            </field>
+
+            <!-- бит не реализован
+            <field>
+              <name>Channel_Current_Value</name>
+              <description>Статус чтения состояния каналов:
+              0b0 - текущие значения;
+              0b1 - значения при настройке</description>
+              <bitRange>[12:12]</bitRange>
+              <access>read-only</access>
+            </field> -->
+
+          </fields>
+        </register>
+
+      </registers>
+    </peripheral>
+
+    <!-- RTC -->
+    <peripheral>
+      <name>RTC</name>
+      <description>Часы реального времени</description>
+      <baseAddress>0x00006400</baseAddress>
+      <addressBlock>
+        <offset>0</offset>
+        <size>0x60</size>
+        <usage>registers</usage>
+      </addressBlock>
+
+      <registers>
+        <!-- RRTC_TIME -->
+        <register>
+          <name>RRTC_TIME</name>
+          <description>Регистр установки времени. Используется BCD-кодировка</description>
+          <addressOffset>0x00</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
 
           <fields>
             <field>
-              <name>STATE_[%s]</name>
-              <description>Port [%s] set/state register
-Reading output current pins state.
-Writing set 1 to corresponding pins.
-1: set 1 to corresponding pin</description>
-              <bitRange>[0:0]</bitRange>
+              <name>S</name>
+              <description>Поле единиц секунд. Допустимые значения от 0 до 9</description>
+              <bitRange>[7:4]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>9</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>TS</name>
+              <description>Поле десятков секунд. Допустимые значения от 0 до 5</description>
+              <bitRange>[10:8]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>5</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>M</name>
+              <description>Поле единиц минут. Допустимые значения от 0 до 9</description>
+              <bitRange>[14:11]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>9</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>M</name>
+              <description>Поле десятков минут. Допустимые значения от 0 до 5</description>
+              <bitRange>[17:15]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>5</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>H</name>
+              <description>Поле единиц часов. Допустимые значения:
+                - TH = 0 - От 0 до 9;
+                - TH = 2 - От 0 до 3 </description>
+              <bitRange>[21:18]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>9</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>TH</name>
+              <description>Поле десятков часов. Доступные значения от 0 до 2</description>
+              <bitRange>[23:22]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>2</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>DOW</name>
+              <description>День недели
+              </description>
+              <bitRange>[23:22]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <name>DayOfWeek</name>
+                <usage>read-write</usage>
+                <enumeratedValue>
+                  <name>Monday</name>
+                  <description>Понедельник</description>
+                  <value>001</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Tuesday</name>
+                  <description>Вторник</description>
+                  <value>010</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Wednesday</name>
+                  <description>Среда</description>
+                  <value>011</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Thursday</name>
+                  <description>Четверг</description>
+                  <value>100</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Friday</name>
+                  <description>Пятница</description>
+                  <value>101</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Saturday</name>
+                  <description>Суббота</description>
+                  <value>110</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Sunday</name>
+                  <description>Воскресенье</description>
+                  <value>111</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>RRTC_DATE</name>
+          <description>Регистр установки даты. Используется BCD-кодировка</description>
+          <addressOffset>0x04</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+
+          <fields>
+            <field>
+              <name>D</name>
+              <description>Поле единиц дней. Допустимые
+                значения:
+                - TD = 2 - от 0 до 3;
+                - TD = 3 - от 0 до 1
+              </description>
+              <bitRange>[3:0]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>3</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>TD</name>
+              <description>Поле десятков дней. Допустимые
+                значения:
+                - {TM,M} != 03 - от 0 до 3;
+                - {TM,M} == 03 - от 0 до 2
+              </description>
+              <bitRange>[5:4]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>3</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>M</name>
+              <description>Поле единиц месяцев. Допустимые значения:
+                - TM = 0 - от 0 до 9;
+                - TM = 1 - от 0 до 2
+              </description>
+              <bitRange>[9:6]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>9</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>TM</name>
+              <description>Поле десятков месяцев. Допустимые значения от 0 до 1
+              </description>
+              <bitRange>[10:10]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>1</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>Y</name>
+              <description>Поле единиц годов. Допустимые значения от 0 до 9
+              </description>
+              <bitRange>[14:11]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>9</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>TY</name>
+              <description>Поле десятков годов. Допустимые значения от 0 до 9
+              </description>
+              <bitRange>[18:15]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>9</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>C</name>
+              <description>Поле единиц веков. Допустимые значения от 0 до 9
+              </description>
+              <bitRange>[22:19]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>9</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+            <field>
+              <name>TC</name>
+              <description>Поле десятков веков. Допустимые значения от 0 до 9
+              </description>
+              <bitRange>[26:13]</bitRange>
+              <access>read-write</access>
+              <writeConstraint>
+                <range>
+                  <minimum>0</minimum>
+                  <maximum>9</maximum>
+                </range>
+              </writeConstraint>
+            </field>
+          </fields>
+        </register>
+        <register derivedFrom="RRTC_TIME">
+          <name>RRTC_TALRM</name>
+          <description>регистр хранит время, при совпадении которого со значением
+            регистра RRTC_TIME, будет сгенерировано соответствующее прерывание
+          </description>
+          <addressOffset>0x08</addressOffset>
+          <fields>
+            <field>
+              <name>CS</name>
+              <description>Разрешает сравнения секунд, когда установлен
+              </description>
+              <bitRange>[28:28]</bitRange>
               <access>read-write</access>
               <enumeratedValues>
                 <enumeratedValue>
-                  <name>Disable</name>
-                  <description>GPIO Logic Low Level</description>
+                  <name>disabled</name>
+                  <description>Сравнение секунд отключено</description>
                   <value>0</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>Enable</name>
-                  <description>GPIO Logic High Level</description>
+                  <name>enable</name>
+                  <description>Сравнение секунд включено</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>CM</name>
+              <description>Разрешает сравнения минут, когда установлен
+              </description>
+              <bitRange>[29:29]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>disabled</name>
+                  <description>Сравнение минут отключено</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>enable</name>
+                  <description>Сравнение минут включено</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>CH</name>
+              <description>Разрешает сравнения часов, когда установлен
+              </description>
+              <bitRange>[30:30]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>disabled</name>
+                  <description>Сравнение часов отключено</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>enable</name>
+                  <description>Сравнение часов включено</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>CDOW</name>
+              <description>Разрешает сравнения дней недели, когда установлен
+              </description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>disabled</name>
+                  <description>Сравнение дней недели отключено</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>enable</name>
+                  <description>Сравнение дней недели включено</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register derivedFrom="RRTC_DATE">
+          <name>RRTC_DALRM</name>
+          <description>регистр хранит время, при совпадении которого со значением
+            регистра RRTC_TIME, будет сгенерировано соответствующее прерывание.
+          </description>
+          <addressOffset>0x0C</addressOffset>
+          <fields>
+            <field>
+              <name>CD</name>
+              <description>Разрешает сравнения дней, когда установлен
+              </description>
+              <bitRange>[27:27]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>disabled</name>
+                  <description>Сравнение дней отключено</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>enable</name>
+                  <description>Сравнение дней включено</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>CM</name>
+              <description>Разрешает сравнения месяцев, когда установлен
+              </description>
+              <bitRange>[28:28]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>disabled</name>
+                  <description>Сравнение месяцев отключено</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>enable</name>
+                  <description>Сравнение месяцев включено</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>CY</name>
+              <description>Разрешает сравнения годов, когда установлен
+              </description>
+              <bitRange>[29:29]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>disabled</name>
+                  <description>Сравнение годов отключено</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>enable</name>
+                  <description>Сравнение годов включено</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>CC</name>
+              <description>Рразрешает сравнения веков, когда установлен
+              </description>
+              <bitRange>[30:30]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>disabled</name>
+                  <description>Сравнение веков отключено</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>enable</name>
+                  <description>Сравнение веков включено</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>RRTC_CTRL</name>
+          <description>регистр управления модулем
+          </description>
+          <addressOffset>0x10</addressOffset>
+          <resetValue>0x00000000</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>FLAG</name>
+              <description>Сигнал проведения синхронизации
+                между тактовыми доменами. После записи в любой регистр и пока
+                данный бит читается равным «1», запрещено выполнять любую новую запись
+              </description>
+              <bitRange>[28:28]</bitRange>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>flagReady</name>
+                  <description>Запись в регистры разрешена</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>flagSync</name>
+                  <description>Выполняется синхронизация, запись в регистры запрещена</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>INTE</name>
+              <description>Бит разрешения прерывания на
+                выходах irq и irq_async. Прерывания появляются при наличии установленного бита ALRM
+              </description>
+              <bitRange>[29:29]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>irqDisabled</name>
+                  <description>Прерывания блока запрещены</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>irqEnable</name>
+                  <description>Прерывания блока разрешены</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>ALRM</name>
+              <description>Установленный бит свидетельствует о совпадении одного разрешенного или
+                всех разрешённых
+                полей будильника. Бит необходимо сбрасывать при помощи управляющего ПО
+              </description>
+              <bitRange>[30:30]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>alrmInactive</name>
+                  <description>Будильник не сработал</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>alrmActive</name>
+                  <description>Будильник сработал</description>
+                  <value>1</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EN</name>
+              <description>Модуль включён и производит отсчёт времени, когда установлен
+              </description>
+              <bitRange>[31:31]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>disabled</name>
+                  <description>Модуль отключен</description>
+                  <value>0</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>enable</name>
+                  <description>Модуль включен</description>
                   <value>1</value>
                 </enumeratedValue>
               </enumeratedValues>

@@ -23,6 +23,7 @@
     "onboard_tools": [
       "ftdi"
     ],
+    "svd_path": "mcu32.svd",
     "speed": "500"
   },
   "frameworks": [
