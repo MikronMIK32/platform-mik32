@@ -27,6 +27,7 @@ env.AppendUnique(
         "-Wall",
         "-fsigned-char",
         "-ffunction-sections",
+        "-fshort-enums",
     ],
 
     CFLAGS = [
