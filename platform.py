@@ -16,7 +16,7 @@ import copy
 import os
 import ctypes
 
-from platformio.managers.platform import PlatformBase
+from platformio.public import PlatformBase
 from platformio.util import get_systype
 # from SCons.Script import DefaultEnvironment
 
@@ -84,16 +84,6 @@ class Mik32Platform(PlatformBase):
         server_args.extend(["-f", "include_eeprom.tcl"])
 
         
-
-        # print(env.GetProjectOption("debug_tool"))
-        # ctypes.windll.user32.MessageBoxA(0, board.id, "Your title", 1)
-        # elif board.id == "e310-arty":
-        #     server_args.extend([
-        #         "-f", os.path.join("interface", "ftdi", "%s.cfg" % (
-        #             "arty-onboard-ftdi" if tool == "ftdi" else tool)),
-        #         "-f", os.path.join(
-        #             sdk_dir or "", "bsp", "freedom-e310-arty", "openocd.cfg")
-        #     ])
         debug["tools"][tool] = {
             "server": {
                 "package": "tool-openocd-riscv",
