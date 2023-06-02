@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from utils import get_memory_type, MemoryType
 from os.path import join
 
 from SCons.Script import (ARGUMENTS, COMMAND_LINE_TARGETS, AlwaysBuild,
@@ -112,45 +113,63 @@ debug_tools = board.get("debug.tools", {})
 upload_actions = []
 upload_target = target_hex
 
-uploader = "openocd"
-tool_args = [
-    "-c",
-    "debug_level %d" % (2 if int(ARGUMENTS.get("PIOVERBOSE", 2)) else 1),
-    # "-s", platform.get_package_dir("tool-openocd-riscv") or ""
-]
-
-tool_args.extend(
-    debug_tools.get(upload_protocol).get("server").get("arguments", []))
-
-# if env.GetProjectOption("debug_speed"):
-#     tool_args.extend(
-#         ["-c", "adapter_khz %s" % env.GetProjectOption("debug_speed")]
-#     )
-
-from utils import get_memory_type, MemoryType
-
-hex_path = target_hex[0].rstr().replace('\\', '/')
-command = ("eeprom_write_file \\\"%s\\\"" % hex_path) \
-    if get_memory_type() == MemoryType.EEPROM \
-    else "load_image \\\"%s\\\" %s ihex" % (hex_path, board.get(
-        "upload.image_offset", "0x0"))
-tool_args.extend(
-    [
-        "-c", "reset halt",
-        "-c", command,
-        "-c", "resume %s" % board.get(
-            "upload").get("image_offset", "0x0"),
-        "-c", "shutdown"
+if upload_protocol == "ftdi":
+    uploader = "openocd"
+    tool_args = [
+        "-c",
+        "debug_level %d" % (2 if int(ARGUMENTS.get("PIOVERBOSE", 2)) else 1),
+        # "-s", platform.get_package_dir("tool-openocd-riscv") or ""
     ]
-)
 
-env.Replace(
-    UPLOADER=uploader,
-    UPLOADERFLAGS=tool_args,
-    UPLOADCMD="$UPLOADER $UPLOADERFLAGS"
-)
+    tool_args.extend(
+        debug_tools.get(upload_protocol).get("server").get("arguments", []))
 
-upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+    # if env.GetProjectOption("debug_speed"):
+    #     tool_args.extend(
+    #         ["-c", "adapter_khz %s" % env.GetProjectOption("debug_speed")]
+    #     )
+
+    hex_path = target_hex[0].rstr().replace('\\', '/')
+    command = ("eeprom_write_file \\\"%s\\\"" % hex_path) \
+        if get_memory_type() == MemoryType.EEPROM \
+        else "load_image \\\"%s\\\" %s ihex" % (hex_path, board.get(
+            "upload.image_offset", "0x0"))
+    tool_args.extend(
+        [
+            "-c", "reset halt",
+            "-c", command,
+            "-c", "resume %s" % board.get(
+                "upload").get("image_offset", "0x0"),
+            "-c", "shutdown"
+        ]
+    )
+
+    env.Replace(
+        UPLOADER=uploader,
+        UPLOADERFLAGS=tool_args,
+        UPLOADCMD="$UPLOADER $UPLOADERFLAGS"
+    )
+
+    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+
+elif upload_protocol == "mik32-uploader":
+    hex_path = target_hex[0].rstr().replace('\\', '/')
+    openocd_path = join(platform.get_package_dir("tool-openocd-esp32") or "", "bin", "openocd.exe")
+
+    sdk_dir = platform.get_package_dir('framework-mik32v0-sdk')
+    openocd_scripts = join(sdk_dir, 'openocd/share/openocd/scripts/')
+
+    # speed = env.GetProjectOption("debug_speed", 500)
+
+    env.Replace(
+        UPLOADER=join(
+            platform.get_package_dir("tool-mik32-uploader") or "", "mik32_upload.py"),
+        UPLOADERFLAGS=["\"%s\"" % hex_path, "--openocd-scripts=\"%s\"" % openocd_scripts, "--openocd-exec=\"%s\"" % openocd_path, "--run-openocd"],
+        UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
+    )
+
+    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+
 
 AlwaysBuild(env.Alias("upload", upload_target, upload_actions))
 

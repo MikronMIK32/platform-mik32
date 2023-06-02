@@ -35,11 +35,16 @@
         "owner": "platformio",
         "version": "~1.80300.0"
       },
-      "tool-openocd-riscv": {
+      "tool-openocd-esp32": {
         "optional": true,
         "type": "uploader",
         "owner": "platformio",
-        "version": "~2.1000.0"
+        "version": "^2.1200"
+      },
+      "tool-mik32-uploader": {
+        "type": "uploader",
+        "owner": "platformio",
+        "version": "^0.1.0"
       }
     }
   }

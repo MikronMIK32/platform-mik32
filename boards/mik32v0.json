@@ -32,9 +32,10 @@
   "upload": {
     "maximum_ram_size": 16384,
     "maximum_size": 8192,
-    "protocol": "ftdi",
+    "protocol": "mik32-uploader",
     "protocols": [
-      "ftdi"
+      "ftdi",
+      "mik32-uploader"
     ]
   }
 }
