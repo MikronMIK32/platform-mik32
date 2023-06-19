@@ -108,70 +108,79 @@ AlwaysBuild(target_size)
 # Target: Upload by default .bin file
 #
 
-upload_protocol = env.subst("$UPLOAD_PROTOCOL")
 debug_tools = board.get("debug.tools", {})
+
+openocd_dir = platform.get_package_dir("tool-openocd-esp32")
+sdk_dir = platform.get_package_dir('framework-mik32v0-sdk')
+
+upload_protocol = env.subst("$UPLOAD_PROTOCOL")
 upload_actions = []
 upload_target = target_hex
+upload_speed = env.GetProjectOption("upload_speed", 500)
 
-if upload_protocol == "ftdi":
-    uploader = "openocd"
-    tool_args = [
-        "-c",
-        "debug_level %d" % (2 if int(ARGUMENTS.get("PIOVERBOSE", 2)) else 1),
-        # "-s", platform.get_package_dir("tool-openocd-riscv") or ""
-    ]
+hex_path = target_hex[0].rstr().replace('\\', '/')
 
-    tool_args.extend(
-        debug_tools.get(upload_protocol).get("server").get("arguments", []))
+openocd_path = join(openocd_dir or "", "bin", "openocd.exe")
+openocd_scripts = join(openocd_dir, 'share/openocd/scripts/')
+openocd_target = join(
+    sdk_dir, "openocd/share/openocd/scripts/target/mik32.cfg")
 
-    # if env.GetProjectOption("debug_speed"):
-    #     tool_args.extend(
-    #         ["-c", "adapter_khz %s" % env.GetProjectOption("debug_speed")]
-    #     )
+mik32_uploader_path = join(
+    platform.get_package_dir("tool-mik32-uploader") or "", "mik32_upload.py")
 
-    hex_path = target_hex[0].rstr().replace('\\', '/')
-    command = ("eeprom_write_file \\\"%s\\\"" % hex_path) \
-        if get_memory_type() == MemoryType.EEPROM \
-        else "load_image \\\"%s\\\" %s ihex" % (hex_path, board.get(
-            "upload.image_offset", "0x0"))
-    tool_args.extend(
-        [
-            "-c", "reset halt",
-            "-c", command,
-            "-c", "resume %s" % board.get(
-                "upload").get("image_offset", "0x0"),
-            "-c", "shutdown"
-        ]
-    )
+mik32_uploader_args = [
+    "\"%s\"" % hex_path, "--openocd-exec=\"%s\"" % openocd_path, "--run-openocd",
+    "--adapter-speed=%s" % upload_speed,
+    "--openocd-scripts=\"%s\"" % openocd_scripts,
+    "--openocd-target=%s" % openocd_target,
+]
 
+openocd_official_interfaces = [
+    "jlink",
+]
+
+openocd_official_ftdi_interfaces = [
+    "olimex-arm-usb-ocd",
+    "olimex-arm-usb-ocd-h",
+    "olimex-arm-usb-tiny-h",
+    "olimex-jtag-tiny",
+]
+
+if upload_protocol == "m-link":
     env.Replace(
-        UPLOADER=uploader,
-        UPLOADERFLAGS=tool_args,
-        UPLOADCMD="$UPLOADER $UPLOADERFLAGS"
-    )
-
-    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
-
-elif upload_protocol == "mik32-uploader":
-    hex_path = target_hex[0].rstr().replace('\\', '/')
-    openocd_path = join(platform.get_package_dir(
-        "tool-openocd-esp32") or "", "bin", "openocd.exe")
-
-    sdk_dir = platform.get_package_dir('framework-mik32v0-sdk')
-    openocd_scripts = join(sdk_dir, 'openocd/share/openocd/scripts/')
-
-    # speed = env.GetProjectOption("debug_speed", 500)
-
-    env.Replace(
-        UPLOADER=join(
-            platform.get_package_dir("tool-mik32-uploader") or "", "mik32_upload.py"),
-        UPLOADERFLAGS=["\"%s\"" % hex_path, "--openocd-scripts=\"%s\"" % openocd_scripts,
-                       "--openocd-exec=\"%s\"" % openocd_path, "--run-openocd", "--adapter-speed=%s" % env.GetProjectOption("upload_speed", 500)],
+        UPLOADER=mik32_uploader_path,
+        UPLOADERFLAGS=[
+            *mik32_uploader_args,
+            "--openocd-interface=%s" % join(sdk_dir,
+                                            "openocd/share/openocd/scripts/interface/ftdi/m-link.cfg"),
+        ],
         UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
     )
-
     upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
 
+elif upload_protocol in openocd_official_interfaces:
+    env.Replace(
+        UPLOADER=mik32_uploader_path,
+        UPLOADERFLAGS=[
+            *mik32_uploader_args,
+            "--openocd-interface=%s" % join(openocd_scripts,
+                                            "interface/%s.cfg" % upload_protocol),
+        ],
+        UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
+    )
+    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+
+elif upload_protocol in openocd_official_ftdi_interfaces:
+    env.Replace(
+        UPLOADER=mik32_uploader_path,
+        UPLOADERFLAGS=[
+            *mik32_uploader_args,
+            "--openocd-interface=%s" % join(openocd_scripts,
+                                            "interface/ftdi/%s.cfg" % upload_protocol),
+        ],
+        UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
+    )
+    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
 
 AlwaysBuild(env.Alias("upload", upload_target, upload_actions))
 

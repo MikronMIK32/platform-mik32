@@ -32,10 +32,14 @@
   "upload": {
     "maximum_ram_size": 16384,
     "maximum_size": 8192,
-    "protocol": "mik32-uploader",
+    "protocol": "m-link",
     "protocols": [
-      "ftdi",
-      "mik32-uploader"
+      "m-link",
+      "jlink",
+      "olimex-arm-usb-ocd",
+      "olimex-arm-usb-ocd-h",
+      "olimex-arm-usb-tiny-h",
+      "olimex-jtag-tiny"
     ]
   }
 }

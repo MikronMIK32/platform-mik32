@@ -31,9 +31,14 @@
   "upload": {
     "maximum_ram_size": 16384,
     "maximum_size": 8192,
-    "protocol": "ftdi",
+    "protocol": "m-link",
     "protocols": [
-      "ftdi"
+      "m-link",
+      "jlink",
+      "olimex-arm-usb-ocd",
+      "olimex-arm-usb-ocd-h",
+      "olimex-arm-usb-tiny-h",
+      "olimex-jtag-tiny"
     ]
   }
 }
