@@ -154,7 +154,8 @@ if upload_protocol == "ftdi":
 
 elif upload_protocol == "mik32-uploader":
     hex_path = target_hex[0].rstr().replace('\\', '/')
-    openocd_path = join(platform.get_package_dir("tool-openocd-esp32") or "", "bin", "openocd.exe")
+    openocd_path = join(platform.get_package_dir(
+        "tool-openocd-esp32") or "", "bin", "openocd.exe")
 
     sdk_dir = platform.get_package_dir('framework-mik32v0-sdk')
     openocd_scripts = join(sdk_dir, 'openocd/share/openocd/scripts/')
@@ -164,7 +165,8 @@ elif upload_protocol == "mik32-uploader":
     env.Replace(
         UPLOADER=join(
             platform.get_package_dir("tool-mik32-uploader") or "", "mik32_upload.py"),
-        UPLOADERFLAGS=["\"%s\"" % hex_path, "--openocd-scripts=\"%s\"" % openocd_scripts, "--openocd-exec=\"%s\"" % openocd_path, "--run-openocd"],
+        UPLOADERFLAGS=["\"%s\"" % hex_path, "--openocd-scripts=\"%s\"" % openocd_scripts,
+                       "--openocd-exec=\"%s\"" % openocd_path, "--run-openocd", "--adapter-speed=%s" % env.GetProjectOption("upload_speed")],
         UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
     )
 
