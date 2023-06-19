@@ -182,6 +182,9 @@ elif upload_protocol in openocd_official_ftdi_interfaces:
     )
     upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
 
+else:
+    print("Upload protocol %s not supported" % upload_protocol)
+
 AlwaysBuild(env.Alias("upload", upload_target, upload_actions))
 
 #
