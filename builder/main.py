@@ -117,6 +117,8 @@ upload_protocol = env.subst("$UPLOAD_PROTOCOL")
 upload_actions = []
 upload_target = target_hex
 upload_speed = env.GetProjectOption("upload_speed", 500)
+upload_command = env.GetProjectOption("upload_command", "")
+upload_flags = env.GetProjectOption("upload_flags", [])
 
 hex_path = target_hex[0].rstr().replace('\\', '/')
 
@@ -180,6 +182,15 @@ elif upload_protocol in openocd_official_ftdi_interfaces:
         ],
         UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
     )
+    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+
+elif upload_protocol == "custom":
+    env.Replace(
+        UPLOADER=upload_command,
+        UPLOADERFLAGS=upload_flags,
+        UPLOADCMD="%s" % (upload_command),
+    )
+    # print("%s %s" % (upload_command, *upload_flags))
     upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
 
 else:
