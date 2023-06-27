@@ -92,7 +92,8 @@ class Mik32Platform(PlatformBase):
             },
             "adapter_speed": debug.get("adapter_speed", "500"),
             "onboard": tool in debug.get("onboard_tools", []),
-            "init_cmds": debug.get("init_cmds", None)
+            "init_cmds": debug.get("init_cmds", None),
+            "extra_cmds": debug.get("extra_cmds", None)
         }
 
         board.manifest["debug"] = debug

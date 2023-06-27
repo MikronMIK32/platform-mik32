@@ -23,7 +23,14 @@
     "onboard_tools": [
       "ftdi"
     ],
-    "speed": "500"
+    "speed": "500",
+    "extra_cmds": [
+      "mem 0x1000000 0x1002000 ro",
+      "mem 0x80000000 0xffffffff ro",
+      "set arch riscv:rv32",
+      "set remotetimeout 10",
+      "set remote hardware-breakpoint-limit 2"
+    ]
   },
   "frameworks": [
     "framework-mik32v0-sdk"
