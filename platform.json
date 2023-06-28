@@ -36,7 +36,6 @@
         "version": "~1.80300.0"
       },
       "tool-openocd": {
-        "optional": true,
         "type": "uploader",
         "owner": "platformio",
         "version": "^3.1200.0"
