@@ -35,11 +35,11 @@
         "owner": "platformio",
         "version": "~1.80300.0"
       },
-      "tool-openocd-esp32": {
+      "tool-openocd": {
         "optional": true,
         "type": "uploader",
         "owner": "platformio",
-        "version": "^2.1200"
+        "version": "^3.1200.0"
       },
       "tool-mik32-uploader": {
         "type": "uploader",

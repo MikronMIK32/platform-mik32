@@ -110,7 +110,7 @@ AlwaysBuild(target_size)
 
 debug_tools = board.get("debug.tools", {})
 
-openocd_dir = platform.get_package_dir("tool-openocd-esp32")
+openocd_dir = platform.get_package_dir("tool-openocd")
 sdk_dir = platform.get_package_dir('framework-mik32v0-sdk')
 
 upload_protocol = env.subst("$UPLOAD_PROTOCOL")
@@ -123,7 +123,7 @@ upload_flags = env.GetProjectOption("upload_flags", [])
 hex_path = target_hex[0].rstr().replace('\\', '/')
 
 openocd_path = join(openocd_dir or "", "bin", "openocd.exe")
-openocd_scripts = join(openocd_dir, 'share/openocd/scripts/')
+openocd_scripts = join(openocd_dir, 'openocd/scripts/')
 openocd_target = join(
     sdk_dir, "openocd/share/openocd/scripts/target/mik32.cfg")
 
@@ -139,6 +139,7 @@ mik32_uploader_args = [
 
 openocd_official_interfaces = [
     "jlink",
+    "altera-usb-blaster",
 ]
 
 openocd_official_ftdi_interfaces = [

@@ -86,7 +86,7 @@ class Mik32Platform(PlatformBase):
         
         debug["tools"][tool] = {
             "server": {
-                "package": "tool-openocd-esp32",
+                "package": "tool-openocd",
                 "executable": "bin/openocd",
                 "arguments": server_args
             },
