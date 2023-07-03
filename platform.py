@@ -24,16 +24,16 @@ from platformio.util import get_systype
 
 class Mik32Platform(PlatformBase):
 
-    def configure_default_packages(self, variables, targets):
-        upload_protocol = variables.get(
-            "upload_protocol",
-            self.board_config(variables.get("board")).get(
-                "upload.protocol", ""))
+    # def configure_default_packages(self, variables, targets):
+    #     upload_protocol = variables.get(
+    #         "upload_protocol",
+    #         self.board_config(variables.get("board")).get(
+    #             "upload.protocol", ""))
 
-        if upload_protocol == "renode" and "debug" not in targets:
-            self.packages["tool-renode"]["type"] = "uploader"
+    #     if upload_protocol == "renode" and "debug" not in targets:
+    #         self.packages["tool-renode"]["type"] = "uploader"
 
-        return PlatformBase.configure_default_packages(self, variables, targets)
+    #     return PlatformBase.configure_default_packages(self, variables, targets)
 
     def get_boards(self, id_=None):
         result = PlatformBase.get_boards(self, id_)
@@ -71,8 +71,8 @@ class Mik32Platform(PlatformBase):
         else:
             print('ERROR! No interface cfg file found for interface', debug.get("interface"), interface_cfg)
 
-        adapter_khz = debug.get("adapter_speed", "500")
-        server_args.extend(["-c", "adapter_khz %s" % adapter_khz])
+        # adapter_khz = debug.get("adapter_speed", "500")
+        # server_args.extend(["-c", "adapter_khz %s" % adapter_khz])
 
         board_cfg = os.path.join('target', 'mik32.cfg')
 
@@ -98,3 +98,18 @@ class Mik32Platform(PlatformBase):
 
         board.manifest["debug"] = debug
         return board
+
+    def configure_debug_session(self, debug_config):
+
+        print("configure_debug_session")
+
+        if "openocd" in (debug_config.server or {}).get("executable", ""):
+            print("if openocd is available")
+
+            debug_config.server["arguments"].extend(
+                ["-c", "adapter speed %s" % (debug_config.speed or "500")]
+            )
+
+        pass
+
+    pass
