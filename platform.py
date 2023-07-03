@@ -24,17 +24,6 @@ from platformio.util import get_systype
 
 class Mik32Platform(PlatformBase):
 
-    # def configure_default_packages(self, variables, targets):
-    #     upload_protocol = variables.get(
-    #         "upload_protocol",
-    #         self.board_config(variables.get("board")).get(
-    #             "upload.protocol", ""))
-
-    #     if upload_protocol == "renode" and "debug" not in targets:
-    #         self.packages["tool-renode"]["type"] = "uploader"
-
-    #     return PlatformBase.configure_default_packages(self, variables, targets)
-
     def get_boards(self, id_=None):
         result = PlatformBase.get_boards(self, id_)
         if not result:
@@ -71,18 +60,12 @@ class Mik32Platform(PlatformBase):
         else:
             print('ERROR! No interface cfg file found for interface', debug.get("interface"), interface_cfg)
 
-        # adapter_khz = debug.get("adapter_speed", "500")
-        # server_args.extend(["-c", "adapter_khz %s" % adapter_khz])
-
         board_cfg = os.path.join('target', 'mik32.cfg')
 
         if os.path.isfile(os.path.join(openocd_scripts, board_cfg)):
             server_args.extend(["-f", board_cfg])
         else:
             print('ERROR! No board cfg file found for', board.id, 'at path', board_cfg)
-
-        server_args.extend(["-f", "include_eeprom.tcl"])
-
         
         debug["tools"][tool] = {
             "server": {
@@ -93,18 +76,41 @@ class Mik32Platform(PlatformBase):
             "adapter_speed": debug.get("adapter_speed", "500"),
             "onboard": tool in debug.get("onboard_tools", []),
             "init_cmds": debug.get("init_cmds", None),
-            "extra_cmds": debug.get("extra_cmds", None)
+            "extra_cmds": debug.get("extra_cmds", None),
+            "load_cmds": debug.get("load_cmds", "preload"),
+            "load_mode": debug.get("load_mode", "modified"),
         }
 
         board.manifest["debug"] = debug
         return board
 
     def configure_debug_session(self, debug_config):
-
-        print("configure_debug_session")
+        print(dir(debug_config))
 
         if "openocd" in (debug_config.server or {}).get("executable", ""):
-            print("if openocd is available")
+
+            sdk_dir = self.get_package_dir('framework-mik32v0-sdk')
+            openocd_scripts = os.path.join(sdk_dir, 'openocd/share/openocd/scripts/')
+            server_args = [
+                "-s", "%s" % openocd_scripts
+            ]
+
+            interface = debug_config.upload_protocol or "m-link"
+            interface_cfg = os.path.join('interface', 'ftdi', interface + '.cfg')
+
+            if os.path.isfile(os.path.join(openocd_scripts, interface_cfg)):
+                server_args.extend(['-f', interface_cfg])
+            else:
+                print('ERROR! No interface cfg file found for interface', interface, interface_cfg)
+            
+            board_cfg = os.path.join('target', 'mik32.cfg')
+
+            if os.path.isfile(os.path.join(openocd_scripts, board_cfg)):
+                server_args.extend(["-f", board_cfg])
+            # else:
+            #     print('ERROR! No board cfg file found for', board.id, 'at path', board_cfg)
+
+            debug_config.server["arguments"] = server_args
 
             debug_config.server["arguments"].extend(
                 ["-c", "adapter speed %s" % (debug_config.speed or "500")]

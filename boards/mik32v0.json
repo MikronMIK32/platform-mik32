@@ -47,6 +47,8 @@
       "olimex-arm-usb-ocd-h",
       "olimex-arm-usb-tiny-h",
       "olimex-jtag-tiny",
+      "sipeed-rv-debugger",
+      "altera-usb-blaster",
       "custom"
     ]
   }

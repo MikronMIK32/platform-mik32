@@ -161,6 +161,18 @@ if upload_protocol == "m-link":
     )
     upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
 
+if upload_protocol == "sipeed-rv-debugger":
+    env.Replace(
+        UPLOADER=mik32_uploader_path,
+        UPLOADERFLAGS=[
+            *mik32_uploader_args,
+            "--openocd-interface=%s" % join(sdk_dir,
+                                            "openocd/share/openocd/scripts/interface/ftdi/sipeed-rv-debugger.cfg"),
+        ],
+        UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
+    )
+    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+
 elif upload_protocol in openocd_official_interfaces:
     env.Replace(
         UPLOADER=mik32_uploader_path,
