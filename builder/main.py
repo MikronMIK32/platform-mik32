@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from utils import get_memory_type, MemoryType
 from os.path import join
 
 from SCons.Script import (ARGUMENTS, COMMAND_LINE_TARGETS, AlwaysBuild,
@@ -149,49 +148,25 @@ openocd_official_ftdi_interfaces = [
     "olimex-jtag-tiny",
 ]
 
-if upload_protocol == "m-link":
-    env.Replace(
-        UPLOADER=mik32_uploader_path,
-        UPLOADERFLAGS=[
-            *mik32_uploader_args,
-            "--openocd-interface=%s" % join(sdk_dir,
-                                            "openocd/share/openocd/scripts/interface/ftdi/m-link.cfg"),
-        ],
-        UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
-    )
-    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+openocd_supported_interfaces = [
+    "olimex-arm-usb-ocd",
+    "olimex-arm-usb-ocd-h",
+    "olimex-arm-usb-tiny-h",
+    "olimex-jtag-tiny",
+    "jlink",
+    "altera-usb-blaster",
+    "m-link",
+    "sipeed-rv-debugger",
+]
 
-if upload_protocol == "sipeed-rv-debugger":
-    env.Replace(
-        UPLOADER=mik32_uploader_path,
-        UPLOADERFLAGS=[
-            *mik32_uploader_args,
-            "--openocd-interface=%s" % join(sdk_dir,
-                                            "openocd/share/openocd/scripts/interface/ftdi/sipeed-rv-debugger.cfg"),
-        ],
-        UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
-    )
-    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
 
-elif upload_protocol in openocd_official_interfaces:
+if upload_protocol in openocd_supported_interfaces:
     env.Replace(
         UPLOADER=mik32_uploader_path,
         UPLOADERFLAGS=[
             *mik32_uploader_args,
-            "--openocd-interface=%s" % join(openocd_scripts,
-                                            "interface/%s.cfg" % upload_protocol),
-        ],
-        UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
-    )
-    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
-
-elif upload_protocol in openocd_official_ftdi_interfaces:
-    env.Replace(
-        UPLOADER=mik32_uploader_path,
-        UPLOADERFLAGS=[
-            *mik32_uploader_args,
-            "--openocd-interface=%s" % join(openocd_scripts,
-                                            "interface/ftdi/%s.cfg" % upload_protocol),
+            "--openocd-interface=%s" % join(
+                platform.get_interface_config_path(upload_protocol)),
         ],
         UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
     )

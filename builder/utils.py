@@ -1,3 +1,4 @@
+import re
 from SCons.Script import (
     DefaultEnvironment,
 )
@@ -25,7 +26,7 @@ def get_ldscript_path() -> str:
             return join(LDSCRIPTS_DIR, ld)
         if exists(join(LDSCRIPTS_DIR, ld + ".ld")):
             return join(LDSCRIPTS_DIR, ld + ".ld")
-    
+
     if board.get("debug.ldscript", ""):
         ld = board.get("debug.ldscript", "")
         if exists(join(LDSCRIPTS_DIR, ld)):
@@ -34,9 +35,10 @@ def get_ldscript_path() -> str:
             return join(LDSCRIPTS_DIR, ld + ".ld")
 
     default_ld_path = join(SHARED_DIR, "ldscripts", board.get(
-            "build.mik32v0-sdk.ldscript"))
+        "build.mik32v0-sdk.ldscript"))
     if exists(default_ld_path):
-        print("No ld script defined, using default %s" % basename(default_ld_path))
+        print("No ld script defined, using default %s" %
+              basename(default_ld_path))
         return join(SHARED_DIR, "ldscripts", board.get(
             "build.mik32v0-sdk.ldscript"))
 
@@ -48,7 +50,6 @@ class MemoryType(Enum):
     EEPROM = "eeprom"
     SPIFI = "spifi"
 
-import re
 
 def get_memory_type() -> MemoryType:
     path = get_ldscript_path()
@@ -61,4 +62,3 @@ def get_memory_type() -> MemoryType:
 
     print("ERROR: Unable to determine memory type")
     return None
-    

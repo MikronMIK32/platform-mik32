@@ -18,11 +18,48 @@ import ctypes
 
 from platformio.public import PlatformBase
 from platformio.util import get_systype
+
 # from SCons.Script import DefaultEnvironment
 
 # env = DefaultEnvironment()
 
+from os.path import join, exists, basename
+
+
 class Mik32Platform(PlatformBase):
+
+
+    def get_interface_config_path(self, interface_name: str) -> str:
+        TOOLCHAIN_DIR = self.get_package_dir(
+            "framework-mik32v0-sdk"
+        )
+        SHARED_DIR = join(TOOLCHAIN_DIR, "shared")
+        LDSCRIPTS_DIR = join(SHARED_DIR, "ldscripts")
+
+        OPENOCD_DIR = self.get_package_dir(
+            "tool-openocd"
+        )
+        OPENOCD_SCRIPTS_DIR = join(OPENOCD_DIR, 'openocd/scripts/')
+        UPLOADER_OPENOCD_SCRIPTS_DIR = join(
+            TOOLCHAIN_DIR, 'openocd/share/openocd/scripts/')
+
+        OPENOCD_INTERFACE_DIR = join(OPENOCD_SCRIPTS_DIR, 'interface/')
+        UPLOADER_OPENOCD_INTERFACE_DIR = join(
+            UPLOADER_OPENOCD_SCRIPTS_DIR, 'interface/ftdi/')
+        OPENOCD_INTERFACE_FTDI_DIR = join(OPENOCD_SCRIPTS_DIR, 'interface/')
+        UPLOADER_OPENOCD_INTERFACE_FTDI_DIR = join(
+            UPLOADER_OPENOCD_SCRIPTS_DIR, 'interface/ftdi/')
+    
+
+        if exists(join(OPENOCD_INTERFACE_DIR, interface_name) + '.cfg'):
+            return join(OPENOCD_INTERFACE_DIR, interface_name) + '.cfg'
+        if exists(join(UPLOADER_OPENOCD_INTERFACE_DIR, interface_name) + '.cfg'):
+            return join(UPLOADER_OPENOCD_INTERFACE_DIR, interface_name) + '.cfg'
+
+        if exists(join(OPENOCD_INTERFACE_FTDI_DIR, interface_name) + '.cfg'):
+            return join(OPENOCD_INTERFACE_FTDI_DIR, interface_name) + '.cfg'
+        if exists(join(UPLOADER_OPENOCD_INTERFACE_FTDI_DIR, interface_name) + '.cfg'):
+            return join(UPLOADER_OPENOCD_INTERFACE_FTDI_DIR, interface_name) + '.cfg'
 
     def get_boards(self, id_=None):
         result = PlatformBase.get_boards(self, id_)
@@ -43,12 +80,13 @@ class Mik32Platform(PlatformBase):
             debug["tools"] = {}
 
         tool = "ftdi"
-            
+
         if (tool not in upload_protocols or tool in debug["tools"]):
             assert "Tool not in upload protocols"
-        
+
         sdk_dir = self.get_package_dir('framework-mik32v0-sdk')
-        openocd_scripts = os.path.join(sdk_dir, 'openocd/share/openocd/scripts/')
+        openocd_scripts = os.path.join(
+            sdk_dir, 'openocd/share/openocd/scripts/')
         server_args = [
             "-s", "%s" % openocd_scripts
         ]
@@ -58,15 +96,17 @@ class Mik32Platform(PlatformBase):
         if os.path.isfile(os.path.join(openocd_scripts, interface_cfg)):
             server_args.extend(['-f', interface_cfg])
         else:
-            print('ERROR! No interface cfg file found for interface', debug.get("interface"), interface_cfg)
+            print('ERROR! No interface cfg file found for interface',
+                  debug.get("interface"), interface_cfg)
 
         board_cfg = os.path.join('target', 'mik32.cfg')
 
         if os.path.isfile(os.path.join(openocd_scripts, board_cfg)):
             server_args.extend(["-f", board_cfg])
         else:
-            print('ERROR! No board cfg file found for', board.id, 'at path', board_cfg)
-        
+            print('ERROR! No board cfg file found for',
+                  board.id, 'at path', board_cfg)
+
         debug["tools"][tool] = {
             "server": {
                 "package": "tool-openocd",
@@ -90,19 +130,21 @@ class Mik32Platform(PlatformBase):
         if "openocd" in (debug_config.server or {}).get("executable", ""):
 
             sdk_dir = self.get_package_dir('framework-mik32v0-sdk')
-            openocd_scripts = os.path.join(sdk_dir, 'openocd/share/openocd/scripts/')
+            openocd_scripts = os.path.join(
+                sdk_dir, 'openocd/share/openocd/scripts/')
             server_args = [
                 "-s", "%s" % openocd_scripts
             ]
 
             interface = debug_config.upload_protocol or "m-link"
-            interface_cfg = os.path.join('interface', 'ftdi', interface + '.cfg')
+            interface_cfg = self.get_interface_config_path(interface)
 
-            if os.path.isfile(os.path.join(openocd_scripts, interface_cfg)):
+            if os.path.isfile(interface_cfg):
                 server_args.extend(['-f', interface_cfg])
             else:
-                print('ERROR! No interface cfg file found for interface', interface, interface_cfg)
-            
+                print('ERROR! No interface cfg file found for interface',
+                      interface, interface_cfg)
+
             board_cfg = os.path.join('target', 'mik32.cfg')
 
             if os.path.isfile(os.path.join(openocd_scripts, board_cfg)):
