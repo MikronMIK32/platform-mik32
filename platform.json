@@ -23,12 +23,21 @@
         "package": "framework-mik32v0-sdk",
         "script": "builder/frameworks/custom.py",
         "title": "Mikron MIK32V0 Firmware Library"
+      },
+      "framework-mik32v1-sdk": {
+        "package": "framework-mik32v1-sdk",
+        "script": "builder/frameworks/custom.py",
+        "title": "Mikron MIK32V1 Firmware Library"
       }
     },
     "packages": {
       "framework-mik32v0-sdk": {
         "type": "framework",
         "version": "^0.2.0"
+      },
+      "framework-mik32v1-sdk": {
+        "type": "framework",
+        "version": "^0.1.0"
       },
       "toolchain-riscv": {
         "type": "toolchain",
