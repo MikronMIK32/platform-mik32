@@ -33,11 +33,13 @@
     "packages": {
       "framework-mik32v0-sdk": {
         "type": "framework",
-        "version": "^0.2.0"
+        "version": "^0.2.0",
+        "optional": true
       },
       "framework-mik32v1-sdk": {
         "type": "framework",
-        "version": "^0.1.0"
+        "version": "^0.1.0",
+        "optional": true
       },
       "toolchain-riscv": {
         "type": "toolchain",
