@@ -39,9 +39,9 @@
   "upload": {
     "maximum_ram_size": 16384,
     "maximum_size": 8192,
-    "protocol": "m-link",
+    "protocol": "mikron-link",
     "protocols": [
-      "m-link",
+      "mikron-link",
       "jlink",
       "olimex-arm-usb-ocd",
       "olimex-arm-usb-ocd-h",

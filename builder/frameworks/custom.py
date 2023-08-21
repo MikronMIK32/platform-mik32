@@ -52,9 +52,8 @@ env.SConscript("_bare.py")
 platform = env.PioPlatform()
 board = env.BoardConfig()
 
-TOOLCHAIN_DIR = platform.get_package_dir(
-    "framework-mik32v0-sdk"
-)
+framework_name = env.GetProjectOption("framework")[0]
+TOOLCHAIN_DIR = platform.get_package_dir(framework_name)
 
 assert isdir(TOOLCHAIN_DIR)
 

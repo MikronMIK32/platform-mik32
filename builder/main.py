@@ -110,7 +110,9 @@ AlwaysBuild(target_size)
 debug_tools = board.get("debug.tools", {})
 
 openocd_dir = platform.get_package_dir("tool-openocd")
-sdk_dir = platform.get_package_dir('framework-mik32v0-sdk')
+
+framework_name = env.GetProjectOption("framework")[0]
+sdk_dir = platform.get_package_dir(framework_name)
 
 upload_protocol = env.subst("$UPLOAD_PROTOCOL")
 upload_actions = []
@@ -133,7 +135,7 @@ mik32_uploader_args = [
     "\"%s\"" % hex_path, "--openocd-exec=\"%s\"" % openocd_path, "--run-openocd",
     "--adapter-speed=%s" % upload_speed,
     "--openocd-scripts=\"%s\"" % openocd_scripts,
-    "--openocd-target=%s" % openocd_target,
+    "--openocd-target=\"%s\"" % openocd_target,
 ]
 
 openocd_official_interfaces = [
@@ -141,21 +143,14 @@ openocd_official_interfaces = [
     "altera-usb-blaster",
 ]
 
-openocd_official_ftdi_interfaces = [
-    "olimex-arm-usb-ocd",
-    "olimex-arm-usb-ocd-h",
-    "olimex-arm-usb-tiny-h",
-    "olimex-jtag-tiny",
-]
-
 openocd_supported_interfaces = [
+    "mikron-link",
     "olimex-arm-usb-ocd",
     "olimex-arm-usb-ocd-h",
     "olimex-arm-usb-tiny-h",
     "olimex-jtag-tiny",
     "jlink",
     "altera-usb-blaster",
-    "m-link",
     "sipeed-rv-debugger",
 ]
 
@@ -165,7 +160,7 @@ if upload_protocol in openocd_supported_interfaces:
         UPLOADER=mik32_uploader_path,
         UPLOADERFLAGS=[
             *mik32_uploader_args,
-            "--openocd-interface=%s" % join(
+            "--openocd-interface=\"%s\"" % join(
                 platform.get_interface_config_path(upload_protocol)),
         ],
         UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'

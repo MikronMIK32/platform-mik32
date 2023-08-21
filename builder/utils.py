@@ -11,9 +11,9 @@ env = DefaultEnvironment()
 platform = env.PioPlatform()
 board = env.BoardConfig()
 
-TOOLCHAIN_DIR = platform.get_package_dir(
-    "framework-mik32v0-sdk"
-)
+framework_name = env.GetProjectOption("framework")[0]
+TOOLCHAIN_DIR = platform.get_package_dir(framework_name)
+
 SHARED_DIR = join(TOOLCHAIN_DIR, "shared")
 LDSCRIPTS_DIR = join(SHARED_DIR, "ldscripts")
 

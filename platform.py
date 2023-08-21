@@ -30,18 +30,13 @@ class Mik32Platform(PlatformBase):
 
 
     def get_interface_config_path(self, interface_name: str) -> str:
-        TOOLCHAIN_DIR = self.get_package_dir(
-            "framework-mik32v0-sdk"
-        )
-        SHARED_DIR = join(TOOLCHAIN_DIR, "shared")
-        LDSCRIPTS_DIR = join(SHARED_DIR, "ldscripts")
 
-        OPENOCD_DIR = self.get_package_dir(
-            "tool-openocd"
-        )
+        OPENOCD_DIR = self.get_package_dir("tool-openocd")
+        UPLOADER_DIR = self.get_package_dir("tool-mik32-uploader")
+
         OPENOCD_SCRIPTS_DIR = join(OPENOCD_DIR, 'openocd/scripts/')
         UPLOADER_OPENOCD_SCRIPTS_DIR = join(
-            TOOLCHAIN_DIR, 'openocd/share/openocd/scripts/')
+            UPLOADER_DIR, 'openocd-scripts/')
 
         OPENOCD_INTERFACE_DIR = join(OPENOCD_SCRIPTS_DIR, 'interface/')
         UPLOADER_OPENOCD_INTERFACE_DIR = join(
