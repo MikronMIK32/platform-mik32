@@ -17,7 +17,10 @@
     "variant": "mik32v0",
     "mik32v0-sdk": {
       "ldscript": "eeprom.ld"
-    }
+    },
+    "flags": [
+      "-D MIK32V0"
+    ]
   },
   "debug": {
     "onboard_tools": [
