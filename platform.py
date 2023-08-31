@@ -37,24 +37,20 @@ class Mik32Platform(PlatformBase):
         OPENOCD_SCRIPTS_DIR = join(OPENOCD_DIR, 'openocd/scripts/')
         UPLOADER_OPENOCD_SCRIPTS_DIR = join(
             UPLOADER_DIR, 'openocd-scripts/')
+        
+        interface_find_paths = [
+            join(UPLOADER_OPENOCD_SCRIPTS_DIR, 'interface/ftdi/'),
+            join(UPLOADER_OPENOCD_SCRIPTS_DIR, 'interface/'),
+            join(OPENOCD_SCRIPTS_DIR, 'interface/ftdi/'),
+            join(OPENOCD_SCRIPTS_DIR, 'interface/'),
+        ]
 
-        OPENOCD_INTERFACE_DIR = join(OPENOCD_SCRIPTS_DIR, 'interface/')
-        UPLOADER_OPENOCD_INTERFACE_DIR = join(
-            UPLOADER_OPENOCD_SCRIPTS_DIR, 'interface/ftdi/')
-        OPENOCD_INTERFACE_FTDI_DIR = join(OPENOCD_SCRIPTS_DIR, 'interface/')
-        UPLOADER_OPENOCD_INTERFACE_FTDI_DIR = join(
-            UPLOADER_OPENOCD_SCRIPTS_DIR, 'interface/ftdi/')
-    
+        for interface in interface_find_paths:
+            path = join(os.path.abspath(interface), interface_name + '.cfg') 
 
-        if exists(join(OPENOCD_INTERFACE_DIR, interface_name) + '.cfg'):
-            return join(OPENOCD_INTERFACE_DIR, interface_name) + '.cfg'
-        if exists(join(UPLOADER_OPENOCD_INTERFACE_DIR, interface_name) + '.cfg'):
-            return join(UPLOADER_OPENOCD_INTERFACE_DIR, interface_name) + '.cfg'
+            if exists(path):
+                return path
 
-        if exists(join(OPENOCD_INTERFACE_FTDI_DIR, interface_name) + '.cfg'):
-            return join(OPENOCD_INTERFACE_FTDI_DIR, interface_name) + '.cfg'
-        if exists(join(UPLOADER_OPENOCD_INTERFACE_FTDI_DIR, interface_name) + '.cfg'):
-            return join(UPLOADER_OPENOCD_INTERFACE_FTDI_DIR, interface_name) + '.cfg'
 
     def get_boards(self, id_=None):
         result = PlatformBase.get_boards(self, id_)

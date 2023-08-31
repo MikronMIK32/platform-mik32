@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from os.path import join
+from os.path import realpath
 
 from SCons.Script import (ARGUMENTS, COMMAND_LINE_TARGETS, AlwaysBuild,
                           Builder, Default, DefaultEnvironment)
@@ -124,24 +125,22 @@ upload_flags = env.GetProjectOption("upload_flags", [])
 hex_path = target_hex[0].rstr().replace('\\', '/')
 
 openocd_path = join(openocd_dir or "", "bin", "openocd.exe")
-openocd_scripts = join(openocd_dir, 'openocd/scripts/')
-openocd_target = join(
-    sdk_dir, "openocd/share/openocd/scripts/target/mik32.cfg")
+openocd_scripts = realpath(join(openocd_dir, 'openocd/scripts/'))
+openocd_target = realpath(join(
+    sdk_dir, "openocd/share/openocd/scripts/target/mik32.cfg"))
 
 mik32_uploader_path = join(
     platform.get_package_dir("tool-mik32-uploader") or "", "mik32_upload.py")
 
 mik32_uploader_args = [
-    "\"%s\"" % hex_path, "--openocd-exec=\"%s\"" % openocd_path, "--run-openocd",
-    "--adapter-speed=%s" % upload_speed,
-    "--openocd-scripts=\"%s\"" % openocd_scripts,
-    "--openocd-target=\"%s\"" % openocd_target,
+    hex_path, 
+    "--openocd-exec", openocd_path, 
+    "--adapter-speed", upload_speed,
+    "--openocd-scripts", openocd_scripts,
+    "--openocd-target", openocd_target,
+    "--run-openocd",
 ]
 
-openocd_official_interfaces = [
-    "jlink",
-    "altera-usb-blaster",
-]
 
 openocd_supported_interfaces = [
     "mikron-link",
@@ -160,12 +159,11 @@ if upload_protocol in openocd_supported_interfaces:
         UPLOADER=mik32_uploader_path,
         UPLOADERFLAGS=[
             *mik32_uploader_args,
-            "--openocd-interface=\"%s\"" % join(
-                platform.get_interface_config_path(upload_protocol)),
+            "--openocd-interface", platform.get_interface_config_path(upload_protocol),
         ],
         UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
     )
-    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE $UPLOADCMD")]
 
 elif upload_protocol == "custom":
     env.Replace(
