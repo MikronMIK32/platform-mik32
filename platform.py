@@ -23,12 +23,12 @@ from platformio.util import get_systype
 
 # env = DefaultEnvironment()
 
-from os.path import join, exists, basename
+from os.path import join, exists, basename, realpath
 
 
 class Mik32Platform(PlatformBase):
 
-
+    # Returns the path to the openocd interface configuration by interface_name
     def get_interface_config_path(self, interface_name: str) -> str:
 
         OPENOCD_DIR = self.get_package_dir("tool-openocd")
@@ -63,6 +63,7 @@ class Mik32Platform(PlatformBase):
                 result[key] = self._add_default_debug_tools(result[key])
         return result
 
+
     def _add_default_debug_tools(self, board):
         debug = board.manifest.get("debug", {})
         upload_protocols = board.manifest.get("upload",
@@ -74,29 +75,32 @@ class Mik32Platform(PlatformBase):
 
         if (tool not in upload_protocols or tool in debug["tools"]):
             assert "Tool not in upload protocols"
+        
+        openocd_dir = self.get_package_dir("tool-openocd")
+        openocd_scripts = realpath(join(openocd_dir, 'openocd/scripts/'))
 
-        sdk_dir = self.get_package_dir('framework-mik32v0-sdk')
-        openocd_scripts = os.path.join(
-            sdk_dir, 'openocd/share/openocd/scripts/')
+        mik32_uploader_path = self.get_package_dir("tool-mik32-uploader") or ""
+        openocd_target = realpath(join(
+            mik32_uploader_path, "openocd-scripts/target/mik32.cfg"))
+
         server_args = [
             "-s", "%s" % openocd_scripts
         ]
-        interface = debug.get("interface", "m-link")
-        interface_cfg = os.path.join('interface', 'ftdi', interface + '.cfg')
+        interface = debug.get("interface", "mikron-link")
+        interface_cfg = self.get_interface_config_path(interface)
 
         if os.path.isfile(os.path.join(openocd_scripts, interface_cfg)):
             server_args.extend(['-f', interface_cfg])
         else:
             print('ERROR! No interface cfg file found for interface',
                   debug.get("interface"), interface_cfg)
+        
 
-        board_cfg = os.path.join('target', 'mik32.cfg')
-
-        if os.path.isfile(os.path.join(openocd_scripts, board_cfg)):
-            server_args.extend(["-f", board_cfg])
+        if os.path.isfile(openocd_target):
+            server_args.extend(["-f", openocd_target])
         else:
             print('ERROR! No board cfg file found for',
-                  board.id, 'at path', board_cfg)
+                  board.id, 'at path', openocd_target)
 
         debug["tools"][tool] = {
             "server": {
@@ -120,14 +124,18 @@ class Mik32Platform(PlatformBase):
 
         if "openocd" in (debug_config.server or {}).get("executable", ""):
 
-            sdk_dir = self.get_package_dir('framework-mik32v0-sdk')
-            openocd_scripts = os.path.join(
-                sdk_dir, 'openocd/share/openocd/scripts/')
+            openocd_dir = self.get_package_dir("tool-openocd")
+            openocd_scripts = realpath(join(openocd_dir, 'openocd/scripts/'))
+
+            mik32_uploader_path = self.get_package_dir("tool-mik32-uploader") or ""
+            openocd_target = realpath(join(
+                mik32_uploader_path, "openocd-scripts/target/mik32.cfg"))
+
             server_args = [
                 "-s", "%s" % openocd_scripts
             ]
 
-            interface = debug_config.upload_protocol or "m-link"
+            interface = debug_config.upload_protocol or "mikron-link"
             interface_cfg = self.get_interface_config_path(interface)
 
             if os.path.isfile(interface_cfg):
@@ -136,10 +144,8 @@ class Mik32Platform(PlatformBase):
                 print('ERROR! No interface cfg file found for interface',
                       interface, interface_cfg)
 
-            board_cfg = os.path.join('target', 'mik32.cfg')
-
-            if os.path.isfile(os.path.join(openocd_scripts, board_cfg)):
-                server_args.extend(["-f", board_cfg])
+            if os.path.isfile(os.path.join(openocd_scripts, openocd_target)):
+                server_args.extend(["-f", openocd_target])
             # else:
             #     print('ERROR! No board cfg file found for', board.id, 'at path', board_cfg)
 

@@ -126,11 +126,11 @@ hex_path = target_hex[0].rstr().replace('\\', '/')
 
 openocd_path = join(openocd_dir or "", "bin", "openocd.exe")
 openocd_scripts = realpath(join(openocd_dir, 'openocd/scripts/'))
-openocd_target = realpath(join(
-    sdk_dir, "openocd/share/openocd/scripts/target/mik32.cfg"))
 
-mik32_uploader_path = join(
-    platform.get_package_dir("tool-mik32-uploader") or "", "mik32_upload.py")
+mik32_uploader_path = platform.get_package_dir("tool-mik32-uploader") or ""
+mik32_uploader_exec = join(mik32_uploader_path, "mik32_upload.py")
+openocd_target = realpath(join(
+    mik32_uploader_path, "openocd-scripts/target/mik32.cfg"))
 
 mik32_uploader_args = [
     hex_path, 
@@ -156,14 +156,14 @@ openocd_supported_interfaces = [
 
 if upload_protocol in openocd_supported_interfaces:
     env.Replace(
-        UPLOADER=mik32_uploader_path,
+        UPLOADER=mik32_uploader_exec,
         UPLOADERFLAGS=[
             *mik32_uploader_args,
             "--openocd-interface", platform.get_interface_config_path(upload_protocol),
         ],
         UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
     )
-    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE $UPLOADCMD")]
+    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
 
 elif upload_protocol == "custom":
     env.Replace(
