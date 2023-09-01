@@ -19,7 +19,7 @@
       "ldscript": "eeprom.ld"
     },
     "flags": [
-      "-D MIK32V1"
+      "-D MIK32V2"
     ]
   },
   "debug": {
