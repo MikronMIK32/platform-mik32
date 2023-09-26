@@ -1,5 +1,5 @@
 {
-  "name": "MIK32V1 Generic Board",
+  "name": "MIK32V2 Generic Board",
   "url": "http://mik32.ru",
   "vendor": "Mikron",
   "build": {
@@ -13,8 +13,8 @@
     "mabi": "ilp32",
     "march": "rv32imc",
     "mcmodel": "medlow",
-    "mcu": "MIK32V1",
-    "variant": "mik32v1",
+    "mcu": "MIK32V2",
+    "variant": "mik32v2",
     "mik32v0-sdk": {
       "ldscript": "eeprom.ld"
     },

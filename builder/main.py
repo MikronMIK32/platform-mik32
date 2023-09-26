@@ -139,8 +139,8 @@ mik32_uploader_args = [
     "--openocd-scripts", openocd_scripts,
     "--openocd-target", openocd_target,
     "--run-openocd",
+    "--mcu-type", board.get("build.mcu", "MIK32V2")
 ]
-
 
 openocd_supported_interfaces = [
     "mikron-link",
