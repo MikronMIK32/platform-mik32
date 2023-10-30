@@ -12,13 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Custom 
-
-get from
-
-https://github.com/espressif/esp-idf
-"""
 
 import copy
 import json
@@ -92,17 +85,17 @@ env.AppendUnique(
     ]
 )
 
-debug = board.manifest.get("debug", {})
-ldscript = debug.get("ldscript", "")
+f_cpu: str = board.get("build.f_cpu", "")
+if not f_cpu.endswith("L"):
+    f_cpu = "".join([f_cpu, "L"])
 
-# if not env.BoardConfig().get("build.ldscript", ""):
-#     env.Replace(
-#         LDSCRIPT_PATH=join(SHARED_DIR, "ldscripts", board.get(
-#             "build.mik32v0-sdk.ldscript"))
-#     )
-#     print("ldscript: %s" % board.get("build.mik32v0-sdk.ldscript"))
-# else:
-#     print("ldscript: %s" % env.BoardConfig().get("build.ldscript", ""))
+# print("CPU Freq:", f_cpu)
+
+env.AppendUnique(
+    CPPDEFINES=[
+        f"OSC_SYSTEM_VALUE={f_cpu}"
+    ]
+)
 
 from utils import get_ldscript_path
 
