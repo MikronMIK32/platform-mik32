@@ -37,7 +37,7 @@ class Mik32Platform(PlatformBase):
         OPENOCD_SCRIPTS_DIR = join(OPENOCD_DIR, 'openocd/scripts/')
         UPLOADER_OPENOCD_SCRIPTS_DIR = join(
             UPLOADER_DIR, 'openocd-scripts/')
-        
+
         interface_find_paths = [
             join(UPLOADER_OPENOCD_SCRIPTS_DIR, 'interface/ftdi/'),
             join(UPLOADER_OPENOCD_SCRIPTS_DIR, 'interface/'),
@@ -46,11 +46,10 @@ class Mik32Platform(PlatformBase):
         ]
 
         for interface in interface_find_paths:
-            path = join(os.path.abspath(interface), interface_name + '.cfg') 
+            path = join(os.path.abspath(interface), interface_name + '.cfg')
 
             if exists(path):
                 return path
-
 
     def get_boards(self, id_=None):
         result = PlatformBase.get_boards(self, id_)
@@ -63,7 +62,6 @@ class Mik32Platform(PlatformBase):
                 result[key] = self._add_default_debug_tools(result[key])
         return result
 
-
     def _add_default_debug_tools(self, board):
         debug = board.manifest.get("debug", {})
         upload_protocols = board.manifest.get("upload",
@@ -75,7 +73,7 @@ class Mik32Platform(PlatformBase):
 
         if (tool not in upload_protocols or tool in debug["tools"]):
             assert "Tool not in upload protocols"
-        
+
         openocd_dir = self.get_package_dir("tool-openocd")
         openocd_scripts = realpath(join(openocd_dir, 'openocd/scripts/'))
 
@@ -94,7 +92,6 @@ class Mik32Platform(PlatformBase):
         else:
             print('ERROR! No interface cfg file found for interface',
                   debug.get("interface"), interface_cfg)
-        
 
         if os.path.isfile(openocd_target):
             server_args.extend(["-f", openocd_target])
@@ -127,7 +124,8 @@ class Mik32Platform(PlatformBase):
             openocd_dir = self.get_package_dir("tool-openocd")
             openocd_scripts = realpath(join(openocd_dir, 'openocd/scripts/'))
 
-            mik32_uploader_path = self.get_package_dir("tool-mik32-uploader") or ""
+            mik32_uploader_path = self.get_package_dir(
+                "tool-mik32-uploader") or ""
             openocd_target = realpath(join(
                 mik32_uploader_path, "openocd-scripts/target/mik32.cfg"))
 
