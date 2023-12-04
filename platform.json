@@ -17,7 +17,7 @@
     "engines": {
       "platformio": "^5"
     },
-    "version": "0.2.1",
+    "version": "0.3.0",
     "frameworks": {
       "framework-mik32v0-sdk": {
         "package": "framework-mik32v0-sdk",
@@ -33,12 +33,12 @@
     "packages": {
       "framework-mik32v0-sdk": {
         "type": "framework",
-        "version": "^0.2.0",
+        "version": "https://github.com/MikronMIK32/framework-mik32v0-sdk.git#test",
         "optional": true
       },
       "framework-mik32v1-sdk": {
         "type": "framework",
-        "version": "^0.1.0",
+        "version": "https://github.com/MikronMIK32/framework-mik32v1-sdk.git#test",
         "optional": true
       },
       "toolchain-riscv": {
@@ -54,7 +54,7 @@
       "tool-mik32-uploader": {
         "type": "uploader",
         "owner": "platformio",
-        "version": "^0.1.0"
+        "version": "https://github.com/MikronMIK32/mik32-uploader.git"
       }
     }
   }
