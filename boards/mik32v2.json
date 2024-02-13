@@ -26,7 +26,7 @@
     "onboard_tools": [
       "ftdi"
     ],
-    "svd_path": "mcu32.svd",
+    "svd_path": "mik32v2.svd",
     "speed": "500",
     "extra_cmds": [
       "set mem inaccessible-by-default off",
