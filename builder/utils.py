@@ -1,4 +1,5 @@
 import re
+from typing import Union
 from SCons.Script import (
     DefaultEnvironment,
 )
@@ -17,22 +18,33 @@ TOOLCHAIN_DIR = platform.get_package_dir(framework_name)
 SHARED_DIR = join(TOOLCHAIN_DIR, "shared")
 LDSCRIPTS_DIR = join(SHARED_DIR, "ldscripts")
 
-def get_ldscript_path() -> str:
-    if board.get("build.ldscript", ""):
-        ld = board.get("build.ldscript", "")
-        if exists(ld):
-            return ld
-        if exists(join(LDSCRIPTS_DIR, ld)):
-            return join(LDSCRIPTS_DIR, ld)
-        if exists(join(LDSCRIPTS_DIR, ld + ".ld")):
-            return join(LDSCRIPTS_DIR, ld + ".ld")
 
-    if board.get("debug.ldscript", ""):
-        ld = board.get("debug.ldscript", "")
-        if exists(join(LDSCRIPTS_DIR, ld)):
-            return join(LDSCRIPTS_DIR, ld)
-        if exists(join(LDSCRIPTS_DIR, ld + ".ld")):
-            return join(LDSCRIPTS_DIR, ld + ".ld")
+def get_ldscript_path() -> Union[str, None]:
+
+    ld_build = board.get("build.ldscript", "")
+    if ld_build:
+        if exists(ld_build):
+            return ld_build
+        if exists(ld_build + ".ld"):
+            return ld_build + ".ld"
+        if exists(join(LDSCRIPTS_DIR, ld_build)):
+            return join(LDSCRIPTS_DIR, ld_build)
+        if exists(join(LDSCRIPTS_DIR, ld_build + ".ld")):
+            return join(LDSCRIPTS_DIR, ld_build + ".ld")
+
+    ld_debug = board.get("debug.ldscript", "")
+    if ld_debug:
+        if exists(ld_debug):
+            return ld_debug
+        if exists(ld_build + ".ld"):
+            return ld_build + ".ld"
+        if exists(join(LDSCRIPTS_DIR, ld_debug)):
+            return join(LDSCRIPTS_DIR, ld_debug)
+        if exists(join(LDSCRIPTS_DIR, ld_debug + ".ld")):
+            return join(LDSCRIPTS_DIR, ld_debug + ".ld")
+        
+    if ld_build != "" or ld_debug != "":
+        return None
 
     default_ld_path = join(SHARED_DIR, "ldscripts", board.get(
         "build.mik32v0-sdk.ldscript"))
@@ -44,6 +56,7 @@ def get_ldscript_path() -> str:
 
     print("ERROR: Unable to find any ld script")
     return None
+
 
 class MemoryType(Enum):
     RAM = "ram"
