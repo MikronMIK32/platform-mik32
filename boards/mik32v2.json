@@ -38,7 +38,7 @@
     ]
   },
   "frameworks": [
-    "framework-mik32v1-sdk"
+    "framework-mik32v2-sdk"
   ],
   "upload": {
     "maximum_ram_size": 16384,
