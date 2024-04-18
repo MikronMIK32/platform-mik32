@@ -34,7 +34,12 @@ env.AppendUnique(
     ],
 
     CXXFLAGS = [
-        "-std=gnu++17"
+        "-std=gnu++17",
+        "-fabi-version=0",
+        "-fno-exceptions",
+        "-fno-rtti",
+        "-fno-use-cxa-atexit",
+        "-fno-threadsafe-statics",
     ],
 
     LINKFLAGS=[
