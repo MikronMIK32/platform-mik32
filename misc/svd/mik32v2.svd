@@ -6890,30 +6890,25 @@ FAPB/( Div_APM_P+1)</description>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[31:13]</bitRange>
-            </field>
-            <field>
               <name>EN_VREFCLB</name>
               <description>Использование в качестве опорного источника напряжения каллибруемый ОИН</description>
               <bitRange>[12:12]</bitRange>
               <access>read-write</access>
             </field>
             <field>
-              <name>OVERTH</name>
+              <name>OVER_THRESH</name>
               <description>Верхний порог срабатывания монитора</description>
               <bitRange>[11:8]</bitRange>
               <access>read-write</access>
             </field>
             <field>
-              <name>UNDERTH</name>
+              <name>UNDER_THRESH</name>
               <description>Нижний порог срабатывания монитора</description>
               <bitRange>[7:4]</bitRange>
               <access>read-write</access>
             </field>
             <field>
-              <name>TEST</name>
+              <name>TESTMODE</name>
               <description>Переход в тестовый режим</description>
               <bitRange>[3:3]</bitRange>
               <access>read-write</access>
@@ -6983,11 +6978,6 @@ FAPB/( Div_APM_P+1)</description>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[31:4]</bitRange>
-            </field>
-            <field>
               <name>OUT_OVER_FLAG</name>
               <description>Текущее состояние линии монитора верхнего порога с учетом цифровой фильтрации</description>
               <bitRange>[3:3]</bitRange>
@@ -7000,13 +6990,13 @@ FAPB/( Div_APM_P+1)</description>
               <access>read-only</access>
             </field>
             <field>
-              <name>OUT_OVER</name>
+              <name>OUT_OVER_VALUE</name>
               <description>Текущее состояние линии монитора верхнего порога без цифровой фильтрации</description>
               <bitRange>[1:1]</bitRange>
               <access>read-only</access>
             </field>
             <field>
-              <name>OUT_UNDER</name>
+              <name>OUT_UNDER_VALUE</name>
               <description>Текущее состояние линии монитора нижнего порога без цифровой фильтрации</description>
               <bitRange>[0:0]</bitRange>
               <access>read-only</access>
@@ -23000,7 +22990,7 @@ Mux_7 – [31:28]</description>
       <baseAddress>0x00085000</baseAddress>
       <addressBlock>
         <offset>0x0</offset>
-        <size>0x0C</size>
+        <size>0x8</size>
         <usage>registers</usage>
       </addressBlock>
       <registers>
@@ -23012,11 +23002,6 @@ Mux_7 – [31:28]</description>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
-            <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[31:14]</bitRange>
-            </field>
             <field>
               <name>EMPTY_READ</name>
               <description>Признак заполненности регистра DAC_VALUE</description>
@@ -23034,11 +23019,6 @@ Mux_7 – [31:28]</description>
                   <value>0b01</value>
                 </enumeratedValue>
               </enumeratedValues>
-            </field>
-            <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[12:12]</bitRange>
             </field>
             <field>
               <name>EXTPAD</name>
@@ -23111,16 +23091,11 @@ Mux_7 – [31:28]</description>
         <register>
           <name>DAC0_VALUE</name>
           <description>Входные данные для ЦАП0</description>
-          <addressOffset>0x08</addressOffset>
+          <addressOffset>0x04</addressOffset>
           <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
-            <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[31:12]</bitRange>
-            </field>
             <field>
               <name>VALUE</name>
               <description>Входные данные для прерывания</description>
@@ -23134,26 +23109,21 @@ Mux_7 – [31:28]</description>
     <peripheral>
       <name>DAC1</name>
       <description>Управление ЦАП</description>
-      <baseAddress>0x00085000</baseAddress>
+      <baseAddress>0x00085008</baseAddress>
       <addressBlock>
         <offset>0x0</offset>
-        <size>0x10</size>
+        <size>0x8</size>
         <usage>registers</usage>
       </addressBlock>
       <registers>
         <register>
           <name>DAC1_CFG</name>
           <description>Регистр настойки ЦАП1</description>
-          <addressOffset>0x04</addressOffset>
+          <addressOffset>0x00</addressOffset>
           <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
-            <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[31:14]</bitRange>
-            </field>
             <field>
               <name>EMPTY_READ</name>
               <description>Признак заполненности регистра DAC_VALUE</description>
@@ -23171,11 +23141,6 @@ Mux_7 – [31:28]</description>
                   <value>0b01</value>
                 </enumeratedValue>
               </enumeratedValues>
-            </field>
-            <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[12:12]</bitRange>
             </field>
             <field>
               <name>EXTPAD</name>
@@ -23248,16 +23213,11 @@ Mux_7 – [31:28]</description>
         <register>
           <name>DAC1_VALUE</name>
           <description>Входные данные для ЦАП1</description>
-          <addressOffset>0x0C</addressOffset>
+          <addressOffset>0x04</addressOffset>
           <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
-            <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[31:12]</bitRange>
-            </field>
             <field>
               <name>VALUE</name>
               <description>Входные данные для прерывания</description>
@@ -23271,10 +23231,10 @@ Mux_7 – [31:28]</description>
     <peripheral>
       <name>PVD_AVCC</name>
       <description>Управление монитором напряжения AVCC</description>
-      <baseAddress>0x00085000</baseAddress>
+      <baseAddress>0x00085010</baseAddress>
       <addressBlock>
         <offset>0x00</offset>
-        <size>0x1C</size>
+        <size>0x0C</size>
         <usage>registers</usage>
       </addressBlock>
       <registers>
@@ -23309,19 +23269,19 @@ Mux_7 – [31:28]</description>
               <access>read-write</access>
             </field>
             <field>
-              <name>OVERTH</name>
+              <name>OVER_THRESH</name>
               <description>Верхний порог срабатывания монитора</description>
               <bitRange>[11:8]</bitRange>
               <access>read-write</access>
             </field>
             <field>
-              <name>UNDERTH</name>
+              <name>UNDER_THRESH</name>
               <description>Нижний порог срабатывания монитора</description>
               <bitRange>[7:4]</bitRange>
               <access>read-write</access>
             </field>
             <field>
-              <name>TEST</name>
+              <name>TESTMODE</name>
               <description>Переход в тестовый режим</description>
               <bitRange>[3:3]</bitRange>
               <access>read-write</access>
@@ -23391,11 +23351,6 @@ Mux_7 – [31:28]</description>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[31:4]</bitRange>
-            </field>
-            <field>
               <name>OUT_OVER_FLAG</name>
               <description>Текущее состояние линии монитора верхнего порога с учетом цифровой фильтрации</description>
               <bitRange>[3:3]</bitRange>
@@ -23408,13 +23363,13 @@ Mux_7 – [31:28]</description>
               <access>read-only</access>
             </field>
             <field>
-              <name>OUT_OVER</name>
+              <name>OUT_OVER_VALUE</name>
               <description>Текущее состояние линии монитора верхнего порога без цифровой фильтрации</description>
               <bitRange>[1:1]</bitRange>
               <access>read-only</access>
             </field>
             <field>
-              <name>OUT_UNDER</name>
+              <name>OUT_UNDER_VALUE</name>
               <description>Текущее состояние линии монитора нижнего порога без цифровой фильтрации</description>
               <bitRange>[0:0]</bitRange>
               <access>read-only</access>
@@ -23426,26 +23381,21 @@ Mux_7 – [31:28]</description>
     <peripheral>
       <name>TSENS</name>
       <description>Управление температурным сенсором</description>
-      <baseAddress>0x00085000</baseAddress>
+      <baseAddress>0x0008501C</baseAddress>
       <addressBlock>
         <offset>0x00</offset>
-        <size>0x38</size>
+        <size>0x1C</size>
         <usage>registers</usage>
       </addressBlock>
       <registers>
         <register>
           <name>TSENS_CFG</name>
           <description>Регистр настроек</description>
-          <addressOffset>0x1C</addressOffset>
+          <addressOffset>0x00</addressOffset>
           <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
-            <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[31:16]</bitRange>
-            </field>
             <field>
               <name>DIV</name>
               <description>Значение делителя тактового сигнала. Частота сенсора определяется как  Tsens = Fin/(2*(Div + 1))</description>
@@ -23491,7 +23441,7 @@ Mux_7 – [31:28]</description>
               </enumeratedValues>
             </field>
             <field>
-              <name>NRESET</name>
+              <name>NRST</name>
               <description>Управление сбросом сенсора, активный уровень «0»</description>
               <bitRange>[2:2]</bitRange>
               <access>read-write</access>
@@ -23537,24 +23487,19 @@ Mux_7 – [31:28]</description>
         <register>
           <name>TSENS_TRESHOLD</name>
           <description>Регистр пороговых значений</description>
-          <addressOffset>0x20</addressOffset>
+          <addressOffset>0x04</addressOffset>
           <access>read-write</access>
           <resetValue>231003</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[31:20]</bitRange>
-            </field>
-            <field>
-              <name>LOW_TRESHOLD</name>
+              <name>TRESHOLD_LOW</name>
               <description>При значении выхода сенсора менее LOW_THRESHOLD будет формироваться прерывание. Значение по умолчанию соответсвует температуре -40 оС</description>
               <bitRange>[19:10]</bitRange>
               <access>read-write</access>
             </field>
             <field>
-              <name>HI_TRESHOLD</name>
+              <name>TRESHOLD_HI</name>
               <description>При значении выхода сенсора больше HI_THRESHOLD  будет формироваться прерывание. Значение по умолчанию соот-ветсвует температуре 125 оС </description>
               <bitRange>[9:0]</bitRange>
               <access>read-write</access>
@@ -23564,7 +23509,7 @@ Mux_7 – [31:28]</description>
         <register>
           <name>TSENS_IRQ</name>
           <description>Регистр прерываний</description>
-          <addressOffset>0x24</addressOffset>
+          <addressOffset>0x8</addressOffset>
           <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
@@ -23610,7 +23555,7 @@ Mux_7 – [31:28]</description>
         <register>
           <name>TSENS_CLEAR_IRQ</name>
           <description>Регистр сброса прерываний</description>
-          <addressOffset>0x28</addressOffset>
+          <addressOffset>0xC</addressOffset>
           <access>write-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
@@ -23642,7 +23587,7 @@ Mux_7 – [31:28]</description>
         <register>
           <name>TSENS_VALUE</name>
           <description>Регистр данных</description>
-          <addressOffset>0x2C</addressOffset>
+          <addressOffset>0x10</addressOffset>
           <access>read-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
@@ -23664,7 +23609,7 @@ Mux_7 – [31:28]</description>
         <register>
           <name>TSENS_SINGLE</name>
           <description>Регистр запуска однократного измерения</description>
-          <addressOffset>0x30</addressOffset>
+          <addressOffset>0x14</addressOffset>
           <access>write-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
@@ -23702,7 +23647,7 @@ Mux_7 – [31:28]</description>
       <baseAddress>0x00085038</baseAddress>
       <addressBlock>
         <offset>0x00</offset>
-        <size>0x8</size>
+        <size>0x4</size>
         <usage>registers</usage>
       </addressBlock>
       <registers>
@@ -23751,17 +23696,17 @@ Mux_7 – [31:28]</description>
     <peripheral>
       <name>ADC</name>
       <description>Управление АЦП</description>
-      <baseAddress>0x00085000</baseAddress>
+      <baseAddress>0x0008503C</baseAddress>
       <addressBlock>
         <offset>0x00</offset>
-        <size>0x50</size>
+        <size>0x14</size>
         <usage>registers</usage>
       </addressBlock>
       <registers>
         <register>
           <name>ADC_CONFIG</name>
           <description>Регистр настойки</description>
-          <addressOffset>0x3C</addressOffset>
+          <addressOffset>0x00</addressOffset>
           <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
@@ -23779,7 +23724,7 @@ Mux_7 – [31:28]</description>
               <access>read-write</access>
             </field>
             <field>
-              <name>EXTPAD</name>
+              <name>EXTPAD_EN</name>
               <description>Выбор источника внешнего опорного напряжения</description>
               <bitRange>[3:3]</bitRange>
               <access>read-write</access>
@@ -23797,7 +23742,7 @@ Mux_7 – [31:28]</description>
               </enumeratedValues>
             </field>
             <field>
-              <name>EXTEN</name>
+              <name>EXTREF</name>
               <description>Выбор источника опорного напряжения</description>
               <bitRange>[2:2]</bitRange>
               <access>read-write</access>
@@ -23815,7 +23760,7 @@ Mux_7 – [31:28]</description>
               </enumeratedValues>
             </field>
             <field>
-              <name>RN</name>
+              <name>RESETN</name>
               <description>Управление сбросом АЦП, активный уровень «0»</description>
               <bitRange>[1:1]</bitRange>
               <access>read-write</access>
@@ -23843,7 +23788,7 @@ Mux_7 – [31:28]</description>
         <register>
           <name>ADC_CONTINUOUS</name>
           <description>Управление непрерывным измерением</description>
-          <addressOffset>0x40</addressOffset>
+          <addressOffset>0x04</addressOffset>
           <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
@@ -23859,7 +23804,7 @@ Mux_7 – [31:28]</description>
         <register>
           <name>ADC_SINGLE</name>
           <description>Управление однократным измерением</description>
-          <addressOffset>0x44</addressOffset>
+          <addressOffset>0x08</addressOffset>
           <access>write-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
@@ -23875,7 +23820,7 @@ Mux_7 – [31:28]</description>
         <register>
           <name>ADC_VALID</name>
           <description>Регистр статуса</description>
-          <addressOffset>0x48</addressOffset>
+          <addressOffset>0x0C</addressOffset>
           <access>read-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
@@ -23891,7 +23836,7 @@ Mux_7 – [31:28]</description>
         <register>
           <name>ADC_VALUE</name>
           <description>Регистр данных</description>
-          <addressOffset>0x4C</addressOffset>
+          <addressOffset>0x10</addressOffset>
           <access>read-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
