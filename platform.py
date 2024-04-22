@@ -31,8 +31,8 @@ class Mik32Platform(PlatformBase):
     # Returns the path to the openocd interface configuration by interface_name
     def get_interface_config_path(self, interface_name: str) -> str:
 
-        OPENOCD_DIR = self.get_package_dir("tool-openocd")
-        UPLOADER_DIR = self.get_package_dir("tool-mik32-uploader")
+        OPENOCD_DIR = self.get_package_dir("tool-openocd") or ""
+        UPLOADER_DIR = self.get_package_dir("tool-mik32-uploader") or ""
 
         OPENOCD_SCRIPTS_DIR = join(OPENOCD_DIR, 'openocd/scripts/')
         UPLOADER_OPENOCD_SCRIPTS_DIR = join(
@@ -74,7 +74,7 @@ class Mik32Platform(PlatformBase):
         if (tool not in upload_protocols or tool in debug["tools"]):
             assert "Tool not in upload protocols"
 
-        openocd_dir = self.get_package_dir("tool-openocd")
+        openocd_dir = self.get_package_dir("tool-openocd") or ""
         openocd_scripts = realpath(join(openocd_dir, 'openocd/scripts/'))
 
         mik32_uploader_path = self.get_package_dir("tool-mik32-uploader") or ""
