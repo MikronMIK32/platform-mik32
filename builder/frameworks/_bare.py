@@ -23,7 +23,7 @@ env.AppendUnique(
         "-mabi=%s" % board_config.get("build.mabi"),
         "-mcmodel=%s" % board_config.get("build.mcmodel"),
         "-Os",
-        "-g",
+        "-g3",
         "-Wall",
         "-fsigned-char",
         "-ffunction-sections",
