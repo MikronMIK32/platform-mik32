@@ -23654,7 +23654,7 @@ Mux_7 – [31:28]</description>
         <register>
           <name>REF_CLB</name>
           <description>Управление калибруемыми источниками тока и напряжения</description>
-          <addressOffset>0x00085038</addressOffset>
+          <addressOffset>0x00</addressOffset>
           <access>read-write</access>
           <resetValue>0x188</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
