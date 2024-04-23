@@ -128,3 +128,9 @@ libs = [
 ]
 
 env.Prepend(LIBS=libs)
+
+libpaths = [
+    join(SHARED_DIR, "ldscripts"),
+]
+
+env.PrependUnique(LIBPATH=libpaths)
