@@ -564,7 +564,7 @@
             </field>
 
             <field>
-              <name>Read_reques</name>
+              <name>Read_request</name>
               <description>Выбор периферийной линии источника</description>
               <bitRange>[20:17]</bitRange>
               <access>read-write</access>
