@@ -19,11 +19,6 @@
     },
     "version": "0.2.1",
     "frameworks": {
-      "framework-mik32v0-sdk": {
-        "package": "framework-mik32v0-sdk",
-        "script": "builder/frameworks/custom.py",
-        "title": "Mikron MIK32V0 Firmware Library"
-      },
       "framework-mik32v2-sdk": {
         "package": "framework-mik32v2-sdk",
         "script": "builder/frameworks/custom.py",
@@ -31,11 +26,6 @@
       }
     },
     "packages": {
-      "framework-mik32v0-sdk": {
-        "type": "framework",
-        "version": "^0.2.0",
-        "optional": true
-      },
       "framework-mik32v2-sdk": {
         "type": "framework",
         "version": "^0.1.0",
