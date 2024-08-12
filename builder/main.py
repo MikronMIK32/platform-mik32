@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 from os.path import join
 from os.path import realpath
 
@@ -124,7 +125,12 @@ upload_flags = env.GetProjectOption("upload_flags", [])
 
 hex_path = target_hex[0].rstr().replace('\\', '/')
 
-openocd_path = join(openocd_dir or "", "bin", "openocd.exe")
+if os.name == 'nt':
+    openocd_exec = "openocd.exe"
+else:
+    openocd_exec = "openocd"
+
+openocd_path = join(openocd_dir or "", "bin", openocd_exec)
 openocd_scripts = realpath(join(openocd_dir, 'openocd/scripts/'))
 
 mik32_uploader_path = platform.get_package_dir("tool-mik32-uploader") or ""
