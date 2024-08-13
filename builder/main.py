@@ -25,16 +25,19 @@ env.SConscript("compat.py", exports="env")
 platform = env.PioPlatform()
 board = env.BoardConfig()
 
+
+TOOLCHAIN_PREFIX = "riscv-none-elf"
+
 env.Replace(
-    AR="riscv64-unknown-elf-gcc-ar",
-    AS="riscv64-unknown-elf-as",
-    CC="riscv64-unknown-elf-gcc",
-    LD="riscv64-unknown-elf-ld",
-    GDB="riscv64-unknown-elf-gdb",
-    CXX="riscv64-unknown-elf-g++",
-    OBJCOPY="riscv64-unknown-elf-objcopy",
-    RANLIB="riscv64-unknown-elf-gcc-ranlib",
-    SIZETOOL="riscv64-unknown-elf-size",
+    AR=TOOLCHAIN_PREFIX + "-gcc-ar",
+    AS=TOOLCHAIN_PREFIX + "-as",
+    CC=TOOLCHAIN_PREFIX + "-gcc",
+    LD=TOOLCHAIN_PREFIX + "-ld",
+    GDB=TOOLCHAIN_PREFIX + "-gdb",
+    CXX=TOOLCHAIN_PREFIX + "-g++",
+    OBJCOPY=TOOLCHAIN_PREFIX + "-objcopy",
+    RANLIB=TOOLCHAIN_PREFIX + "-gcc-ranlib",
+    SIZETOOL=TOOLCHAIN_PREFIX + "-size",
 
     ARFLAGS=["rc"],
 

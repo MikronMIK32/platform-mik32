@@ -11,7 +11,7 @@
       ]
     ],
     "mabi": "ilp32",
-    "march": "rv32imc",
+    "march": "rv32imc_zicsr_zifencei",
     "mcmodel": "medlow",
     "mcu": "MIK32V2",
     "variant": "mik32v2",
