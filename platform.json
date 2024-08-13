@@ -44,7 +44,7 @@
       "toolchain-riscv": {
         "type": "toolchain",
         "owner": "platformio",
-        "version": "^1.130200.2"
+        "version": "~1.130200.2"
       },
       "tool-openocd": {
         "type": "uploader",
