@@ -2,7 +2,7 @@
 <!-- File naming: <vendor>_<part/series name>.svd -->
 <device schemaVersion="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">
   <vendor>Mikron</vendor>
-  <name>MCU32</name>
+  <name>MIK32</name>
   <series>MIK32</series>
   <version>1.0</version>
   <description>MIK32_V2 registers description</description>
@@ -304,7 +304,7 @@ If (state==read):  Current byte len</description>
               <access>read-write</access>
             </field>
             <field>
-              <name>READ_REQUETS</name>
+              <name>READ_REQUEST</name>
               <description>Выбор периферийной линии источника</description>
               <bitRange>[20:17]</bitRange>
               <access>read-write</access>
@@ -377,7 +377,7 @@ If (state==read):  Current byte len</description>
               </enumeratedValues>
             </field>
             <field>
-              <name>WRITE_REQUETS</name>
+              <name>WRITE_REQUEST</name>
               <description>Выбор периферийной линии назначения</description>
               <bitRange>[24:21]</bitRange>
               <access>read-write</access>
@@ -758,7 +758,7 @@ If (state==read):  Current byte len</description>
               <access>read-write</access>
             </field>
             <field>
-              <name>READ_REQUETS</name>
+              <name>READ_REQUEST</name>
               <description>Выбор периферийной линии источника</description>
               <bitRange>[20:17]</bitRange>
               <access>read-write</access>
@@ -831,7 +831,7 @@ If (state==read):  Current byte len</description>
               </enumeratedValues>
             </field>
             <field>
-              <name>WRITE_REQUETS</name>
+              <name>WRITE_REQUEST</name>
               <description>Выбор периферийной линии назначения</description>
               <bitRange>[24:21]</bitRange>
               <access>read-write</access>
@@ -1212,7 +1212,7 @@ If (state==read):  Current byte len</description>
               <access>read-write</access>
             </field>
             <field>
-              <name>READ_REQUETS</name>
+              <name>READ_REQUEST</name>
               <description>Выбор периферийной линии источника</description>
               <bitRange>[20:17]</bitRange>
               <access>read-write</access>
@@ -1285,7 +1285,7 @@ If (state==read):  Current byte len</description>
               </enumeratedValues>
             </field>
             <field>
-              <name>WRITE_REQUETS</name>
+              <name>WRITE_REQUEST</name>
               <description>Выбор периферийной линии назначения</description>
               <bitRange>[24:21]</bitRange>
               <access>read-write</access>
@@ -1666,7 +1666,7 @@ If (state==read):  Current byte len</description>
               <access>read-write</access>
             </field>
             <field>
-              <name>READ_REQUETS</name>
+              <name>READ_REQUEST</name>
               <description>Выбор периферийной линии источника</description>
               <bitRange>[20:17]</bitRange>
               <access>read-write</access>
@@ -1739,7 +1739,7 @@ If (state==read):  Current byte len</description>
               </enumeratedValues>
             </field>
             <field>
-              <name>WRITE_REQUETS</name>
+              <name>WRITE_REQUEST</name>
               <description>Выбор периферийной линии назначения</description>
               <bitRange>[24:21]</bitRange>
               <access>read-write</access>
