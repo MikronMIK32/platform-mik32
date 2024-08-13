@@ -47,12 +47,12 @@ def get_ldscript_path() -> Union[str, None]:
         return None
 
     default_ld_path = join(SHARED_DIR, "ldscripts", board.get(
-        "build.mik32v0-sdk.ldscript"))
+        "build.mik32v2-sdk.ldscript"))
     if exists(default_ld_path):
         print("No ld script defined, using default %s" %
               basename(default_ld_path))
         return join(SHARED_DIR, "ldscripts", board.get(
-            "build.mik32v0-sdk.ldscript"))
+            "build.mik32v2-sdk.ldscript"))
 
     print("ERROR: Unable to find any ld script")
     return None
