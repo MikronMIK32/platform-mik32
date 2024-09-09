@@ -15,7 +15,7 @@ MIK32 АМУР - 32-х битный микроконтроллер с ГОСТ �
 
 ```
 [env:mik32v2]
-platform = https://github.com/platformio/platform-espressif32.git#v0.2.0-alpha
+platform = https://github.com/platformio/platform-espressif32.git#v0.3.0
 board = mik32v2
 board_build.ldscript=eeprom
 ```
