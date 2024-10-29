@@ -116,6 +116,11 @@ class Mik32Platform(PlatformBase):
         board.manifest["debug"] = debug
         return board
 
+    adapter_speed_not_supported = [
+        "altera-usb-blaster",
+        "start-link",
+    ]
+
     def configure_debug_session(self, debug_config):
         print(dir(debug_config))
 
@@ -149,9 +154,10 @@ class Mik32Platform(PlatformBase):
 
             debug_config.server["arguments"] = server_args
 
-            debug_config.server["arguments"].extend(
-                ["-c", "adapter speed %s" % (debug_config.speed or "500")]
-            )
+            if interface not in self.adapter_speed_not_supported:
+                debug_config.server["arguments"].extend(
+                    ["-c", "adapter speed %s" % (debug_config.speed or "500")]
+                )
 
         pass
 

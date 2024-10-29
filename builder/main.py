@@ -153,6 +153,7 @@ mik32_uploader_args = [
 
 openocd_supported_interfaces = [
     "mikron-link",
+    "start-link",
     "olimex-arm-usb-ocd",
     "olimex-arm-usb-ocd-h",
     "olimex-arm-usb-tiny-h",

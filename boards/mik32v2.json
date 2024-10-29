@@ -46,6 +46,7 @@
     "protocol": "mikron-link",
     "protocols": [
       "mikron-link",
+      "start-link",
       "jlink",
       "olimex-arm-usb-ocd",
       "olimex-arm-usb-ocd-h",
