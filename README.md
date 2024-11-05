@@ -38,6 +38,7 @@ board_build.ldscript=eeprom
 Возможные значения:
 
 - `mikron-link` - Программатор MIK32;
+- `start-link` - Программатор платы START-MIK32-V1;
 - `olimex-arm-usb-ocd` - Olimex ARM-USB-OCD;
 - `olimex-arm-usb-ocd-h` - Olimex ARM-USB-OCD-H;
 - `olimex-arm-usb-tiny-h` - Olimex ARM-USB-TINY-H;

@@ -17,7 +17,7 @@
     "engines": {
       "platformio": "^5"
     },
-    "version": "0.3.0",
+    "version": "0.4.0",
     "frameworks": {
       "framework-mik32v0-sdk": {
         "package": "framework-mik32v0-sdk",
@@ -44,7 +44,7 @@
       "tool-mik32-uploader": {
         "type": "uploader",
         "owner": "mikron",
-        "version": "^0.2.0"
+        "version": "^0.3.0"
       },
       "framework-mik32v0-sdk": {
         "type": "framework",
