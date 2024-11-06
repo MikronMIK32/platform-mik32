@@ -15,6 +15,7 @@
     "mcmodel": "medlow",
     "mcu": "MIK32V2",
     "variant": "mik32v2",
+    "ldscript": "eeprom.ld",
     "flags": [
       "-D MIK32V2"
     ]

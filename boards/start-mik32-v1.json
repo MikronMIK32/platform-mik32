@@ -15,6 +15,7 @@
     "mcmodel": "medlow",
     "mcu": "MIK32V2",
     "variant": "mik32v2",
+    "ldscript": "eeprom.ld",
     "flags": [
       "-D MIK32V2"
     ]
@@ -39,7 +40,7 @@
   ],
   "upload": {
     "maximum_ram_size": 16384,
-    "maximum_size": 8388608,
+    "maximum_size": 8192,
     "protocol": "start-link",
     "protocols": [
       "mikron-link",
