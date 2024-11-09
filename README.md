@@ -1,6 +1,6 @@
 # MIK32: Платформа разработки для PlatformIO
 
-MIK32 АМУР - 32-х битный микроконтроллер с ГОСТ криптозащитой на основе процессорного ядра RISC-V.
+MIK32 АМУР - 32-битный микроконтроллер с ГОСТ криптозащитой на основе процессорного ядра RISC-V.
 
 Дополнительная информация:
 - [Микрон](https://mikron.ru/products/mikrokontrollery/mk32-amur/) (Страница микроконтроллера на сайте АО Микрон)
@@ -15,7 +15,7 @@ MIK32 АМУР - 32-х битный микроконтроллер с ГОСТ �
 
 ```
 [env:mik32v2]
-platform = https://github.com/platformio/platform-espressif32.git#v0.3.0
+platform = https://github.com/MikronMIK32/platform-mik32.git#v0.4.0
 board = mik32v2
 board_build.ldscript=eeprom
 ```
@@ -24,7 +24,7 @@ board_build.ldscript=eeprom
 
 ```
 [env:mik32v2]
-platform = https://github.com/platformio/platform-espressif32.git
+platform = https://github.com/MikronMIK32/platform-mik32.git
 board = mik32v2
 board_build.ldscript=eeprom
 ```
