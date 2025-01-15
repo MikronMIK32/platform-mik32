@@ -142,8 +142,8 @@ openocd_target = realpath(join(
     mik32_uploader_path, "openocd-scripts/target/mik32.cfg"))
 
 mik32_uploader_args = [
-    hex_path, 
-    "--openocd-exec", openocd_path, 
+    hex_path,
+    "--openocd-exec", openocd_path,
     "--adapter-speed", upload_speed,
     "--openocd-scripts", openocd_scripts,
     "--openocd-target", openocd_target,
@@ -151,32 +151,8 @@ mik32_uploader_args = [
     "--mcu-type", board.get("build.mcu", "MIK32V2")
 ]
 
-openocd_supported_interfaces = [
-    "mikron-link",
-    "start-link",
-    "mikron-development-board",
-    "olimex-arm-usb-ocd",
-    "olimex-arm-usb-ocd-h",
-    "olimex-arm-usb-tiny-h",
-    "olimex-jtag-tiny",
-    "jlink",
-    "altera-usb-blaster",
-    "sipeed-rv-debugger",
-]
 
-
-if upload_protocol in openocd_supported_interfaces:
-    env.Replace(
-        UPLOADER=mik32_uploader_exec,
-        UPLOADERFLAGS=[
-            *mik32_uploader_args,
-            "--openocd-interface", platform.get_interface_config_path(upload_protocol),
-        ],
-        UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
-    )
-    upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
-
-elif upload_protocol == "custom":
+if upload_protocol == "custom":
     env.Replace(
         UPLOADER=upload_command,
         UPLOADERFLAGS=upload_flags,
@@ -186,7 +162,22 @@ elif upload_protocol == "custom":
     upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
 
 else:
-    print("Upload protocol %s not supported" % upload_protocol)
+    interface_config_path = platform.get_interface_config_path(upload_protocol)
+
+    if interface_config_path != "":
+        env.Replace(
+            UPLOADER=mik32_uploader_exec,
+            UPLOADERFLAGS=[
+                *mik32_uploader_args,
+                "--openocd-interface", platform.get_interface_config_path(
+                    upload_protocol),
+            ],
+            UPLOADCMD='"$PYTHONEXE" "$UPLOADER" $UPLOADERFLAGS'
+        )
+        upload_actions = [env.VerboseAction("$UPLOADCMD", "Uploading $SOURCE")]
+
+    else:
+        print("Upload interface %s not found!" % upload_protocol)
 
 AlwaysBuild(env.Alias("upload", upload_target, upload_actions))
 
