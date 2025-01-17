@@ -78,8 +78,6 @@ env.Append(
 if not env.get("PIOFRAMEWORK"):
     env.SConscript("frameworks/_bare.py", exports="env")
 
-env.SConscript("frameworks/custom.py", exports={"env": env})
-
 #
 # Target: Build executable and linkable firmware
 #
@@ -115,9 +113,6 @@ AlwaysBuild(target_size)
 debug_tools = board.get("debug.tools", {})
 
 openocd_dir = platform.get_package_dir("tool-openocd")
-
-framework_name = env.GetProjectOption("framework")[0]
-sdk_dir = platform.get_package_dir(framework_name)
 
 upload_protocol = env.subst("$UPLOAD_PROTOCOL")
 upload_actions = []
