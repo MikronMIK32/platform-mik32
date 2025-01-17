@@ -13,17 +13,7 @@
 # limitations under the License.
 
 
-import copy
-import json
-import subprocess
-import sys
-import os
-import ctypes
-
-from os.path import join, isdir, exists, basename, dirname
-
-import click
-import semantic_version
+from os.path import join, isdir, exists, dirname
 
 from colorama import Fore, Style
 
@@ -33,12 +23,6 @@ from SCons.Script import (
     DefaultEnvironment,
 )
 
-from platformio import fs
-from platformio.proc import exec_command
-from platformio.util import get_systype
-from platformio.builder.tools.piolib import ProjectAsLibBuilder
-from platformio.package.version import get_original_version, pepver_to_semver
-
 env = DefaultEnvironment()
 
 env.SConscript("_bare.py")
@@ -46,10 +30,11 @@ env.SConscript("_bare.py")
 platform = env.PioPlatform()
 board = env.BoardConfig()
 
+
+# Prepare paths to the framework directories
+
 framework_name = env.GetProjectOption("framework")[0]
 FRAMEWORK_DIR = platform.get_package_dir(framework_name)
-
-assert isdir(FRAMEWORK_DIR)
 
 BUILD_DIR = env.subst("$BUILD_DIR")
 PROJECT_DIR = env.subst("$PROJECT_DIR")
@@ -61,12 +46,7 @@ RUNTIME_DIR = join(SHARED_DIR, "runtime")
 HAL_DIR = join(FRAMEWORK_DIR, "hal")
 
 
-def log(msg, should_append=False):
-    LOG_FILE = join(PROJECT_DIR, "log.log")
-
-    with open(LOG_FILE, 'a' if should_append else 'w') as f:
-        f.write(msg + '\n')
-
+# Add header file search directories
 
 env.AppendUnique(
     CPPPATH=[
@@ -84,39 +64,8 @@ env.AppendUnique(
     ]
 )
 
-f_cpu: str = board.get("build.f_cpu", "")
-if not f_cpu.endswith("L"):
-    f_cpu = "".join([f_cpu, "L"])
 
-env.AppendUnique(
-    CPPDEFINES=[
-        f"OSC_SYSTEM_VALUE={f_cpu}"
-    ]
-)
-
-
-ld_build = board.get("build.ldscript", "").removesuffix(".ld")
-
-for path in [
-    "",             # $PROJECT_DIR or path from 
-    LDSCRIPTS_DIR,
-]:
-    file_path = join(path, ld_build) + ".ld"
-    ld_path = dirname(file_path)
-
-    if exists(file_path):
-        print("ld_path =", ld_path)
-        if ld_path != "":
-            env.PrependUnique(LIBPATH=ld_path)
-
-        env.Replace(LDSCRIPT_PATH=file_path)
-        break
-else:
-    print(f"{Fore.RED}ERROR: Unable to find linker script: {file_path}{Style.RESET_ALL}")
-    print(f"{Fore.RED}Specify correct linker script name or path in platformio.ini"
-        f" parameter: board_build.ldscript{Style.RESET_ALL}")
-    env.Exit(1)
-
+# Add startup file and HAL library source code directories
 
 libs = [
     env.BuildLibrary(
@@ -142,3 +91,42 @@ libs = [
 ]
 
 env.Prepend(LIBS=libs)
+
+
+# Define the system clock frequency
+
+f_cpu: str = board.get("build.f_cpu", "")
+if not f_cpu.endswith("L"):
+    f_cpu = "".join([f_cpu, "L"])
+
+env.AppendUnique(
+    CPPDEFINES=[
+        ("OSC_SYSTEM_VALUE", f_cpu)
+    ]
+)
+
+
+# Defining path to selected linker script and adding library search path 
+# for correct search of nested scripts
+
+ld_build = board.get("build.ldscript", "").removesuffix(".ld")
+
+for path in [
+    "",             # $PROJECT_DIR or path from board_build.ldscript
+    LDSCRIPTS_DIR,  # framework/shared/ldscripts
+]:
+    file_path = join(path, ld_build) + ".ld"
+    ld_path = dirname(file_path)
+
+    if exists(file_path):
+        print("ld_path =", ld_path)
+        if ld_path != "":
+            env.PrependUnique(LIBPATH=ld_path)
+
+        env.Replace(LDSCRIPT_PATH=file_path)
+        break
+else:
+    print(f"{Fore.RED}ERROR: Unable to find linker script: {file_path}{Style.RESET_ALL}")
+    print(f"{Fore.RED}Specify correct linker script name or path in platformio.ini"
+        f" parameter: board_build.ldscript{Style.RESET_ALL}")
+    env.Exit(1)
