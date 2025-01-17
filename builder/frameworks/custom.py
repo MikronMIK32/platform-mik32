@@ -20,10 +20,12 @@ import sys
 import os
 import ctypes
 
-from os.path import join, isdir
+from os.path import join, isdir, exists, basename, dirname
 
 import click
 import semantic_version
+
+from colorama import Fore, Style
 
 from SCons.Script import (
     ARGUMENTS,
@@ -38,7 +40,6 @@ from platformio.builder.tools.piolib import ProjectAsLibBuilder
 from platformio.package.version import get_original_version, pepver_to_semver
 
 env = DefaultEnvironment()
-# env.SConscript("_embed_files.py", exports="env")
 
 env.SConscript("_bare.py")
 
@@ -46,19 +47,18 @@ platform = env.PioPlatform()
 board = env.BoardConfig()
 
 framework_name = env.GetProjectOption("framework")[0]
-TOOLCHAIN_DIR = platform.get_package_dir(framework_name)
+FRAMEWORK_DIR = platform.get_package_dir(framework_name)
 
-assert isdir(TOOLCHAIN_DIR)
+assert isdir(FRAMEWORK_DIR)
 
 BUILD_DIR = env.subst("$BUILD_DIR")
 PROJECT_DIR = env.subst("$PROJECT_DIR")
 PROJECT_SRC_DIR = env.subst("$PROJECT_SRC_DIR")
-CMAKE_API_REPLY_PATH = join(".cmake", "api", "v1", "reply")
 
-SHARED_DIR = join(TOOLCHAIN_DIR, "shared")
+SHARED_DIR = join(FRAMEWORK_DIR, "shared")
 LDSCRIPTS_DIR = join(SHARED_DIR, "ldscripts")
 RUNTIME_DIR = join(SHARED_DIR, "runtime")
-HAL_DIR = join(TOOLCHAIN_DIR, "hal")
+HAL_DIR = join(FRAMEWORK_DIR, "hal")
 
 
 def log(msg, should_append=False):
@@ -70,7 +70,6 @@ def log(msg, should_append=False):
 
 env.AppendUnique(
     CPPPATH=[
-        '-v',
         "$PROJECT_SRC_DIR",
         join(SHARED_DIR, "include"),
         join(SHARED_DIR, "periphery"),
@@ -89,20 +88,35 @@ f_cpu: str = board.get("build.f_cpu", "")
 if not f_cpu.endswith("L"):
     f_cpu = "".join([f_cpu, "L"])
 
-# print("CPU Freq:", f_cpu)
-
 env.AppendUnique(
     CPPDEFINES=[
         f"OSC_SYSTEM_VALUE={f_cpu}"
     ]
 )
 
-from utils import get_ldscript_path
 
-print("ldscript: %s" % get_ldscript_path())
-env.Replace(
-        LDSCRIPT_PATH=get_ldscript_path()
-    )
+ld_build = board.get("build.ldscript", "").removesuffix(".ld")
+
+for path in [
+    "",             # $PROJECT_DIR or path from 
+    LDSCRIPTS_DIR,
+]:
+    file_path = join(path, ld_build) + ".ld"
+    ld_path = dirname(file_path)
+
+    if exists(file_path):
+        print("ld_path =", ld_path)
+        if ld_path != "":
+            env.PrependUnique(LIBPATH=ld_path)
+
+        env.Replace(LDSCRIPT_PATH=file_path)
+        break
+else:
+    print(f"{Fore.RED}ERROR: Unable to find linker script: {file_path}{Style.RESET_ALL}")
+    print(f"{Fore.RED}Specify correct linker script name or path in platformio.ini"
+        f" parameter: board_build.ldscript{Style.RESET_ALL}")
+    env.Exit(1)
+
 
 libs = [
     env.BuildLibrary(
@@ -128,9 +142,3 @@ libs = [
 ]
 
 env.Prepend(LIBS=libs)
-
-libpaths = [
-    join(SHARED_DIR, "ldscripts"),
-]
-
-env.PrependUnique(LIBPATH=libpaths)
