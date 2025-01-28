@@ -119,7 +119,6 @@ for path in [
     ld_path = dirname(file_path)
 
     if exists(file_path):
-        print("ld_path =", ld_path)
         if ld_path != "":
             env.PrependUnique(LIBPATH=ld_path)
 
