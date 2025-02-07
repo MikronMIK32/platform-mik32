@@ -17635,7 +17635,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH1_CNTR</name>
+          <name>CH1_CNTRL</name>
           <description>Конфигурационный регистр 1 канала</description>
           <addressOffset>0x80</addressOffset>
           <resetValue>0x0</resetValue>
@@ -17673,12 +17673,12 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                 <enumeratedValue>
                   <name>Direct</name>
                   <description>Прямой (не инвертированный) выход</description>
-                  <value>0b01</value>
+                  <value>0b00</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Inverted</name>
                   <description>Инвертированный выход</description>
-                  <value>0b00</value>
+                  <value>0b01</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -17792,7 +17792,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH2_CNTR</name>
+          <name>CH2_CNTRL</name>
           <description>Конфигурационный регистр 2 канала</description>
           <addressOffset>0x90</addressOffset>
           <resetValue>0x0</resetValue>
@@ -17830,12 +17830,12 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                 <enumeratedValue>
                   <name>Direct</name>
                   <description>Прямой (не инвертированный) выход</description>
-                  <value>0b01</value>
+                  <value>0b00</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Inverted</name>
                   <description>Инвертированный выход</description>
-                  <value>0b00</value>
+                  <value>0b01</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -17949,7 +17949,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH3_CNTR</name>
+          <name>CH3_CNTRL</name>
           <description>Конфигурационный регистр 3 канала</description>
           <addressOffset>0xA0</addressOffset>
           <resetValue>0x0</resetValue>
@@ -17987,12 +17987,12 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                 <enumeratedValue>
                   <name>Direct</name>
                   <description>Прямой (не инвертированный) выход</description>
-                  <value>0b01</value>
+                  <value>0b00</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Inverted</name>
                   <description>Инвертированный выход</description>
-                  <value>0b00</value>
+                  <value>0b01</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -18106,7 +18106,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH4_CNTR</name>
+          <name>CH4_CNTRL</name>
           <description>Конфигурационный регистр 4 канала</description>
           <addressOffset>0xB0</addressOffset>
           <resetValue>0x0</resetValue>
@@ -18144,12 +18144,12 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                 <enumeratedValue>
                   <name>Direct</name>
                   <description>Прямой (не инвертированный) выход</description>
-                  <value>0b01</value>
+                  <value>0b00</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Inverted</name>
                   <description>Инвертированный выход</description>
-                  <value>0b00</value>
+                  <value>0b01</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -18569,7 +18569,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH1_CNTR</name>
+          <name>CH1_CNTRL</name>
           <description>Конфигурационный регистр 1 канала</description>
           <addressOffset>0x80</addressOffset>
           <resetValue>0x0</resetValue>
@@ -18607,12 +18607,12 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                 <enumeratedValue>
                   <name>Direct</name>
                   <description>Прямой (не инвертированный) выход</description>
-                  <value>0b01</value>
+                  <value>0b00</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Inverted</name>
                   <description>Инвертированный выход</description>
-                  <value>0b00</value>
+                  <value>0b01</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -18726,7 +18726,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH2_CNTR</name>
+          <name>CH2_CNTRL</name>
           <description>Конфигурационный регистр 2 канала</description>
           <addressOffset>0x90</addressOffset>
           <resetValue>0x0</resetValue>
@@ -18764,12 +18764,12 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                 <enumeratedValue>
                   <name>Direct</name>
                   <description>Прямой (не инвертированный) выход</description>
-                  <value>0b01</value>
+                  <value>0b00</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Inverted</name>
                   <description>Инвертированный выход</description>
-                  <value>0b00</value>
+                  <value>0b01</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -18883,7 +18883,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH3_CNTR</name>
+          <name>CH3_CNTRL</name>
           <description>Конфигурационный регистр 3 канала</description>
           <addressOffset>0x90</addressOffset>
           <resetValue>0x0</resetValue>
@@ -18921,12 +18921,12 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                 <enumeratedValue>
                   <name>Direct</name>
                   <description>Прямой (не инвертированный) выход</description>
-                  <value>0b01</value>
+                  <value>0b00</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Inverted</name>
                   <description>Инвертированный выход</description>
-                  <value>0b00</value>
+                  <value>0b01</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -19040,7 +19040,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH4_CNTR</name>
+          <name>CH4_CNTRL</name>
           <description>Конфигурационный регистр 4 канала</description>
           <addressOffset>0xB0</addressOffset>
           <resetValue>0x0</resetValue>
@@ -19078,12 +19078,12 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                 <enumeratedValue>
                   <name>Direct</name>
                   <description>Прямой (не инвертированный) выход</description>
-                  <value>0b01</value>
+                  <value>0b00</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>Inverted</name>
                   <description>Инвертированный выход</description>
-                  <value>0b00</value>
+                  <value>0b01</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
