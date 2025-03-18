@@ -62,7 +62,7 @@ SOFTWARE. \n</licenseText>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
-              <name>Dst</name>
+              <name>DST</name>
               <description>Адрес назначения.
 В режиме чтения текущего статуса (Current_valuе=1) возвращает последнюю переданную подзадачу контроллера канала.
 В случае ошибки записи содержит указатель на текущий адрес мастер-интерфейса</description>
@@ -80,7 +80,7 @@ SOFTWARE. \n</licenseText>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
-              <name>Src</name>
+              <name>SCR</name>
               <description>Адрес источника
 
 В режиме чтения текущего статуса (Current_valuе=1) возвращает текущую подзадачу контроллера канала. Указатель на адрес блока, который обрабатывается вычисляется как: 
@@ -102,7 +102,7 @@ Current_ch_read_task - 2^READ_BURST_SIZE
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
-              <name>Data_Len</name>
+              <name>LEN</name>
               <description>Количество байт пересылки рассчитывается как LEN +1 
 
 В режиме чтения текущего статуса (Current_valuе=1) возвращает счётчик байт подзадач контроллера. Счётчик байт подзадач обновляется только по подзадачам записи. Кол-во байт в блоках, которые удалось записать вычисляется как:  
@@ -261,6 +261,11 @@ If (state==read):  Current byte len</description>
                   <description>Слово</description>
                   <value>0b10</value>
                 </enumeratedValue>
+                <enumeratedValue>
+                  <name>Reserved</name>
+                  <description>Резерв</description>
+                  <value>0b11</value>
+                </enumeratedValue>
               </enumeratedValues>
             </field>
             <field>
@@ -284,6 +289,11 @@ If (state==read):  Current byte len</description>
                   <name>4Byte</name>
                   <description>Слово</description>
                   <value>0b10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Reserved</name>
+                  <description>Резерв</description>
+                  <value>0b11</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -556,7 +566,7 @@ Current_ch_read_task - 2^READ_BURST_SIZE
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
-              <name>Data_Len</name>
+              <name>LEN</name>
               <description>Количество байт пересылки рассчитывается как LEN +1 
 
 В режиме чтения текущего статуса (Current_valuе=1) возвращает счётчик байт подзадач контроллера. Счётчик байт подзадач обновляется только по подзадачам записи. Кол-во байт в блоках, которые удалось записать вычисляется как:  
@@ -1010,7 +1020,7 @@ Current_ch_read_task - 2^READ_BURST_SIZE
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
-              <name>Data_Len</name>
+              <name>LEN</name>
               <description>Количество байт пересылки рассчитывается как LEN +1 
 
 В режиме чтения текущего статуса (Current_valuе=1) возвращает счётчик байт подзадач контроллера. Счётчик байт подзадач обновляется только по подзадачам записи. Кол-во байт в блоках, которые удалось записать вычисляется как:  
@@ -1464,7 +1474,7 @@ Current_ch_read_task - 2^READ_BURST_SIZE
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
-              <name>Data_Len</name>
+              <name>LEN</name>
               <description>Количество байт пересылки рассчитывается как LEN +1 
 
 В режиме чтения текущего статуса (Current_valuе=1) возвращает счётчик байт подзадач контроллера. Счётчик байт подзадач обновляется только по подзадачам записи. Кол-во байт в блоках, которые удалось записать вычисляется как:  
@@ -1871,7 +1881,7 @@ If (state==read):  Current byte len</description>
         </register>
         <register>
           <name>CONFIG</name>
-          <description>Регистр прерываний и настройки контроллера</description>
+          <description>Регистр прерываний и настройки контроллера при записи</description>
           <addressOffset>0x40</addressOffset>
           <access>write-only</access>
           <resetValue>0x00000000</resetValue>
@@ -1882,6 +1892,13 @@ If (state==read):  Current byte len</description>
               <description>Очистка локального прерывания</description>
               <bitRange>[3:0]</bitRange>
               <access>write-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Reset</name>
+                  <description>снятие запроса на прерывание </description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>CLEAR_GLOBAL_IRQ</name>
@@ -1889,6 +1906,13 @@ If (state==read):  Current byte len</description>
 «1» – снятие запроса на прерывание</description>
               <bitRange>[4:4]</bitRange>
               <access>write-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Reset</name>
+                  <description>снятие запроса на прерывание </description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>CLEAR_ERROR_IRQ</name>
@@ -1896,12 +1920,13 @@ If (state==read):  Current byte len</description>
 «1» – снятие запроса на прерывание</description>
               <bitRange>[5:5]</bitRange>
               <access>write-only</access>
-              <writeConstraint>
-                <range>
-                  <minimum>0b0</minimum>
-                  <maximum>0b1</maximum>
-                </range>
-              </writeConstraint>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Reset</name>
+                  <description>снятие запроса на прерывание </description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
               <name>GLOBAL_IRQ_ENA</name>
@@ -1961,7 +1986,7 @@ If (state==read):  Current byte len</description>
         </register>
         <register>
           <name>STATUS</name>
-          <description>Регистр прерываний и настройки контроллера</description>
+          <description>Регистр прерываний и настройки контроллера при чтении</description>
           <addressOffset>0x40</addressOffset>
           <access>read-only</access>
           <resetValue>0x00000000</resetValue>
@@ -1970,79 +1995,60 @@ If (state==read):  Current byte len</description>
             <field>
               <name>CHANNEL_READY</name>
               <description>Статус состояния каналов:
-«1» - готов к работе;
-«0» - занят
-
 В режиме чтения текущего статуса (Current_valuе=1) возвращает:
 [0] - состояния ошибки при чтении (0 – ошибки не было; 1 – была зафиксирована ошибка шины при чтении)
 [1] - состояния ошибки при записи (0 – ошибки не было; 1 – была зафиксирована ошибка шины при записи)
 [3:2] состояния статуса контроллера канала (2’b01 – канал в состоянии чтения; 2’b10 – канала в состоянии записи)</description>
               <bitRange>[3:0]</bitRange>
               <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Busy</name>
+                  <description>канал занят</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Ready</name>
+                  <description>готов к работе</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
-              <name>CHANNEL1_IRQ</name>
-              <description>Статус прерываний:
-«1» - есть прерывания;
-«0» - нет прерываний</description>
-              <bitRange>[4:4]</bitRange>
+              <name>CHANNEL_IRQ</name>
+              <description>Статус прерываний</description>
+              <bitRange>[7:4]</bitRange>
               <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Interrupt</name>
+                  <description>есть прерывания</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Uninterrupt</name>
+                  <description>нет прерываний</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
             <field>
-              <name>CHANNEL2_IRQ</name>
-              <description>Статус прерываний:
-«1» - есть прерывания;
-«0» - нет прерываний</description>
-              <bitRange>[5:5]</bitRange>
+              <name>CHANNEL_BUS_ERROR</name>
+              <description>Статус прерываний. Примечание – При передаче каналу нового задания, значения CHANNEL_BUS_ERROR сбрасываются в 0.</description>
+              <bitRange>[11:8]</bitRange>
               <access>read-only</access>
-            </field>
-            <field>
-              <name>CHANNEL3_IRQ</name>
-              <description>Статус прерываний:
-«1» - есть прерывания;
-«0» - нет прерываний</description>
-              <bitRange>[6:6]</bitRange>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>CHANNEL4_IRQ</name>
-              <description>Статус прерываний:
-«1» - есть прерывания;
-«0» - нет прерываний</description>
-              <bitRange>[7:7]</bitRange>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>CHANNEL1_BUS_ERROR</name>
-              <description>Статус состояния каналов при ошибках на шине:
-«1» - есть ошибка;
-«0» - нет ошибки</description>
-              <bitRange>[8:8]</bitRange>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>CHANNEL2_BUS_ERROR</name>
-              <description>Статус состояния каналов при ошибках на шине:
-«1» - есть ошибка;
-«0» - нет ошибки</description>
-              <bitRange>[9:9]</bitRange>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>CHANNEL3_BUS_ERROR</name>
-              <description>Статус состояния каналов при ошибках на шине:
-«1» - есть ошибка;
-«0» - нет ошибки</description>
-              <bitRange>[10:10]</bitRange>
-              <access>read-only</access>
-            </field>
-            <field>
-              <name>CHANNEL4_BUS_ERROR</name>
-              <description>Статус состояния каналов при ошибках на шине:
-«1» - есть ошибка;
-«0» - нет ошибки</description>
-              <bitRange>[11:11]</bitRange>
-              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Error</name>
+                  <description>есть ошибка</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>No_errror</name>
+                  <description>нет ошибки</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+              </enumeratedValues>
             </field>
           </fields>
         </register>
@@ -4010,6 +4016,11 @@ FAPB/( Div_APM_P+1)</description>
               </enumeratedValues>
             </field>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[2:2]</bitRange>
+            </field>
+            <field>
               <name>MUX_TIM32_1_TIM1</name>
               <description>Выбор синхронного тактового сигнала для входа TIM1 Timer32_1</description>
               <bitRange>[3:3]</bitRange>
@@ -4046,6 +4057,11 @@ FAPB/( Div_APM_P+1)</description>
               </enumeratedValues>
             </field>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[5:5]</bitRange>
+            </field>
+            <field>
               <name>MUX_TIM32_2_TIM1</name>
               <description>Выбор синхронного тактового сигнала для входа TIM1 Timer32_2</description>
               <bitRange>[6:6]</bitRange>
@@ -4080,6 +4096,11 @@ FAPB/( Div_APM_P+1)</description>
                   <value>0b01</value>
                 </enumeratedValue>
               </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[8:8]</bitRange>
             </field>
             <field>
               <name>MUX_TIM16_0</name>
@@ -4315,8 +4336,15 @@ FAPB/( Div_APM_P+1)</description>
         </register>
         <register>
           <name>SLEEP_MODE</name>
-          <description>Переход в спящий режим осуществляется записью в данный регистр.  При записи отключается тактирование ядра. В зависимости от записываемого значения отключается тактирование модулей
-</description>
+          <description>Переход в спящий режим осуществляется записью в данный регистр.  При записи отключается тактирование ядра. В зависимости от записываемого значения отключается тактирование модулей:
+SLEEP_MODE [0] = 1 –
+отключение тактирования ядра;
+SLEEP_MODE [1] = 1 –
+отключение тактирования EEPROM;
+SLEEP_MODE [2] = 1 –
+отключение тактирования ОЗУ;
+SLEEP_MODE [3] = 1 –
+отключение тактирования контроллера SPIFI.</description>
           <addressOffset>0x3C</addressOffset>
           <access>read-write</access>
           <resetValue>0x0</resetValue>
@@ -6554,8 +6582,10 @@ FAPB/( Div_APM_P+1)</description>
       </addressBlock>
       <registers>
         <register>
-          <name>VALUE</name>
+          <name>TIM0_VALUE</name>
           <addressOffset>0x00</addressOffset>
+          <access>read-only</access>
+          <resetValue>0x0</resetValue>
           <fields>
             <field>
               <name>TIM_VAL</name>
@@ -6566,9 +6596,10 @@ FAPB/( Div_APM_P+1)</description>
           </fields>
         </register>
         <register>
-          <name>TOP</name>
+          <name>TIM0_TOP</name>
           <description>максимальное значение счетной последовательности</description>
           <addressOffset>0x04</addressOffset>
+          <access>read-write</access>
           <resetValue>0xFFFFFFFF</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -6581,24 +6612,26 @@ FAPB/( Div_APM_P+1)</description>
           </fields>
         </register>
         <register>
-          <name>PRESCALE</name>
+          <name>TIM0_PRESCALE</name>
           <description>значение делителя</description>
           <addressOffset>0x08</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
               <name>TIM_PRESCALE</name>
-              <description>Значение предварительного делителя.  Предделитель вырабатывает тактовый сигнал для счета, частота которого в целое раз меньше входной</description>
+              <description>Значение предварительного делителя.  Предделитель вырабатывает тактовый сигнал для счета, частота которого в (TIM_PRESCALE + 1)  раз меньше входной. Диапазон значений от 0 до (232 - 1)</description>
               <bitRange>[31:0]</bitRange>
               <access>read-write</access>
             </field>
           </fields>
         </register>
         <register>
-          <name>CONTROL</name>
+          <name>TIM0_CONTROL</name>
           <description>Конфигурационный регистр основного таймера</description>
           <addressOffset>0x0C</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0x0</resetMask>
           <fields>
@@ -6656,9 +6689,10 @@ FAPB/( Div_APM_P+1)</description>
           </fields>
         </register>
         <register>
-          <name>ENABLE</name>
+          <name>TIM0_ENABLE</name>
           <description>Регистр включения таймера</description>
           <addressOffset>0x10</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -6694,9 +6728,10 @@ FAPB/( Div_APM_P+1)</description>
           </fields>
         </register>
         <register>
-          <name>INT_MASK</name>
+          <name>TIM0_INT_MASK</name>
           <description>Регистр маски прерываний</description>
           <addressOffset>0x14</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -6768,16 +6803,18 @@ FAPB/( Div_APM_P+1)</description>
           </fields>
         </register>
         <register>
-          <name>INT_CLEAR</name>
+          <name>TIM0_INT_CLEAR</name>
           <description>Регистр сброса флагов прерываний</description>
           <addressOffset>0x18</addressOffset>
-          <resetValue>C</resetValue>
+          <access>writeOnce</access>
+          <resetValue>0xFFFFFFFF</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
         <register>
-          <name>INT_FLAG</name>
+          <name>TIM0_INT_FLAG</name>
           <description>Регистр флагов прерываний</description>
           <addressOffset>0x1C</addressOffset>
+          <access>read-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -6845,6 +6882,646 @@ FAPB/( Div_APM_P+1)</description>
               <description>Статус прерывания по переполнению счетчика</description>
               <bitRange>[0:0]</bitRange>
               <access>read-only</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH1_CNTRL</name>
+          <description>Конфигурационный регистр 1 канала</description>
+          <addressOffset>0x80</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:10]</bitRange>
+            </field>
+            <field>
+              <name>DIR</name>
+              <description>Направление передачи данных. Устанавливается автоматически в зависимости от режима работы (1 - выход, 0 - вход)</description>
+              <bitRange>[9:9]</bitRange>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Output</name>
+                  <description>Выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Input</name>
+                  <description>Вход</description>
+                  <value>0b0</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>PWM_INV</name>
+              <description>Тип вывода в режиме ШИМ инвертирование</description>
+              <bitRange>[8:8]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Direct</name>
+                  <description>Прямой (не инвертированный) выход</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Inverted</name>
+                  <description>Инвертированный выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EN</name>
+              <description>Включение/выключение канала</description>
+              <bitRange>[7:7]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>MODE</name>
+              <description>Режим работы канала</description>
+              <bitRange>[6:5]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Reserved</name>
+                  <description>Зарезервировано</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Compare</name>
+                  <description>Режим сравнения (для timer0)</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Capture</name>
+                  <description>Режим захвата(для timer0)</description>
+                  <value>0b10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>PWM</name>
+                  <description>ШИМ</description>
+                  <value>0b11</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EDGE</name>
+              <description>Режим сигнала захвата </description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Front</name>
+                  <description>фронт</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Back</name>
+                  <description>срез</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[3:1]</bitRange>
+            </field>
+            <field>
+              <name>NOISE</name>
+              <description>Управление фильтрацией входных помех на входе ic_port:
+0 – фильтрация выклю-чена;
+1 – фильтрация выклю-чена</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Enable</name>
+                  <description>Фильтрация выключена</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Фильтрация включена</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH1_OCR</name>
+          <description>Значение сравнения 1 канала</description>
+          <addressOffset>0x84</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>OCR</name>
+              <description>Значение таймера в режиме сравнения</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH1_ICR</name>
+          <description>Значение захвата 1 канала</description>
+          <addressOffset>0x88</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>ICR</name>
+              <description>Значение таймера в режиме захвата</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH2_OCR</name>
+          <description>Значение сравнения 2 канала</description>
+          <addressOffset>0x94</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>OCR</name>
+              <description>Значение таймера в режиме сравнения</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH2_CNTRL</name>
+          <description>Конфигурационный регистр 2 канала</description>
+          <addressOffset>0x90</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:10]</bitRange>
+            </field>
+            <field>
+              <name>DIR</name>
+              <description>Направление передачи данных. Устанавливается автоматически в зависимости от режима работы (1 - выход, 0 - вход)</description>
+              <bitRange>[9:9]</bitRange>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Output</name>
+                  <description>Выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Input</name>
+                  <description>Вход</description>
+                  <value>0b0</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>PWM_INV</name>
+              <description>Тип вывода в режиме ШИМ инвертирование</description>
+              <bitRange>[8:8]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Direct</name>
+                  <description>Прямой (не инвертированный) выход</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Inverted</name>
+                  <description>Инвертированный выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EN</name>
+              <description>Включение/выключение канала</description>
+              <bitRange>[7:7]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>MODE</name>
+              <description>Режим работы канала</description>
+              <bitRange>[6:5]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Reserved</name>
+                  <description>Зарезервировано</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Compare</name>
+                  <description>Режим сравнения (для timer0)</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Capture</name>
+                  <description>Режим захвата(для timer0)</description>
+                  <value>0b10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>PWM</name>
+                  <description>ШИМ</description>
+                  <value>0b11</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EDGE</name>
+              <description>Режим сигнала захвата </description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Front</name>
+                  <description>фронт</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Back</name>
+                  <description>срез</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[3:1]</bitRange>
+            </field>
+            <field>
+              <name>NOISE</name>
+              <description>Управление фильтрацией входных помех на входе ic_port:
+0 – фильтрация выклю-чена;
+1 – фильтрация выклю-чена</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Enable</name>
+                  <description>Фильтрация выключена</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Фильтрация включена</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH2_ICR</name>
+          <description>Значение захвата 2 канала</description>
+          <addressOffset>0x98</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>ICR</name>
+              <description>Значение таймера в режиме захвата</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH3_CNTRL</name>
+          <description>Конфигурационный регистр 3 канала</description>
+          <addressOffset>0xA0</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:10]</bitRange>
+            </field>
+            <field>
+              <name>DIR</name>
+              <description>Направление передачи данных. Устанавливается автоматически в зависимости от режима работы (1 - выход, 0 - вход)</description>
+              <bitRange>[9:9]</bitRange>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Output</name>
+                  <description>Выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Input</name>
+                  <description>Вход</description>
+                  <value>0b0</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>PWM_INV</name>
+              <description>Тип вывода в режиме ШИМ инвертирование</description>
+              <bitRange>[8:8]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Direct</name>
+                  <description>Прямой (не инвертированный) выход</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Inverted</name>
+                  <description>Инвертированный выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EN</name>
+              <description>Включение/выключение канала</description>
+              <bitRange>[7:7]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>MODE</name>
+              <description>Режим работы канала</description>
+              <bitRange>[6:5]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Reserved</name>
+                  <description>Зарезервировано</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Compare</name>
+                  <description>Режим сравнения (для timer0)</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Capture</name>
+                  <description>Режим захвата(для timer0)</description>
+                  <value>0b10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>PWM</name>
+                  <description>ШИМ</description>
+                  <value>0b11</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EDGE</name>
+              <description>Режим сигнала захвата </description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Front</name>
+                  <description>фронт</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Back</name>
+                  <description>срез</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[3:1]</bitRange>
+            </field>
+            <field>
+              <name>NOISE</name>
+              <description>Управление фильтрацией входных помех на входе ic_port:
+0 – фильтрация выклю-чена;
+1 – фильтрация выклю-чена</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Enable</name>
+                  <description>Фильтрация выключена</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Фильтрация включена</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH3_OCR</name>
+          <description>Значение сравнения 3 канала</description>
+          <addressOffset>0xA4</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>OCR</name>
+              <description>Значение таймера в режиме сравнения</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH3_ICR</name>
+          <description>Значение захвата 3 канала</description>
+          <addressOffset>0xA8</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>ICR</name>
+              <description>Значение таймера в режиме захвата</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH4_CNTRL</name>
+          <description>Конфигурационный регистр 4 канала</description>
+          <addressOffset>0xB0</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:10]</bitRange>
+            </field>
+            <field>
+              <name>DIR</name>
+              <description>Направление передачи данных. Устанавливается автоматически в зависимости от режима работы (1 - выход, 0 - вход)</description>
+              <bitRange>[9:9]</bitRange>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Output</name>
+                  <description>Выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Input</name>
+                  <description>Вход</description>
+                  <value>0b0</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>PWM_INV</name>
+              <description>Тип вывода в режиме ШИМ инвертирование</description>
+              <bitRange>[8:8]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Direct</name>
+                  <description>Прямой (не инвертированный) выход</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Inverted</name>
+                  <description>Инвертированный выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EN</name>
+              <description>Включение/выключение канала</description>
+              <bitRange>[7:7]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>MODE</name>
+              <description>Режим работы канала</description>
+              <bitRange>[6:5]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Reserved</name>
+                  <description>Зарезервировано</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Compare</name>
+                  <description>Режим сравнения (для timer0)</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Capture</name>
+                  <description>Режим захвата(для timer0)</description>
+                  <value>0b10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>PWM</name>
+                  <description>ШИМ</description>
+                  <value>0b11</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EDGE</name>
+              <description>Режим сигнала захвата </description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Front</name>
+                  <description>фронт</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Back</name>
+                  <description>срез</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[3:1]</bitRange>
+            </field>
+            <field>
+              <name>NOISE</name>
+              <description>Управление фильтрацией входных помех на входе ic_port:
+0 – фильтрация выклю-чена;
+1 – фильтрация выклю-чена</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Enable</name>
+                  <description>Фильтрация выключена</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Фильтрация включена</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH4_OCR</name>
+          <description>Значение сравнения 4 канала</description>
+          <addressOffset>0xB4</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>OCR</name>
+              <description>Значение таймера в режиме сравнения</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM0_CH4_ICR</name>
+          <description>Значение захвата 4 канала</description>
+          <addressOffset>0xB8</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>ICR</name>
+              <description>Значение таймера в режиме захвата</description>
+              <bitRange>[31:0]</bitRange>
+              <access>read-write</access>
             </field>
           </fields>
         </register>
@@ -10221,24 +10898,84 @@ FAPB/( Div_APM_P+1)</description>
               <access>read-write</access>
               <enumeratedValues>
                 <enumeratedValue>
-                  <name>Main_array</name>
+                  <name>Main_array1</name>
                   <description>Номер строки основного массива OTP</description>
-                  <value>0b00xx</value>
+                  <value>0b0000</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>Test_row</name>
+                  <name>Main_array2</name>
+                  <description>Номер строки основного массива OTP</description>
+                  <value>0b0001</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Main_array3</name>
+                  <description>Номер строки основного массива OTP</description>
+                  <value>0b0010</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Main_array4</name>
+                  <description>Номер строки основного массива OTP</description>
+                  <value>0b0011</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Test_row1</name>
                   <description>Тестовая строка OTP</description>
-                  <value>0b01xx</value>
+                  <value>0b0100</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>Test_column</name>
+                  <name>Test_row2</name>
+                  <description>Тестовая строка OTP</description>
+                  <value>0b0101</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Test_row3</name>
+                  <description>Тестовая строка OTP</description>
+                  <value>0b0110</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Test_row4</name>
+                  <description>Тестовая строка OTP</description>
+                  <value>0b0111</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Test_column1</name>
                   <description>Тестовый столбец OTP</description>
-                  <value>0b10xx</value>
+                  <value>0b1000</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>Test_bit</name>
+                  <name>Test_column2</name>
+                  <description>Тестовый столбец OTP</description>
+                  <value>0b1001</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Test_column3</name>
+                  <description>Тестовый столбец OTP</description>
+                  <value>0b1010</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Test_column4</name>
+                  <description>Тестовый столбец OTP</description>
+                  <value>0b1011</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Test_bit1</name>
                   <description>Тестовый бит</description>
-                  <value>0b11xx</value>
+                  <value>0b1100</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Test_bit2</name>
+                  <description>Тестовый бит</description>
+                  <value>0b1101</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Test_bit3</name>
+                  <description>Тестовый бит</description>
+                  <value>0b1110</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Test_bit4</name>
+                  <description>Тестовый бит</description>
+                  <value>0b1111</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -10661,6 +11398,12 @@ N_W = 50000000 нс/Pclk, где Pclk – период тактового сиг
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:3]</bitRange>
+              <access>write-only</access>
+            </field>
+            <field>
               <name>BATT_GOOD</name>
               <description>Флаг состояние резервного (батарейного) источника питания</description>
               <bitRange>[2:2]</bitRange>
@@ -10713,8 +11456,15 @@ N_W = 50000000 нс/Pclk, где Pclk – период тактового сиг
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:15]</bitRange>
+              <access>write-only</access>
+            </field>
+            <field>
               <name>OSC32K_SM</name>
-              <description>Режим повышенного потребления, активный уровень “0” для OSC32K</description>
+              <description>Режим повышенного потребления, активный уровень “0” для OSC32K.
+Используется для более быстрого и стабильного запуска генератора, повышает устойчивость генерации на предельных режимах эксплуатации. После запуска допускается установить значение 1.</description>
               <bitRange>[14:14]</bitRange>
               <access>read-write</access>
             </field>
@@ -10794,6 +11544,12 @@ N_W = 50000000 нс/Pclk, где Pclk – период тактового сиг
           <resetValue>0x200</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:12]</bitRange>
+              <access>write-only</access>
+            </field>
             <field>
               <name>FORCE_32K_CLK</name>
               <description>Принудительное переключение на опорный источник для монитора частоты</description>
@@ -15298,7 +16054,7 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
     </peripheral>
     <peripheral>
       <name>TIMER16_0</name>
-      <description>Регистры модуля таймера_0</description>
+      <description>Регистры 16-разрядного таймера</description>
       <baseAddress>0x00081C00</baseAddress>
       <addressBlock>
         <offset>0x00</offset>
@@ -15314,6 +16070,11 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:7]</bitRange>
+            </field>
             <field>
               <name>DOWN</name>
               <description>Изменение направления счетчика вверх на вниз. В режиме энкодера бит DOWN устанавливается аппаратно, чтобы сообщить приложению, что направление счетчика изменилось с "вверх" на "вниз".</description>
@@ -15368,6 +16129,11 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
           <modifiedWriteValues>oneToClear</modifiedWriteValues>
           <fields>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:7]</bitRange>
+            </field>
+            <field>
               <name>DOWNCF</name>
               <description>Запись «1» в этот бит снимает флаг DOWN в регистре LPT_ISR</description>
               <bitRange>[6:6]</bitRange>
@@ -15419,6 +16185,11 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:7]</bitRange>
+            </field>
             <field>
               <name>DOWNIE</name>
               <description>запрет/разрешение прерывания DOWN</description>
@@ -15556,6 +16327,11 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:25]</bitRange>
+            </field>
+            <field>
               <name>ENC</name>
               <description>Разрешение режима энкодера. Бит ENC управляет режимом работы энкодера </description>
               <bitRange>[24:24]</bitRange>
@@ -15610,7 +16386,7 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
               </enumeratedValues>
             </field>
             <field>
-              <name>WAVWPOL</name>
+              <name>WAVEPOL</name>
               <description>Полярность формы волны. Бит WAVEPOL управляет полярностью выходного сигнала</description>
               <bitRange>[21:21]</bitRange>
               <access>read-write</access>
@@ -15690,6 +16466,11 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
                   <value>0b00</value>
                 </enumeratedValue>
               </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[16:16]</bitRange>
             </field>
             <field>
               <name>TRIGSEL</name>
@@ -15740,6 +16521,11 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
               </enumeratedValues>
             </field>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[12:12]</bitRange>
+            </field>
+            <field>
               <name>PRESC</name>
               <description>Делитель частоты. Биты PRESC задают коэффициент деления делителя. /n</description>
               <bitRange>[11:9]</bitRange>
@@ -15788,6 +16574,11 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
               </enumeratedValues>
             </field>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[8:8]</bitRange>
+            </field>
+            <field>
               <name>TRGFLT</name>
               <description>Конфигурируемый цифровой фильтр для триггера. Значение TRGFLT устанавливает количество последовательных одинаковых выборок, которые должны быть обнаружены при изменении уровня на внутреннем триггере, прежде чем это будет считаться действительным переходом уровня. Для использования этой функции необходимо наличие источника внутреннего тактового сигнала.</description>
               <bitRange>[7:6]</bitRange>
@@ -15814,6 +16605,11 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
                   <value>0b11</value>
                 </enumeratedValue>
               </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[5:5]</bitRange>
             </field>
             <field>
               <name>CKFLT</name>
@@ -15892,6 +16688,11 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
           <addressOffset>0x10</addressOffset>
           <fields>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:3]</bitRange>
+            </field>
+            <field>
               <name>CNTSTRT</name>
               <description>Запуск таймера в непрерывном режиме
 Этот бит устанавливается программно и очищается аппаратно.
@@ -15919,7 +16720,7 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
         </register>
         <register>
           <name>CMP</name>
-          <description>Регистр сравнения</description>
+          <description>Регистр сравнения. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x14</addressOffset>
           <fields>
             <field>
@@ -15937,7 +16738,7 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
         </register>
         <register>
           <name>ARR</name>
-          <description>Регистр автоматической перезагрузки</description>
+          <description>Регистр автоматической перезагрузки. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x18</addressOffset>
           <fields>
             <field>
@@ -15976,7 +16777,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
     </peripheral>
     <peripheral>
       <name>TIMER16_1</name>
-      <description>Регистры модуля таймера_1</description>
+      <description>Регистры 16-разрядного таймера_1</description>
       <baseAddress>0x00082000</baseAddress>
       <addressBlock>
         <offset>0x00</offset>
@@ -15992,6 +16793,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:7]</bitRange>
+            </field>
             <field>
               <name>DOWN</name>
               <description>Изменение направления счетчика вверх на вниз. В режиме энкодера бит DOWN устанавливается аппаратно, чтобы сообщить приложению, что направление счетчика изменилось с "вверх" на "вниз".</description>
@@ -16046,6 +16852,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <modifiedWriteValues>oneToClear</modifiedWriteValues>
           <fields>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:7]</bitRange>
+            </field>
+            <field>
               <name>DOWNCF</name>
               <description>Запись «1» в этот бит снимает флаг DOWN в регистре LPT_ISR</description>
               <bitRange>[6:6]</bitRange>
@@ -16097,6 +16908,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:7]</bitRange>
+            </field>
             <field>
               <name>DOWNIE</name>
               <description>запрет/разрешение прерывания DOWN</description>
@@ -16234,6 +17050,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:25]</bitRange>
+            </field>
+            <field>
               <name>ENC</name>
               <description>Разрешение режима энкодера. Бит ENC управляет режимом работы энкодера </description>
               <bitRange>[24:24]</bitRange>
@@ -16288,7 +17109,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
               </enumeratedValues>
             </field>
             <field>
-              <name>WAVWPOL</name>
+              <name>WAVEPOL</name>
               <description>Полярность формы волны. Бит WAVEPOL управляет полярностью выходного сигнала</description>
               <bitRange>[21:21]</bitRange>
               <access>read-write</access>
@@ -16370,29 +17191,34 @@ ARR - значение автозагрузки для TIMER16.  Это знач
               </enumeratedValues>
             </field>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[16:16]</bitRange>
+            </field>
+            <field>
               <name>TRIGSEL</name>
               <description>Селектор триггера. Биты TRIGSEL выбирают источник триггера, который будет служить событием запуска для TIMER16, из 8 доступных источников.</description>
               <bitRange>[15:13]</bitRange>
               <access>read-write</access>
               <enumeratedValues>
                 <enumeratedValue>
-                  <name>GPIO1_9</name>
-                  <description>Источник триггера GPIO1_9</description>
+                  <name>GPIO0_7</name>
+                  <description>Источник триггера GPIO0_7</description>
                   <value>0b000</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>GPIO1_8</name>
-                  <description>Источник триггера GPIO1_8</description>
+                  <name>GPIO0_4</name>
+                  <description>Источник триггера GPIO0_4</description>
                   <value>0b001</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>GPIO1_7</name>
-                  <description>Источник триггера GPIO1_7</description>
+                  <name>GPIO0_15</name>
+                  <description>Источник триггера GPIO0_15</description>
                   <value>0b010</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>GPIO1_6</name>
-                  <description>Источник триггера GPIO1_6</description>
+                  <name>GPIO0_14</name>
+                  <description>Источник триггера GPIO0_14</description>
                   <value>0b011</value>
                 </enumeratedValue>
                 <enumeratedValue>
@@ -16416,6 +17242,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                   <value>0b111</value>
                 </enumeratedValue>
               </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[12:12]</bitRange>
             </field>
             <field>
               <name>PRESC</name>
@@ -16466,6 +17297,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
               </enumeratedValues>
             </field>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[8:8]</bitRange>
+            </field>
+            <field>
               <name>TRGFLT</name>
               <description>Конфигурируемый цифровой фильтр для триггера. Значение TRGFLT устанавливает количество последовательных одинаковых выборок, которые должны быть обнаружены при изменении уровня на внутреннем триггере, прежде чем это будет считаться действительным переходом уровня. Для использования этой функции необходимо наличие источника внутреннего тактового сигнала.</description>
               <bitRange>[7:6]</bitRange>
@@ -16492,6 +17328,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                   <value>0b11</value>
                 </enumeratedValue>
               </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[5:5]</bitRange>
             </field>
             <field>
               <name>CKFLT</name>
@@ -16570,6 +17411,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <addressOffset>0x10</addressOffset>
           <fields>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:3]</bitRange>
+            </field>
+            <field>
               <name>CNTSTRT</name>
               <description>Запуск таймера в непрерывном режиме
 Этот бит устанавливается программно и очищается аппаратно.
@@ -16597,7 +17443,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
         </register>
         <register>
           <name>CMP</name>
-          <description>Регистр сравнения</description>
+          <description>Регистр сравнения. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x14</addressOffset>
           <fields>
             <field>
@@ -16615,7 +17461,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
         </register>
         <register>
           <name>ARR</name>
-          <description>Регистр автоматической перезагрузки</description>
+          <description>Регистр автоматической перезагрузки. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x18</addressOffset>
           <fields>
             <field>
@@ -16654,7 +17500,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
     </peripheral>
     <peripheral>
       <name>TIMER16_2</name>
-      <description>Регистры модуля таймера_2</description>
+      <description>Регистры 16-разрядного таймера_2</description>
       <baseAddress>0x00082400</baseAddress>
       <addressBlock>
         <offset>0x00</offset>
@@ -16670,6 +17516,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:7]</bitRange>
+            </field>
             <field>
               <name>DOWN</name>
               <description>Изменение направления счетчика вверх на вниз. В режиме энкодера бит DOWN устанавливается аппаратно, чтобы сообщить приложению, что направление счетчика изменилось с "вверх" на "вниз".</description>
@@ -16724,6 +17575,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <modifiedWriteValues>oneToClear</modifiedWriteValues>
           <fields>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:7]</bitRange>
+            </field>
+            <field>
               <name>DOWNCF</name>
               <description>Запись «1» в этот бит снимает флаг DOWN в регистре LPT_ISR</description>
               <bitRange>[6:6]</bitRange>
@@ -16775,6 +17631,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:7]</bitRange>
+            </field>
             <field>
               <name>DOWNIE</name>
               <description>запрет/разрешение прерывания DOWN</description>
@@ -16912,6 +17773,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:25]</bitRange>
+            </field>
+            <field>
               <name>ENC</name>
               <description>Разрешение режима энкодера. Бит ENC управляет режимом работы энкодера </description>
               <bitRange>[24:24]</bitRange>
@@ -16966,7 +17832,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
               </enumeratedValues>
             </field>
             <field>
-              <name>WAVWPOL</name>
+              <name>WAVEPOL</name>
               <description>Полярность формы волны. Бит WAVEPOL управляет полярностью выходного сигнала</description>
               <bitRange>[21:21]</bitRange>
               <access>read-write</access>
@@ -17048,29 +17914,34 @@ ARR - значение автозагрузки для TIMER16.  Это знач
               </enumeratedValues>
             </field>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[16:16]</bitRange>
+            </field>
+            <field>
               <name>TRIGSEL</name>
               <description>Селектор триггера. Биты TRIGSEL выбирают источник триггера, который будет служить событием запуска для TIMER16, из 8 доступных источников.</description>
               <bitRange>[15:13]</bitRange>
               <access>read-write</access>
               <enumeratedValues>
                 <enumeratedValue>
-                  <name>GPIO2_3</name>
-                  <description>Источник триггера GPIO2_3</description>
+                  <name>GPIO0_7</name>
+                  <description>Источник триггера GPIO0_7</description>
                   <value>0b000</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>GPIO2_2</name>
-                  <description>Источник триггера GPIO2_2</description>
+                  <name>GPIO0_4</name>
+                  <description>Источник триггера GPIO0_4</description>
                   <value>0b001</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>GPIO2_1</name>
-                  <description>Источник триггера GPIO2_1</description>
+                  <name>GPIO0_15</name>
+                  <description>Источник триггера GPIO0_15</description>
                   <value>0b010</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>GPIO2_0</name>
-                  <description>Источник триггера GPIO2_0</description>
+                  <name>GPIO0_14</name>
+                  <description>Источник триггера GPIO0_14</description>
                   <value>0b011</value>
                 </enumeratedValue>
                 <enumeratedValue>
@@ -17094,6 +17965,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                   <value>0b111</value>
                 </enumeratedValue>
               </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[12:12]</bitRange>
             </field>
             <field>
               <name>PRESC</name>
@@ -17144,6 +18020,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
               </enumeratedValues>
             </field>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[8:8]</bitRange>
+            </field>
+            <field>
               <name>TRGFLT</name>
               <description>Конфигурируемый цифровой фильтр для триггера. Значение TRGFLT устанавливает количество последовательных одинаковых выборок, которые должны быть обнаружены при изменении уровня на внутреннем триггере, прежде чем это будет считаться действительным переходом уровня. Для использования этой функции необходимо наличие источника внутреннего тактового сигнала.</description>
               <bitRange>[7:6]</bitRange>
@@ -17170,6 +18051,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                   <value>0b11</value>
                 </enumeratedValue>
               </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[5:5]</bitRange>
             </field>
             <field>
               <name>CKFLT</name>
@@ -17248,6 +18134,11 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <addressOffset>0x10</addressOffset>
           <fields>
             <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:3]</bitRange>
+            </field>
+            <field>
               <name>CNTSTRT</name>
               <description>Запуск таймера в непрерывном режиме
 Этот бит устанавливается программно и очищается аппаратно.
@@ -17275,7 +18166,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
         </register>
         <register>
           <name>CMP</name>
-          <description>Регистр сравнения</description>
+          <description>Регистр сравнения. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x14</addressOffset>
           <fields>
             <field>
@@ -17293,7 +18184,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
         </register>
         <register>
           <name>ARR</name>
-          <description>Регистр автоматической перезагрузки</description>
+          <description>Регистр автоматической перезагрузки. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x18</addressOffset>
           <fields>
             <field>
@@ -17335,14 +18226,16 @@ ARR - значение автозагрузки для TIMER16.  Это знач
       <description>регистры модуля таймера_1</description>
       <baseAddress>0x00082800</baseAddress>
       <addressBlock>
-        <offset>0x0</offset>
-        <size>0xBC</size>
+        <offset>0</offset>
+        <size>0x20</size>
         <usage>registers</usage>
       </addressBlock>
       <registers>
         <register>
-          <name>VALUE</name>
+          <name>TIM1_VALUE</name>
           <addressOffset>0x00</addressOffset>
+          <access>read-only</access>
+          <resetValue>0x0</resetValue>
           <fields>
             <field>
               <name>TIM_VAL</name>
@@ -17353,9 +18246,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>TOP</name>
+          <name>TIM1_TOP</name>
           <description>максимальное значение счетной последовательности</description>
           <addressOffset>0x04</addressOffset>
+          <access>read-write</access>
           <resetValue>0xFFFFFFFF</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -17368,25 +18262,28 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>PRESCALE</name>
+          <name>TIM1_PRESCALE</name>
           <description>значение делителя</description>
           <addressOffset>0x08</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
               <name>TIM_PRESCALE</name>
-              <description>Значение предварительного делителя.  Предделитель вырабатывает тактовый сигнал для счета, частота которого в целое раз меньше входной</description>
+              <description>Значение предварительного делителя.  Предделитель вырабатывает тактовый сигнал для счета, частота которого в (TIM_PRESCALE + 1)  раз меньше входной. Диапазон значений от 0 до (232 - 1)</description>
               <bitRange>[31:0]</bitRange>
               <access>read-write</access>
             </field>
           </fields>
         </register>
         <register>
-          <name>CONTROL</name>
+          <name>TIM1_CONTROL</name>
           <description>Конфигурационный регистр основного таймера</description>
           <addressOffset>0x0C</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
+          <resetMask>0x0</resetMask>
           <fields>
             <field>
               <name>SOURSE</name>
@@ -17442,9 +18339,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>ENABLE</name>
+          <name>TIM1_ENABLE</name>
           <description>Регистр включения таймера</description>
           <addressOffset>0x10</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -17480,9 +18378,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>INT_MASK</name>
+          <name>TIM1_INT_MASK</name>
           <description>Регистр маски прерываний</description>
           <addressOffset>0x14</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -17554,16 +18453,18 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>INT_CLEAR</name>
+          <name>TIM1_INT_CLEAR</name>
           <description>Регистр сброса флагов прерываний</description>
           <addressOffset>0x18</addressOffset>
+          <access>writeOnce</access>
           <resetValue>0xFFFFFFFF</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
         <register>
-          <name>INT_FLAG</name>
+          <name>TIM1_INT_FLAG</name>
           <description>Регистр флагов прерываний</description>
           <addressOffset>0x1C</addressOffset>
+          <access>read-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -17635,9 +18536,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH1_CNTRL</name>
+          <name>TIM1_CH1_CNTRL</name>
           <description>Конфигурационный регистр 1 канала</description>
           <addressOffset>0x80</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -17762,9 +18664,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH1_OCR</name>
+          <name>TIM1_CH1_OCR</name>
           <description>Значение сравнения 1 канала</description>
           <addressOffset>0x84</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -17777,9 +18680,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH1_ICR</name>
+          <name>TIM1_CH1_ICR</name>
           <description>Значение захвата 1 канала</description>
           <addressOffset>0x88</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -17792,136 +18696,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH2_CNTRL</name>
-          <description>Конфигурационный регистр 2 канала</description>
-          <addressOffset>0x90</addressOffset>
-          <resetValue>0x0</resetValue>
-          <resetMask>0xFFFFFFFF</resetMask>
-          <fields>
-            <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[31:10]</bitRange>
-            </field>
-            <field>
-              <name>DIR</name>
-              <description>Направление передачи данных. Устанавливается автоматически в зависимости от режима работы (1 - выход, 0 - вход)</description>
-              <bitRange>[9:9]</bitRange>
-              <access>read-only</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Output</name>
-                  <description>Выход</description>
-                  <value>0b01</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Input</name>
-                  <description>Вход</description>
-                  <value>0b0</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>PWM_INV</name>
-              <description>Тип вывода в режиме ШИМ инвертирование</description>
-              <bitRange>[8:8]</bitRange>
-              <access>read-write</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Direct</name>
-                  <description>Прямой (не инвертированный) выход</description>
-                  <value>0b00</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Inverted</name>
-                  <description>Инвертированный выход</description>
-                  <value>0b01</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>EN</name>
-              <description>Включение/выключение канала</description>
-              <bitRange>[7:7]</bitRange>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>MODE</name>
-              <description>Режим работы канала</description>
-              <bitRange>[6:5]</bitRange>
-              <access>read-write</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Reserved</name>
-                  <description>Зарезервировано</description>
-                  <value>0b00</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Compare</name>
-                  <description>Режим сравнения (для timer0)</description>
-                  <value>0b01</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Capture</name>
-                  <description>Режим захвата(для timer0)</description>
-                  <value>0b10</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>PWM</name>
-                  <description>ШИМ</description>
-                  <value>0b11</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>EDGE</name>
-              <description>Режим сигнала захвата </description>
-              <bitRange>[4:4]</bitRange>
-              <access>read-write</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Front</name>
-                  <description>фронт</description>
-                  <value>0b00</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Back</name>
-                  <description>срез</description>
-                  <value>0b01</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[3:1]</bitRange>
-            </field>
-            <field>
-              <name>NOISE</name>
-              <description>Управление фильтрацией входных помех на входе ic_port:
-0 – фильтрация выклю-чена;
-1 – фильтрация выклю-чена</description>
-              <bitRange>[0:0]</bitRange>
-              <access>read-write</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Enable</name>
-                  <description>Фильтрация выключена</description>
-                  <value>0b00</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Disable</name>
-                  <description>Фильтрация включена</description>
-                  <value>0b01</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>CH2_OCR</name>
+          <name>TIM1_CH2_OCR</name>
           <description>Значение сравнения 2 канала</description>
           <addressOffset>0x94</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -17934,9 +18712,138 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH2_ICR</name>
+          <name>TIM1_CH2_CNTRL</name>
+          <description>Конфигурационный регистр 2 канала</description>
+          <addressOffset>0x90</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:10]</bitRange>
+            </field>
+            <field>
+              <name>DIR</name>
+              <description>Направление передачи данных. Устанавливается автоматически в зависимости от режима работы (1 - выход, 0 - вход)</description>
+              <bitRange>[9:9]</bitRange>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Output</name>
+                  <description>Выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Input</name>
+                  <description>Вход</description>
+                  <value>0b0</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>PWM_INV</name>
+              <description>Тип вывода в режиме ШИМ инвертирование</description>
+              <bitRange>[8:8]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Direct</name>
+                  <description>Прямой (не инвертированный) выход</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Inverted</name>
+                  <description>Инвертированный выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EN</name>
+              <description>Включение/выключение канала</description>
+              <bitRange>[7:7]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>MODE</name>
+              <description>Режим работы канала</description>
+              <bitRange>[6:5]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Reserved</name>
+                  <description>Зарезервировано</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Compare</name>
+                  <description>Режим сравнения (для timer0)</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Capture</name>
+                  <description>Режим захвата(для timer0)</description>
+                  <value>0b10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>PWM</name>
+                  <description>ШИМ</description>
+                  <value>0b11</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EDGE</name>
+              <description>Режим сигнала захвата </description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Front</name>
+                  <description>фронт</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Back</name>
+                  <description>срез</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[3:1]</bitRange>
+            </field>
+            <field>
+              <name>NOISE</name>
+              <description>Управление фильтрацией входных помех на входе ic_port:
+0 – фильтрация выклю-чена;
+1 – фильтрация выклю-чена</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Enable</name>
+                  <description>Фильтрация выключена</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Фильтрация включена</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM1_CH2_ICR</name>
           <description>Значение захвата 2 канала</description>
           <addressOffset>0x98</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -17949,9 +18856,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH3_CNTRL</name>
+          <name>TIM1_CH3_CNTRL</name>
           <description>Конфигурационный регистр 3 канала</description>
           <addressOffset>0xA0</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18076,9 +18984,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH3_OCR</name>
+          <name>TIM1_CH3_OCR</name>
           <description>Значение сравнения 3 канала</description>
           <addressOffset>0xA4</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18091,9 +19000,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH3_ICR</name>
+          <name>TIM1_CH3_ICR</name>
           <description>Значение захвата 3 канала</description>
           <addressOffset>0xA8</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18106,9 +19016,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH4_CNTRL</name>
+          <name>TIM1_CH4_CNTRL</name>
           <description>Конфигурационный регистр 4 канала</description>
           <addressOffset>0xB0</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18233,9 +19144,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH4_OCR</name>
+          <name>TIM1_CH4_OCR</name>
           <description>Значение сравнения 4 канала</description>
           <addressOffset>0xB4</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18248,9 +19160,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH4_ICR</name>
+          <name>TIM1_CH4_ICR</name>
           <description>Значение захвата 4 канала</description>
           <addressOffset>0xB8</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18269,14 +19182,16 @@ ARR - значение автозагрузки для TIMER16.  Это знач
       <description>регистры модуля таймера_2</description>
       <baseAddress>0x00082C00</baseAddress>
       <addressBlock>
-        <offset>0x0</offset>
-        <size>0xBC</size>
+        <offset>0</offset>
+        <size>0x20</size>
         <usage>registers</usage>
       </addressBlock>
       <registers>
         <register>
-          <name>VALUE</name>
+          <name>TIM2_VALUE</name>
           <addressOffset>0x00</addressOffset>
+          <access>read-only</access>
+          <resetValue>0x0</resetValue>
           <fields>
             <field>
               <name>TIM_VAL</name>
@@ -18287,9 +19202,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>TOP</name>
+          <name>TIM2_TOP</name>
           <description>максимальное значение счетной последовательности</description>
           <addressOffset>0x04</addressOffset>
+          <access>read-write</access>
           <resetValue>0xFFFFFFFF</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18302,25 +19218,28 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>PRESCALE</name>
+          <name>TIM2_PRESCALE</name>
           <description>значение делителя</description>
           <addressOffset>0x08</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
             <field>
               <name>TIM_PRESCALE</name>
-              <description>Значение предварительного делителя.  Предделитель вырабатывает тактовый сигнал для счета, частота которого в целое раз меньше входной</description>
+              <description>Значение предварительного делителя.  Предделитель вырабатывает тактовый сигнал для счета, частота которого в (TIM_PRESCALE + 1)  раз меньше входной. Диапазон значений от 0 до (232 - 1)</description>
               <bitRange>[31:0]</bitRange>
               <access>read-write</access>
             </field>
           </fields>
         </register>
         <register>
-          <name>CONTROL</name>
+          <name>TIM2_CONTROL</name>
           <description>Конфигурационный регистр основного таймера</description>
           <addressOffset>0x0C</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
+          <resetMask>0x0</resetMask>
           <fields>
             <field>
               <name>SOURSE</name>
@@ -18376,9 +19295,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>ENABLE</name>
+          <name>TIM2_ENABLE</name>
           <description>Регистр включения таймера</description>
           <addressOffset>0x10</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18414,9 +19334,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>INT_MASK</name>
+          <name>TIM2_INT_MASK</name>
           <description>Регистр маски прерываний</description>
           <addressOffset>0x14</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18488,16 +19409,18 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>INT_CLEAR</name>
+          <name>TIM2_INT_CLEAR</name>
           <description>Регистр сброса флагов прерываний</description>
           <addressOffset>0x18</addressOffset>
+          <access>writeOnce</access>
           <resetValue>0xFFFFFFFF</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
         <register>
-          <name>INT_FLAG</name>
+          <name>TIM2_INT_FLAG</name>
           <description>Регистр флагов прерываний</description>
           <addressOffset>0x1C</addressOffset>
+          <access>read-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18569,9 +19492,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH1_CNTRL</name>
+          <name>TIM2_CH1_CNTRL</name>
           <description>Конфигурационный регистр 1 канала</description>
           <addressOffset>0x80</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18696,9 +19620,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH1_OCR</name>
+          <name>TIM2_CH1_OCR</name>
           <description>Значение сравнения 1 канала</description>
           <addressOffset>0x84</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18711,9 +19636,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH1_ICR</name>
+          <name>TIM2_CH1_ICR</name>
           <description>Значение захвата 1 канала</description>
           <addressOffset>0x88</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18726,136 +19652,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH2_CNTRL</name>
-          <description>Конфигурационный регистр 2 канала</description>
-          <addressOffset>0x90</addressOffset>
-          <resetValue>0x0</resetValue>
-          <resetMask>0xFFFFFFFF</resetMask>
-          <fields>
-            <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[31:10]</bitRange>
-            </field>
-            <field>
-              <name>DIR</name>
-              <description>Направление передачи данных. Устанавливается автоматически в зависимости от режима работы (1 - выход, 0 - вход)</description>
-              <bitRange>[9:9]</bitRange>
-              <access>read-only</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Output</name>
-                  <description>Выход</description>
-                  <value>0b01</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Input</name>
-                  <description>Вход</description>
-                  <value>0b0</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>PWM_INV</name>
-              <description>Тип вывода в режиме ШИМ инвертирование</description>
-              <bitRange>[8:8]</bitRange>
-              <access>read-write</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Direct</name>
-                  <description>Прямой (не инвертированный) выход</description>
-                  <value>0b00</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Inverted</name>
-                  <description>Инвертированный выход</description>
-                  <value>0b01</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>EN</name>
-              <description>Включение/выключение канала</description>
-              <bitRange>[7:7]</bitRange>
-              <access>read-write</access>
-            </field>
-            <field>
-              <name>MODE</name>
-              <description>Режим работы канала</description>
-              <bitRange>[6:5]</bitRange>
-              <access>read-write</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Reserved</name>
-                  <description>Зарезервировано</description>
-                  <value>0b00</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Compare</name>
-                  <description>Режим сравнения (для timer0)</description>
-                  <value>0b01</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Capture</name>
-                  <description>Режим захвата(для timer0)</description>
-                  <value>0b10</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>PWM</name>
-                  <description>ШИМ</description>
-                  <value>0b11</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>EDGE</name>
-              <description>Режим сигнала захвата </description>
-              <bitRange>[4:4]</bitRange>
-              <access>read-write</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Front</name>
-                  <description>фронт</description>
-                  <value>0b00</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Back</name>
-                  <description>срез</description>
-                  <value>0b01</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-            <field>
-              <name>Reserved</name>
-              <description>Зарезервировано</description>
-              <bitRange>[3:1]</bitRange>
-            </field>
-            <field>
-              <name>NOISE</name>
-              <description>Управление фильтрацией входных помех на входе ic_port:
-0 – фильтрация выклю-чена;
-1 – фильтрация выклю-чена</description>
-              <bitRange>[0:0]</bitRange>
-              <access>read-write</access>
-              <enumeratedValues>
-                <enumeratedValue>
-                  <name>Enable</name>
-                  <description>Фильтрация выключена</description>
-                  <value>0b00</value>
-                </enumeratedValue>
-                <enumeratedValue>
-                  <name>Disable</name>
-                  <description>Фильтрация включена</description>
-                  <value>0b01</value>
-                </enumeratedValue>
-              </enumeratedValues>
-            </field>
-          </fields>
-        </register>
-        <register>
-          <name>CH2_OCR</name>
+          <name>TIM2_CH2_OCR</name>
           <description>Значение сравнения 2 канала</description>
           <addressOffset>0x94</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18868,9 +19668,138 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH2_ICR</name>
+          <name>TIM2_CH2_CNTRL</name>
+          <description>Конфигурационный регистр 2 канала</description>
+          <addressOffset>0x90</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x0</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
+          <fields>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[31:10]</bitRange>
+            </field>
+            <field>
+              <name>DIR</name>
+              <description>Направление передачи данных. Устанавливается автоматически в зависимости от режима работы (1 - выход, 0 - вход)</description>
+              <bitRange>[9:9]</bitRange>
+              <access>read-only</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Output</name>
+                  <description>Выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Input</name>
+                  <description>Вход</description>
+                  <value>0b0</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>PWM_INV</name>
+              <description>Тип вывода в режиме ШИМ инвертирование</description>
+              <bitRange>[8:8]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Direct</name>
+                  <description>Прямой (не инвертированный) выход</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Inverted</name>
+                  <description>Инвертированный выход</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EN</name>
+              <description>Включение/выключение канала</description>
+              <bitRange>[7:7]</bitRange>
+              <access>read-write</access>
+            </field>
+            <field>
+              <name>MODE</name>
+              <description>Режим работы канала</description>
+              <bitRange>[6:5]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Reserved</name>
+                  <description>Зарезервировано</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Compare</name>
+                  <description>Режим сравнения (для timer0)</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Capture</name>
+                  <description>Режим захвата(для timer0)</description>
+                  <value>0b10</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>PWM</name>
+                  <description>ШИМ</description>
+                  <value>0b11</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>EDGE</name>
+              <description>Режим сигнала захвата </description>
+              <bitRange>[4:4]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Front</name>
+                  <description>фронт</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Back</name>
+                  <description>срез</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+            <field>
+              <name>Reserved</name>
+              <description>Зарезервировано</description>
+              <bitRange>[3:1]</bitRange>
+            </field>
+            <field>
+              <name>NOISE</name>
+              <description>Управление фильтрацией входных помех на входе ic_port:
+0 – фильтрация выклю-чена;
+1 – фильтрация выклю-чена</description>
+              <bitRange>[0:0]</bitRange>
+              <access>read-write</access>
+              <enumeratedValues>
+                <enumeratedValue>
+                  <name>Enable</name>
+                  <description>Фильтрация выключена</description>
+                  <value>0b00</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>Disable</name>
+                  <description>Фильтрация включена</description>
+                  <value>0b01</value>
+                </enumeratedValue>
+              </enumeratedValues>
+            </field>
+          </fields>
+        </register>
+        <register>
+          <name>TIM2_CH2_ICR</name>
           <description>Значение захвата 2 канала</description>
           <addressOffset>0x98</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -18883,9 +19812,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH3_CNTRL</name>
+          <name>TIM2_CH3_CNTRL</name>
           <description>Конфигурационный регистр 3 канала</description>
-          <addressOffset>0x90</addressOffset>
+          <addressOffset>0xA0</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -19010,9 +19940,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH3_OCR</name>
+          <name>TIM2_CH3_OCR</name>
           <description>Значение сравнения 3 канала</description>
           <addressOffset>0xA4</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -19025,9 +19956,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH3_ICR</name>
+          <name>TIM2_CH3_ICR</name>
           <description>Значение захвата 3 канала</description>
           <addressOffset>0xA8</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -19040,9 +19972,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH4_CNTRL</name>
+          <name>TIM2_CH4_CNTRL</name>
           <description>Конфигурационный регистр 4 канала</description>
           <addressOffset>0xB0</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -19167,9 +20100,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH4_OCR</name>
+          <name>TIM2_CH4_OCR</name>
           <description>Значение сравнения 4 канала</description>
           <addressOffset>0xB4</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -19182,9 +20116,10 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           </fields>
         </register>
         <register>
-          <name>CH4_ICR</name>
+          <name>TIM2_CH4_ICR</name>
           <description>Значение захвата 4 канала</description>
           <addressOffset>0xB8</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -19245,14 +20180,34 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                   <value>0b1111</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>CS1</name>
+                  <name>CS1_1</name>
                   <description>Выбрано устройство 1</description>
-                  <value>0bxx01</value>
+                  <value>0b0001</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>CS2</name>
+                  <name>CS1_2</name>
+                  <description>Выбрано устройство 1</description>
+                  <value>0b0101</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS1_3</name>
+                  <description>Выбрано устройство 1</description>
+                  <value>0b1001</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS1_4</name>
+                  <description>Выбрано устройство 1</description>
+                  <value>0b1101</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS2_1</name>
                   <description>Выбрано устройство 2</description>
-                  <value>0bx011</value>
+                  <value>0b0011</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS2_2</name>
+                  <description>Выбрано устройство 2</description>
+                  <value>0b1011</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>CS3</name>
@@ -19262,7 +20217,42 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                 <enumeratedValue>
                   <name>CS4</name>
                   <description>Выбрано устройство 4</description>
-                  <value>0bxxx0</value>
+                  <value>0b0000</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b0010</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b0100</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b1000</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b1010</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b1100</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b0110</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b1110</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -19976,14 +20966,34 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                   <value>0b1111</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>CS1</name>
+                  <name>CS1_1</name>
                   <description>Выбрано устройство 1</description>
-                  <value>0bxx01</value>
+                  <value>0b0001</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>CS2</name>
+                  <name>CS1_2</name>
+                  <description>Выбрано устройство 1</description>
+                  <value>0b0101</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS1_3</name>
+                  <description>Выбрано устройство 1</description>
+                  <value>0b1001</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS1_4</name>
+                  <description>Выбрано устройство 1</description>
+                  <value>0b1101</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS2_1</name>
                   <description>Выбрано устройство 2</description>
-                  <value>0bx011</value>
+                  <value>0b0011</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS2_2</name>
+                  <description>Выбрано устройство 2</description>
+                  <value>0b1011</value>
                 </enumeratedValue>
                 <enumeratedValue>
                   <name>CS3</name>
@@ -19991,9 +21001,44 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                   <value>0b0111</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>CS4</name>
+                  <name>CS4_1</name>
                   <description>Выбрано устройство 4</description>
-                  <value>0bxxx0</value>
+                  <value>0b0000</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4_2</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b0100</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4_3</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b0010</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4_4</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b1000</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4_5</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b1010</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4_6</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b1100</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4_7</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b0110</value>
+                </enumeratedValue>
+                <enumeratedValue>
+                  <name>CS4_8</name>
+                  <description>Выбрано устройство 4</description>
+                  <value>0b1110</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
@@ -22607,7 +23652,7 @@ RXDR или аппаратно при PE=0.
       </addressBlock>
       <registers>
         <register>
-          <name>SET</name>
+          <name>STATE</name>
           <description>Установка выводов в «1»</description>
           <addressOffset>0x00</addressOffset>
           <access>write-only</access>
@@ -22615,7 +23660,7 @@ RXDR или аппаратно при PE=0.
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
         <register>
-          <name>STATE</name>
+          <name>SET</name>
           <description>Текущее состояние выводов</description>
           <addressOffset>0x00</addressOffset>
           <access>read-only</access>
@@ -22690,7 +23735,7 @@ RXDR или аппаратно при PE=0.
       </addressBlock>
       <registers>
         <register>
-          <name>SET</name>
+          <name>STATE</name>
           <description>Установка выводов в «1»</description>
           <addressOffset>0x00</addressOffset>
           <access>write-only</access>
@@ -22698,7 +23743,7 @@ RXDR или аппаратно при PE=0.
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
         <register>
-          <name>STATE</name>
+          <name>SET</name>
           <description>Текущее состояние выводов</description>
           <addressOffset>0x00</addressOffset>
           <access>read-only</access>
@@ -22773,7 +23818,7 @@ RXDR или аппаратно при PE=0.
       </addressBlock>
       <registers>
         <register>
-          <name>SET</name>
+          <name>STATE</name>
           <description>Установка выводов в «1»</description>
           <addressOffset>0x00</addressOffset>
           <access>write-only</access>
@@ -22781,7 +23826,7 @@ RXDR или аппаратно при PE=0.
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
         <register>
-          <name>STATE</name>
+          <name>SET</name>
           <description>Текущее состояние выводов</description>
           <addressOffset>0x00</addressOffset>
           <access>read-only</access>
