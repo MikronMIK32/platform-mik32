@@ -2078,12 +2078,18 @@ FSYS/( DIV_AHB+1)</description>
           <description>Задает значение делителя шины APB_M. Частота шины APB_M (FAPM_M) рассчитывается, как 
 FAPB/( Div_APM_M+1)</description>
           <addressOffset>0x04</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x00</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
         </register>
         <register>
           <name>DIV_APB_P</name>
           <description>Задает значение делителя шины APB_P. Частота шины APB_P (FAPM_P) рассчитывается, как 
 FAPB/( Div_APM_P+1)</description>
           <addressOffset>0x08</addressOffset>
+          <access>read-write</access>
+          <resetValue>0x00</resetValue>
+          <resetMask>0xFFFFFFFF</resetMask>
         </register>
         <register>
           <name>CLK_AHB_SET</name>
@@ -6806,7 +6812,7 @@ SLEEP_MODE [3] = 1 –
           <name>TIM0_INT_CLEAR</name>
           <description>Регистр сброса флагов прерываний</description>
           <addressOffset>0x18</addressOffset>
-          <access>writeOnce</access>
+          <access>read-write</access>
           <resetValue>0xFFFFFFFF</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
@@ -11385,7 +11391,7 @@ N_W = 50000000 нс/Pclk, где Pclk – период тактового сиг
           <name>SYS_POWEROFF</name>
           <description>Запись в регистр «1» отключает питание системного домена</description>
           <addressOffset>0x08</addressOffset>
-          <access>write-only</access>
+          <access>read-write</access>
           <resetValue>0x00</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
@@ -11626,7 +11632,7 @@ N_W = 50000000 нс/Pclk, где Pclk – период тактового сиг
           <name>RTC_CONTROL</name>
           <description>Сброс RTC происходит при записи “1”</description>
           <addressOffset>0x18</addressOffset>
-          <access>write-only</access>
+          <access>read-write</access>
           <resetValue>0x00</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
@@ -13015,7 +13021,7 @@ FSPIFI_SCK = FHCLK / 2^(SCK_DIV+1)</description>
           <name>EEA</name>
           <description>Регистр адреса страницы </description>
           <addressOffset>0x04</addressOffset>
-          <access>write-only</access>
+          <access>read-write</access>
           <fields>
             <field>
               <name>ADDR</name>
@@ -13029,7 +13035,7 @@ FSPIFI_SCK = FHCLK / 2^(SCK_DIV+1)</description>
           <name>EECON</name>
           <description>Регистр управления </description>
           <addressOffset>0x08</addressOffset>
-          <access>write-only</access>
+          <access>read-write</access>
           <resetValue>0x00</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -13157,6 +13163,7 @@ FSPIFI_SCK = FHCLK / 2^(SCK_DIV+1)</description>
           <name>EESTA</name>
           <description>Регистр статуса</description>
           <addressOffset>0x0C</addressOffset>
+          <access>read-write</access>
           <resetValue>0x00</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -13602,7 +13609,7 @@ FSPIFI_SCK = FHCLK / 2^(SCK_DIV+1)</description>
       </registers>
     </peripheral>
     <peripheral>
-      <name>CRC</name>
+      <name>CRC32</name>
       <description>Блок вычисления контрольных сумм</description>
       <baseAddress>0x00080400</baseAddress>
       <addressBlock>
@@ -13627,6 +13634,7 @@ FSPIFI_SCK = FHCLK / 2^(SCK_DIV+1)</description>
           <name>CTRL</name>
           <description>Регистр управления</description>
           <addressOffset>0x08</addressOffset>
+          <access>read-write</access>
           <fields>
             <field>
               <name>TOT</name>
@@ -13755,6 +13763,13 @@ FSPIFI_SCK = FHCLK / 2^(SCK_DIV+1)</description>
       </addressBlock>
       <registers>
         <register>
+          <name>KEY</name>
+          <description>Регистр ключа</description>
+          <addressOffset>0x9C</addressOffset>
+          <access>write-only</access>
+          <resetMask>0xFFFFFFFF</resetMask>
+        </register>
+        <register>
           <name>CON</name>
           <description>Конфигурация</description>
           <addressOffset>0x84</addressOffset>
@@ -13817,13 +13832,6 @@ FSPIFI_SCK = FHCLK / 2^(SCK_DIV+1)</description>
               <access>read-write</access>
             </field>
           </fields>
-        </register>
-        <register>
-          <name>KEY</name>
-          <description>Регистр ключа</description>
-          <addressOffset>0x9C</addressOffset>
-          <access>write-only</access>
-          <resetMask>0xFFFFFFFF</resetMask>
         </register>
         <register>
           <name>STA</name>
@@ -14829,6 +14837,7 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
           <name>MODEM</name>
           <description>Регистр управления модемом</description>
           <addressOffset>0x2C</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -15916,6 +15925,7 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
           <name>MODEM</name>
           <description>Регистр управления модемом</description>
           <addressOffset>0x2C</addressOffset>
+          <access>read-write</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -16686,6 +16696,7 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
           <name>CR</name>
           <description>Регистр управления</description>
           <addressOffset>0x10</addressOffset>
+          <access>read-write</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -16722,6 +16733,7 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
           <name>CMP</name>
           <description>Регистр сравнения. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x14</addressOffset>
+          <access>read-write</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -16740,6 +16752,7 @@ BR = F/BRR, где BR - бодрейт, F - значение частоты вх
           <name>ARR</name>
           <description>Регистр автоматической перезагрузки. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x18</addressOffset>
+          <access>read-write</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -16759,6 +16772,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>CNT</name>
           <description>Регистр счётчика</description>
           <addressOffset>0x1C</addressOffset>
+          <access>read-only</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -17409,6 +17423,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>CR</name>
           <description>Регистр управления</description>
           <addressOffset>0x10</addressOffset>
+          <access>read-write</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -17445,6 +17460,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>CMP</name>
           <description>Регистр сравнения. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x14</addressOffset>
+          <access>read-write</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -17463,6 +17479,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>ARR</name>
           <description>Регистр автоматической перезагрузки. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x18</addressOffset>
+          <access>read-write</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -17482,6 +17499,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>CNT</name>
           <description>Регистр счётчика</description>
           <addressOffset>0x1C</addressOffset>
+          <access>read-only</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -18132,6 +18150,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>CR</name>
           <description>Регистр управления</description>
           <addressOffset>0x10</addressOffset>
+          <access>read-write</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -18168,6 +18187,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>CMP</name>
           <description>Регистр сравнения. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x14</addressOffset>
+          <access>read-write</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -18186,6 +18206,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>ARR</name>
           <description>Регистр автоматической перезагрузки. Примечание: Регистр CMP может быть изменен только тогда, когда TIMER16 включен (бит ENABLE установлен в '1').</description>
           <addressOffset>0x18</addressOffset>
+          <access>read-write</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -18205,6 +18226,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>CNT</name>
           <description>Регистр счётчика</description>
           <addressOffset>0x1C</addressOffset>
+          <access>read-only</access>
           <fields>
             <field>
               <name>Reserved</name>
@@ -18456,7 +18478,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>TIM1_INT_CLEAR</name>
           <description>Регистр сброса флагов прерываний</description>
           <addressOffset>0x18</addressOffset>
-          <access>writeOnce</access>
+          <access>read-write</access>
           <resetValue>0xFFFFFFFF</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
@@ -19412,7 +19434,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>TIM2_INT_CLEAR</name>
           <description>Регистр сброса флагов прерываний</description>
           <addressOffset>0x18</addressOffset>
-          <access>writeOnce</access>
+          <access>read-write</access>
           <resetValue>0xFFFFFFFF</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
@@ -20147,7 +20169,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>CONFIG</name>
           <description>Регистр конфигурации SPI</description>
           <addressOffset>0x00</addressOffset>
-		  <access>read-write</access>
+          <access>read-write</access>
           <resetValue>0x00</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -20776,6 +20798,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>ENABLE</name>
           <description>Регистр включения/выключения SPI</description>
           <addressOffset>0x14</addressOffset>
+          <access>read-write</access>
           <resetValue>0x00</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -20934,6 +20957,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>CONFIG</name>
           <description>Регистр конфигурации SPI</description>
           <addressOffset>0x00</addressOffset>
+          <access>read-write</access>
           <resetValue>0x00</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -21562,6 +21586,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
           <name>ENABLE</name>
           <description>Регистр включения/выключения SPI</description>
           <addressOffset>0x14</addressOffset>
+          <access>read-write</access>
           <resetValue>0x00</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -22216,7 +22241,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                   <value>#00</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>1#it</name>
+                  <name>10bit</name>
                   <description>Ведущий работает в режиме 10-битного адреса</description>
                   <value>#01</value>
                 </enumeratedValue>
@@ -22242,7 +22267,7 @@ ARR - значение автозагрузки для TIMER16.  Это знач
               </enumeratedValues>
             </field>
             <field>
-              <name>SADD_1#it</name>
+              <name>SADD_10bit</name>
               <description>Адрес ведомого (режим «ведущий») в режиме 10-битного адреса (ADD10 = 1).
 Изменение этих битов при START=1 не допускается.</description>
               <bitRange>[9:0]</bitRange>
@@ -22295,14 +22320,14 @@ ARR - значение автозагрузки для TIMER16.  Это знач
                   <value>#00</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>1#it</name>
+                  <name>10bit</name>
                   <description>OA1 – 10-битный  адрес</description>
                   <value>#01</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
             <field>
-              <name>OA1_1#it</name>
+              <name>OA1_10bit</name>
               <description>Собственный адрес 1 (10-битный режим).
 Изменение бита допускается при OA1EN=0.</description>
               <bitRange>[9:0]</bitRange>
@@ -22468,7 +22493,7 @@ t_SCLL = (SCLL+1) x t_PRESC
           <name>ISR</name>
           <description>Регистр флагов прерываний</description>
           <addressOffset>0x18</addressOffset>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -23184,7 +23209,7 @@ RXDR или аппаратно при PE=0.
                   <value>#00</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>1#it</name>
+                  <name>10bit</name>
                   <description>Ведущий работает в режиме 10-битного адреса</description>
                   <value>#01</value>
                 </enumeratedValue>
@@ -23210,7 +23235,7 @@ RXDR или аппаратно при PE=0.
               </enumeratedValues>
             </field>
             <field>
-              <name>SADD_1#it</name>
+              <name>SADD_10bit</name>
               <description>Адрес ведомого (режим «ведущий») в режиме 10-битного адреса (ADD10 = 1).
 Изменение этих битов при START=1 не допускается.</description>
               <bitRange>[9:0]</bitRange>
@@ -23263,14 +23288,14 @@ RXDR или аппаратно при PE=0.
                   <value>#00</value>
                 </enumeratedValue>
                 <enumeratedValue>
-                  <name>1#it</name>
+                  <name>10bit</name>
                   <description>OA1 – 10-битный  адрес</description>
                   <value>#01</value>
                 </enumeratedValue>
               </enumeratedValues>
             </field>
             <field>
-              <name>OA1_1#it</name>
+              <name>OA1_10bit</name>
               <description>Собственный адрес 1 (10-битный режим).
 Изменение бита допускается при OA1EN=0.</description>
               <bitRange>[9:0]</bitRange>
@@ -23436,7 +23461,7 @@ t_SCLL = (SCLL+1) x t_PRESC
           <name>ISR</name>
           <description>Регистр флагов прерываний</description>
           <addressOffset>0x18</addressOffset>
-          <access>read-write</access>
+          <access>read-only</access>
           <resetValue>0x00</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -23643,7 +23668,7 @@ RXDR или аппаратно при PE=0.
       </registers>
     </peripheral>
     <peripheral>
-      <name>GPIO16_0</name>
+      <name>GPIO0</name>
       <description>Модуль ввода/вывода</description>
       <baseAddress>0x00084000</baseAddress>
       <addressBlock>
@@ -23656,7 +23681,7 @@ RXDR или аппаратно при PE=0.
           <name>STATE</name>
           <description>Установка выводов в «1»</description>
           <addressOffset>0x00</addressOffset>
-          <access>write-only</access>
+          <access>read-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
@@ -23664,7 +23689,7 @@ RXDR или аппаратно при PE=0.
           <name>SET</name>
           <description>Текущее состояние выводов</description>
           <addressOffset>0x00</addressOffset>
-          <access>read-only</access>
+          <access>write-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
@@ -23726,7 +23751,7 @@ RXDR или аппаратно при PE=0.
       </registers>
     </peripheral>
     <peripheral>
-      <name>GPIO16_1</name>
+      <name>GPIO1</name>
       <description>Модуль ввода/вывода</description>
       <baseAddress>0x00084400</baseAddress>
       <addressBlock>
@@ -23739,7 +23764,7 @@ RXDR или аппаратно при PE=0.
           <name>STATE</name>
           <description>Установка выводов в «1»</description>
           <addressOffset>0x00</addressOffset>
-          <access>write-only</access>
+          <access>read-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
@@ -23747,7 +23772,7 @@ RXDR или аппаратно при PE=0.
           <name>SET</name>
           <description>Текущее состояние выводов</description>
           <addressOffset>0x00</addressOffset>
-          <access>read-only</access>
+          <access>write-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
@@ -23809,7 +23834,7 @@ RXDR или аппаратно при PE=0.
       </registers>
     </peripheral>
     <peripheral>
-      <name>GPIO8_2</name>
+      <name>GPIO2</name>
       <description>Модуль ввода/вывода</description>
       <baseAddress>0x00084800</baseAddress>
       <addressBlock>
@@ -23822,7 +23847,7 @@ RXDR или аппаратно при PE=0.
           <name>STATE</name>
           <description>Установка выводов в «1»</description>
           <addressOffset>0x00</addressOffset>
-          <access>write-only</access>
+          <access>read-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
@@ -23830,7 +23855,7 @@ RXDR или аппаратно при PE=0.
           <name>SET</name>
           <description>Текущее состояние выводов</description>
           <addressOffset>0x00</addressOffset>
-          <access>read-only</access>
+          <access>write-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
         </register>
@@ -24138,7 +24163,7 @@ Mux_7 – [31:28]</description>
           <name>DAC0_VALUE</name>
           <description>Входные данные для ЦАП0</description>
           <addressOffset>0x04</addressOffset>
-          <access>read-write</access>
+          <access>write-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
@@ -24260,7 +24285,7 @@ Mux_7 – [31:28]</description>
           <name>DAC1_VALUE</name>
           <description>Входные данные для ЦАП1</description>
           <addressOffset>0x04</addressOffset>
-          <access>read-write</access>
+          <access>write-only</access>
           <resetValue>0x0</resetValue>
           <resetMask>0xFFFFFFFF</resetMask>
           <fields>
