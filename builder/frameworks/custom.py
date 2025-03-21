@@ -93,19 +93,6 @@ libs = [
 env.Prepend(LIBS=libs)
 
 
-# Define the system clock frequency
-
-f_cpu: str = board.get("build.f_cpu", "")
-if not f_cpu.endswith("L"):
-    f_cpu = "".join([f_cpu, "L"])
-
-env.AppendUnique(
-    CPPDEFINES=[
-        ("OSC_SYSTEM_VALUE", f_cpu)
-    ]
-)
-
-
 # Defining path to selected linker script and adding library search path 
 # for correct search of nested scripts
 

@@ -29,6 +29,11 @@ env.AppendUnique(
         "-ffunction-sections",
     ],
 
+    CPPDEFINES=[
+        "%s" % board_config.get("build.mcu"),
+        "OSC_SYSTEM_VALUE=%s" % board_config.get("build.f_cpu"),
+    ],
+
     CFLAGS = [
         "-std=gnu11"
     ],
