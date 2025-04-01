@@ -22,7 +22,7 @@
       "ftdi"
     ],
     "svd_path": "mik32v2.svd",
-    "speed": "500",
+    "speed": "3200",
     "extra_cmds": [
       "set mem inaccessible-by-default off",
       "mem 0x01000000 0x01002000 ro",
